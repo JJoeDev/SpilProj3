@@ -76,7 +76,7 @@ public class CrashPushback : MonoBehaviour
         float fart = HentAktuelFart();
         if (fart < minHastighedForSkub) return;
 
-        // Triggers har ingen contacts -> brug -forward
+        
         Vector3 dir = -transform.forward;
         StartSkub(dir, fart);
     }

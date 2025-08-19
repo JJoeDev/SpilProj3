@@ -55,7 +55,7 @@ public class CollisionDamage : MonoBehaviour
             return;
         
         // Afgør aktuel hastighed udelukkende fra PlayerMovement
-        float currentSpeed = (playerMovement != null) ? playerMovement.currentSpeed : 0f;
+        float currentSpeed = (playerMovement != null) ? playerMovement.speed : 0f;
         if (currentSpeed < minSpeedToDealDamage)
             return;
         

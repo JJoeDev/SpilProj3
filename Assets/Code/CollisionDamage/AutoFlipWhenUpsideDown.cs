@@ -44,9 +44,6 @@ public class AutoFlipWhenUpsideDown : MonoBehaviour
     {
         _pm = GetComponent<PlayerMovementTest>();
         _rb = GetComponent<Rigidbody>();
-
-        if (_pm == null)
-            Debug.LogWarning("[AutoFlipWhenUpsideDown] Fandt ikke PlayerMovement på objektet.");
     }
 
     void Update()
@@ -88,10 +85,6 @@ public class AutoFlipWhenUpsideDown : MonoBehaviour
             }
         }
     }
-
-    /// <summary>
-    /// Returnerer true hvis vinklen mellem world-up og køretøjets up overstiger tærsklen.
-    /// </summary>
     private bool ErPåHovedet()
     {
         // 0° = oprejst, 180° = på hovedet
@@ -110,9 +103,6 @@ public class AutoFlipWhenUpsideDown : MonoBehaviour
             _pm.currentSpeed = 0f;
             _pm.enabled = false;
         }
-
-        if (logTilKonsol)
-            Debug.Log("[AutoFlipWhenUpsideDown] Kørsel låst (på hovedet).");
     }
 
     private void FrigivKørsel()
@@ -121,9 +111,6 @@ public class AutoFlipWhenUpsideDown : MonoBehaviour
 
         if (_pm != null)
             _pm.enabled = true;
-
-        if (logTilKonsol)
-            Debug.Log("[AutoFlipWhenUpsideDown] Kørsel frigivet.");
     }
 
     private void UdførFlip()
@@ -145,11 +132,6 @@ public class AutoFlipWhenUpsideDown : MonoBehaviour
         // Start cooldown før vi må køre igen
         _genAktiverTid = Time.time + efterFlipCooldown;
         _påHovedetTimer = 0f;
-
-        if (logTilKonsol)
-            Debug.Log("[AutoFlipWhenUpsideDown] Flip udført.");
-
-        // Bemærk: kørsel forbliver låst indtil cooldown er gået; Update vil kalde FrigivKørsel().
     }
 
     // Hjælpe-gizmo så du kan se world-up vs din up i Scene
