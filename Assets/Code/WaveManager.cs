@@ -15,15 +15,14 @@ public class WaveManager : MonoBehaviour
 
     public Transform[] spawnPoints;
 
-    bool spawningWave;
-    int enemiesToSpawn;
+    private bool m_spawningWave;
+     private int m_enemiesToSpawn;
     [SerializeField] private TextMeshProUGUI m_waveCounter;
 
     void Awake()
     {
-        Debug.Log("JEG ER VÅGEN");
-        enemiesToSpawn = 1;
-        StartCoroutine(SpawnEnemyWave(enemiesToSpawn));
+        m_enemiesToSpawn = 1;
+        StartCoroutine(SpawnEnemyWave(m_enemiesToSpawn));
     }
 
 
@@ -31,18 +30,18 @@ public class WaveManager : MonoBehaviour
     void Update()
     {
         m_enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length; //Enemy tag er ikke lavet endnu
-        if (m_enemyCount == 0 && !spawningWave)
+        if (m_enemyCount == 0 && !m_spawningWave)
         {
             waveNumber++;
-            enemiesToSpawn++;
-            StartCoroutine(SpawnEnemyWave(enemiesToSpawn));
+            m_enemiesToSpawn++;
+            StartCoroutine(SpawnEnemyWave(m_enemiesToSpawn));
         }
 
 
     }
     IEnumerator SpawnEnemyWave(int enemiesToSpawn)
     {
-        spawningWave = true;
+        m_spawningWave = true;
         m_waveCounter.text = "Wave " + waveNumber;
         Debug.Log("Wave " + waveNumber);
         m_waveCounter.gameObject.SetActive(true);
@@ -54,7 +53,7 @@ public class WaveManager : MonoBehaviour
             Debug.Log("enemy spawned ");
             yield return new WaitForSeconds(timeBetweenEnemySpawn);
         }
-        spawningWave = false;
+        m_spawningWave = false;
 
     }
 }
