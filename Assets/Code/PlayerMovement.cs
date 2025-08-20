@@ -4,75 +4,75 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] WheelCollider frontRight;
-    [SerializeField] WheelCollider frontLeft;
-    [SerializeField] WheelCollider backRight;
-    [SerializeField] WheelCollider backLeft;
+    [SerializeField] WheelCollider m_frontRight;
+    [SerializeField] WheelCollider m_frontLeft;
+    [SerializeField] WheelCollider m_backRight;
+    [SerializeField] WheelCollider m_backLeft;
 
-    [SerializeField] InputManager input;
+    InputManager m_iManager;
 
     public float Acceleration = 500f;
     public float BreakingForce = 300f;
     public float maxTurnAngle = 15f;
     public float maxSpeed = 100f; // km/h
 
-    private float currentAcceleration = 0f;
-    private float currentBreakForce = 0f;
-    private float currentTurnAngle = 0f;
+    private float m_currentAcceleration = 0f;
+    private float m_currentBreakForce = 0f;
+    private float m_currentTurnAngle = 0f;
 
-    private Rigidbody rb;
+    private Rigidbody m_rb;
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        m_iManager = InputManager.Instance;
+        m_rb = GetComponent<Rigidbody>();
     }
 
     private void FixedUpdate()
     {
         // Get inputs from InputManager
-        float verticalInput = input.OnMove().y;
-        float horizontalInput = input.OnMove().x;
+        Vector2 input = m_iManager.OnMove();
 
         // Convert velocity magnitude to km/h
-        float speed = rb.velocity.magnitude * 3.6f;
+        float speed = m_rb.velocity.magnitude * 3.6f;
 
         // Acceleration (only if under max speed OR braking/reversing)
-        if (speed < maxSpeed || verticalInput < 0f)
+        if (speed < maxSpeed || input.x < 0f)
         {
-            currentAcceleration = Acceleration * verticalInput;
+            m_currentAcceleration = Acceleration * input.x;
         }
         else
         {
-            currentAcceleration = 0f;
+            m_currentAcceleration = 0f;
         }
 
         // Braking
-        if (input.OnHandBreak().ReadValue<float>() > 0.1f)
+        if (m_iManager.OnHandBreak().ReadValue<float>() > 0.1f)
         {
-            currentBreakForce = BreakingForce; // full brake
+            m_currentBreakForce = BreakingForce; // full brake
         }
-        else if (Mathf.Approximately(verticalInput, 0f))
+        else if (Mathf.Approximately(input.x, 0f))
         {
-            currentBreakForce = BreakingForce * 0.3f; // engine braking
+            m_currentBreakForce = BreakingForce * 0.3f; // engine braking
         }
         else
         {
-            currentBreakForce = 0f;
+            m_currentBreakForce = 0f;
         }
 
         // Apply acceleration (currently front wheel drive)
-        frontRight.motorTorque = currentAcceleration;
-        frontLeft.motorTorque = currentAcceleration;
+        m_frontRight.motorTorque = m_currentAcceleration;
+        m_frontLeft.motorTorque = m_currentAcceleration;
 
         // Apply brakes to all wheels
-        frontRight.brakeTorque = currentBreakForce;
-        frontLeft.brakeTorque = currentBreakForce;
-        backRight.brakeTorque = currentBreakForce;
-        backLeft.brakeTorque = currentBreakForce;
+        m_frontRight.brakeTorque = m_currentBreakForce;
+        m_frontLeft.brakeTorque = m_currentBreakForce;
+        m_backRight.brakeTorque = m_currentBreakForce;
+        m_backLeft.brakeTorque = m_currentBreakForce;
 
         // Steering
-        currentTurnAngle = -maxTurnAngle * horizontalInput;
-        frontLeft.steerAngle = currentTurnAngle;
-        frontRight.steerAngle = currentTurnAngle;
+        m_currentTurnAngle = -maxTurnAngle * input.y;
+        m_frontLeft.steerAngle = m_currentTurnAngle;
+        m_frontRight.steerAngle = m_currentTurnAngle;
     }
 }
