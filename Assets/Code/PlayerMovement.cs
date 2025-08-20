@@ -12,9 +12,10 @@ public class PlayerMovement : MonoBehaviour
     InputManager m_iManager;
 
     public float Acceleration = 500f;
-    public float BreakingForce = 300f;
-    public float maxTurnAngle = 15f;
+    public float BreakingForce = 500f;
+    public float maxTurnAngle = 20f;
     public float maxSpeed = 100f; // km/h
+    public float jumpForce = 5000f; 
 
     private float m_currentAcceleration = 0f;
     private float m_currentBreakForce = 0f;
@@ -26,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
     {
         m_iManager = InputManager.Instance;
         m_rb = GetComponent<Rigidbody>();
+
+        m_rb.centerOfMass = new Vector3(0, -0.1f, 0);
     }
 
     private void FixedUpdate()
@@ -37,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
         float speed = m_rb.velocity.magnitude * 3.6f;
 
         // Acceleration (only if under max speed OR braking/reversing)
-        if (speed < maxSpeed || input.x < 0f)
+        if (speed < maxSpeed || input.y < 0f)
         {
             m_currentAcceleration = Acceleration * input.y;
         }
@@ -74,5 +77,21 @@ public class PlayerMovement : MonoBehaviour
         m_currentTurnAngle = -maxTurnAngle * input.x;
         m_frontLeft.steerAngle = m_currentTurnAngle;
         m_frontRight.steerAngle = m_currentTurnAngle;
+
+        // Jump
+        if (m_iManager.OnJump().WasPressedThisFrame() && IsGrounded())
+        {
+            m_rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
     }
+
+    private bool IsGrounded()
+    {
+        float wheelRayLength = 0.2f; // slightly longer than suspension
+        return Physics.Raycast(m_frontLeft.transform.position, -transform.up, wheelRayLength) ||
+               Physics.Raycast(m_frontRight.transform.position, -transform.up, wheelRayLength) ||
+               Physics.Raycast(m_backLeft.transform.position, -transform.up, wheelRayLength) ||
+               Physics.Raycast(m_backRight.transform.position, -transform.up, wheelRayLength);
+    }
+
 }
