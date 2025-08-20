@@ -6,8 +6,8 @@ using UnityEngine.EventSystems;
 
 public abstract class MenuButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] float hoverSizeIncreasePercentage = 20; 
-    [SerializeField] float easingTime = 0.15f;
+    [SerializeField] float m_hoverSizeIncreasePercentage = 20; 
+    [SerializeField] float m_easingTime = 0.15f;
 
 
     TMP_Text m_buttonText;
@@ -25,12 +25,12 @@ public abstract class MenuButton : MonoBehaviour, IPointerClickHandler, IPointer
 
     public virtual void OnPointerEnter(PointerEventData pointerEventData)
     {
-        StartCoroutine(ieSmoothHover(easingTime));
+        StartCoroutine(ieSmoothHover(m_easingTime));
     }
 
     public virtual void OnPointerExit(PointerEventData pointerEventData)
     {
-        StartCoroutine(ieSmoothExit(easingTime));
+        StartCoroutine(ieSmoothExit(m_easingTime));
     }
 
     IEnumerator ieSmoothHover(float smoothTime)
@@ -42,7 +42,7 @@ public abstract class MenuButton : MonoBehaviour, IPointerClickHandler, IPointer
             elapsed += Time.deltaTime;
             t = elapsed / smoothTime;
             m_buttonText.fontSize = Mathf.Lerp(
-                m_startFontSize, m_startFontSize * (1 + hoverSizeIncreasePercentage * 0.01f), 1 - Mathf.Pow(1 - t, 4)
+                m_startFontSize, m_startFontSize * (1 + m_hoverSizeIncreasePercentage * 0.01f), 1 - Mathf.Pow(1 - t, 4)
             );
             yield return null;
         }
@@ -56,7 +56,7 @@ public abstract class MenuButton : MonoBehaviour, IPointerClickHandler, IPointer
             elapsed -= Time.deltaTime;
             t = elapsed / smoothTime;
             m_buttonText.fontSize = Mathf.Lerp(
-                m_startFontSize, m_startFontSize * (1 + hoverSizeIncreasePercentage * 0.01f), 1 - Mathf.Pow(1 - t, 4)
+                m_startFontSize, m_startFontSize * (1 + m_hoverSizeIncreasePercentage * 0.01f), 1 - Mathf.Pow(1 - t, 4)
             );
             yield return null;
         }
