@@ -14,10 +14,18 @@ public class PlayerMovement : MonoBehaviour
     public float Acceleration = 500f;
     public float BreakingForce = 300f;
     public float maxTurnAngle = 15f;
+    public float maxSpeed = 100f; // km/h
 
     private float currentAcceleration = 0f;
     private float currentBreakForce = 0f;
     private float currentTurnAngle = 0f;
+
+    private Rigidbody rb;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     private void FixedUpdate()
     {
@@ -25,8 +33,18 @@ public class PlayerMovement : MonoBehaviour
         float verticalInput = input.OnMove().y;
         float horizontalInput = input.OnMove().x;
 
-        // Acceleration
-        currentAcceleration = Acceleration * verticalInput;
+        // Convert velocity magnitude to km/h
+        float speed = rb.velocity.magnitude * 3.6f;
+
+        // Acceleration (only if under max speed OR braking/reversing)
+        if (speed < maxSpeed || verticalInput < 0f)
+        {
+            currentAcceleration = Acceleration * verticalInput;
+        }
+        else
+        {
+            currentAcceleration = 0f;
+        }
 
         // Braking
         if (input.OnHandBreak().ReadValue<float>() > 0.1f)
@@ -41,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
         {
             currentBreakForce = 0f;
         }
-        
+
         // Apply acceleration (currently front wheel drive)
         frontRight.motorTorque = currentAcceleration;
         frontLeft.motorTorque = currentAcceleration;
