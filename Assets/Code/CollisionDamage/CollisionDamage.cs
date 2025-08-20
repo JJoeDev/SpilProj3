@@ -33,21 +33,16 @@ public class CollisionDamage : MonoBehaviour
     void Awake()
     {
         playerMovement = GetComponentInParent<PlayerMovementTest>();  
-    }
-
-    
+    } 
     void OnCollisionEnter(Collision collision)
     {
         TryApplyDamage(collision.collider); 
     }
-
-    
     void OnTriggerEnter(Collider other)
     {
         if (damageOnTrigger)
             TryApplyDamage(other);
     }
-
     private void TryApplyDamage(Collider hitCollider)
     {
         
