@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
-public class GoToButton : MenuButton
+public class PlayButton : MenuButton
 {
-    [SerializeField] GameObject m_currentMenuObject; // The object to disable
-    [SerializeField] GameObject m_goToObject;        // The object to enable
-
     public override void OnPointerClick(PointerEventData pointerEventData)
     {
-        m_goToObject.SetActive(true);
-        m_currentMenuObject.SetActive(false);
+        // (!) Make sure this scene is the first in the build hierearchy -
+        // and that the next scene is our main scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
+
     public override void OnPointerEnter(PointerEventData pointerEventData)
     {
         base.OnPointerEnter(pointerEventData);

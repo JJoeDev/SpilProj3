@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class GoToButton : MenuButton
+public class QuitButton : MenuButton
 {
-    [SerializeField] GameObject m_currentMenuObject; // The object to disable
-    [SerializeField] GameObject m_goToObject;        // The object to enable
-
     public override void OnPointerClick(PointerEventData pointerEventData)
     {
-        m_goToObject.SetActive(true);
-        m_currentMenuObject.SetActive(false);
+        Application.Quit();
     }
     public override void OnPointerEnter(PointerEventData pointerEventData)
     {
