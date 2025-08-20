@@ -39,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
         // Acceleration (only if under max speed OR braking/reversing)
         if (speed < maxSpeed || input.x < 0f)
         {
-            m_currentAcceleration = Acceleration * input.x;
+            m_currentAcceleration = Acceleration * input.y;
         }
         else
         {
@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
         {
             m_currentBreakForce = BreakingForce; // full brake
         }
-        else if (Mathf.Approximately(input.x, 0f))
+        else if (Mathf.Approximately(input.y, 0f))
         {
             m_currentBreakForce = BreakingForce * 0.3f; // engine braking
         }
@@ -71,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
         m_backLeft.brakeTorque = m_currentBreakForce;
 
         // Steering
-        m_currentTurnAngle = -maxTurnAngle * input.y;
+        m_currentTurnAngle = -maxTurnAngle * input.x;
         m_frontLeft.steerAngle = m_currentTurnAngle;
         m_frontRight.steerAngle = m_currentTurnAngle;
     }
