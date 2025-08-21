@@ -263,10 +263,7 @@ GameObject:
   - component: {fileID: 1513058938}
   - component: {fileID: 1513058937}
   - component: {fileID: 1513058936}
-  - component: {fileID: 1513058935}
-  - component: {fileID: 1513058934}
   - component: {fileID: 1513058933}
-  - component: {fileID: 1513058932}
   - component: {fileID: 1513058940}
   m_Layer: 0
   m_Name: PlayerTest
@@ -275,26 +272,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1513058932
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1513058931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a27d822d0e9075b499bc166c4d314e8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  "vinkelT\xE6rskel": 120
-  "tidF\xF8rAutoFlip": 2
-  "l\xF8ftH\xF8jde": 1
-  efterFlipCooldown: 0.5
-  nulstilRigidbodyHastighed: 1
-  tilladManueltFlip: 1
-  manuelFlipKey: 114
-  logTilKonsol: 0
 --- !u!114 &1513058933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,76 +289,9 @@ MonoBehaviour:
   maxDamage: 0
   damageableLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 0
   perTargetCooldown: 0.25
   damageOnTrigger: 1
---- !u!114 &1513058934
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1513058931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb1617a91e196ec4b89146f6cab8d5bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skubLag:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  "ogs\xE5Triggers": 1
-  baseSkubAfstand: 0.5
-  skubAfstandPrFart: 0.08
-  minSkub: 0.2
-  maxSkub: 2.5
-  varighedLavFart: 0.12
-  "varighedH\xF8jFart": 0.22
-  ease:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  brugKollisionsNormal: 1
-  minHastighedForSkub: 0.1
-  cooldown: 0.25
-  "vinkelD\xE6mpning": 1
-  "l\xE5sBev\xE6gelseUnderSkub": 1
-  maxSpeedEfterKollision: 1
---- !u!114 &1513058935
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1513058931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 057e5400b5f65b04694a5a465e456d1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentSpeed: 0
-  minSpeed: 0
-  MaxSpeed: 0
 --- !u!65 &1513058936
 BoxCollider:
   m_ObjectHideFlags: 0
