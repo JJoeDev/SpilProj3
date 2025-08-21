@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Explodable
+public abstract class Explodable : MonoBehaviour
 {
     public virtual void Explode() 
     {

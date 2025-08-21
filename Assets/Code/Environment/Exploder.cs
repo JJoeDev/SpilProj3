@@ -22,9 +22,9 @@ public class Exploder : MonoBehaviour
         {
             if (collider == null || collider.gameObject == gameObject) continue;
 
-            if (collider.GetComponent<IExplodable>() != null)
+            if (collider.GetComponent<Explodable>() != null)
             {
-                collider.GetComponent<IExplodable>().Explode();
+                collider.GetComponent<Explodable>().Explode(transform.position);
 
                 Debug.Log(collider.name);
                 Debug.DrawLine(transform.position, collider.transform.position, Color.red, 5f);
