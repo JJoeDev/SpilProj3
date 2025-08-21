@@ -2,19 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Exploder : MonoBehaviour
+public class Exploder : Explodable
 {
     [SerializeField] float m_explodeRadius = 5;
-    [SerializeField] float m_explosionForce;
+    [SerializeField] float m_explosionForce = 15;
 
 
     Collider[] m_affectedObjects;
     int m_affectedObjectsCount = 20;
 
-    void Explode()
+    public override void Explode()
     {
-        Debug.Log("EXPLODING!");
-
         m_affectedObjects = new Collider[m_affectedObjectsCount];
         Physics.OverlapSphereNonAlloc(transform.position, m_explodeRadius, m_affectedObjects);
         
@@ -24,22 +22,9 @@ public class Exploder : MonoBehaviour
 
             if (collider.GetComponent<Explodable>() != null)
             {
-                collider.GetComponent<Explodable>().Explode(transform.position);
-
-                Debug.Log(collider.name);
-                Debug.DrawLine(transform.position, collider.transform.position, Color.red, 5f);
+                collider.GetComponent<Explodable>().Explode(transform.position, m_explosionForce);
+               // Debug.DrawLine(transform.position, collider.transform.position, Color.red, 5f);
             }
-
-        }
-
-        //Destroy(gameObject);
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Explode();
         }
     }
 }

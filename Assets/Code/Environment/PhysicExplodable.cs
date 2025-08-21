@@ -18,8 +18,8 @@ public class PhysicExplodable : Explodable
         }
     }
 
-    public override void Explode(Vector3 exploderPos)
+    public override void Explode(Vector3 exploderPos, float explosionforce)
     {
-        m_rigidBody.velocity = (transform.position - exploderPos).normalized * 15 + Vector3.up;
+        m_rigidBody.velocity = (transform.position - exploderPos).normalized * explosionforce + Vector3.up;
     }
 }
