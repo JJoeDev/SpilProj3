@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class CollisionDamage : MonoBehaviour
+/*public class CollisionDamage : MonoBehaviour
 {
     [Header("Skadesindstillinger")]
     [Tooltip("Skade pr. 1 enhed hastighed (enheder/sek).")]
@@ -74,3 +74,4 @@ public class CollisionDamage : MonoBehaviour
         targetRoot.SendMessageUpwards("TakeDamage", damage, SendMessageOptions.DontRequireReceiver);
     }
 }
+*/
