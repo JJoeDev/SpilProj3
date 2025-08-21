@@ -41,8 +41,8 @@ public class DamageCollision2 : MonoBehaviour
     {
         if (m_rb != null)
         {
-            m_lastVelocity = m_rb.velocity;           // vektor-retning + størrelse
-            m_lastSpeed = m_lastVelocity.magnitude;   // kun størrelsen (|v|)
+            m_lastVelocity = m_rb.velocity; // vektor-retning + størrelse
+            m_lastSpeed = m_lastVelocity.magnitude; // kun størrelsen (|v|)
         }
         else
         {

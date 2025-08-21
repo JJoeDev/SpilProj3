@@ -23,9 +23,6 @@ public class PlayerCrashDamage : MonoBehaviour
     [Tooltip("Spillerens Rigidbody. Findes automatisk hvis tom.")]
     [SerializeField] private Rigidbody m_rb;
 
-    [Header("Debug")]
-    [SerializeField] private bool m_log = false;
-
 
     private float m_lastPreSpeed = 0f;
     private float m_lastHitTime = -999f;
