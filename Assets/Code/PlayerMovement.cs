@@ -15,11 +15,12 @@ public class PlayerMovement : MonoBehaviour
     public float BreakingForce = 500f;
     public float maxTurnAngle = 20f;
     public float maxSpeed = 100f; // km/h
-    public float jumpForce = 5000f; 
+    public float jumpForce = 5000f;
 
     private float m_currentAcceleration = 0f;
     private float m_currentBreakForce = 0f;
     private float m_currentTurnAngle = 0f;
+    private Quaternion m_jumpRotation;
 
     private Rigidbody m_rb;
 
@@ -81,17 +82,44 @@ public class PlayerMovement : MonoBehaviour
         // Jump
         if (m_iManager.OnJump().WasPressedThisFrame() && IsGrounded())
         {
+            // Reset vertical velocity so every jump starts clean
+            Vector3 vel = m_rb.velocity;
+            vel.y = 0f;
+            m_rb.velocity = vel;
+
+            // Store rotation at jump start
+            m_jumpRotation = transform.rotation;
+
+            // Apply jump force
             m_rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+
+        // Mid-air rotation handling
+        if (!IsGrounded())
+        {
+            // Lock roll (X) and pitch (Z) to jump rotation, keep current yaw
+            Vector3 euler = transform.eulerAngles;
+            Vector3 lockedEuler = m_jumpRotation.eulerAngles;
+
+            transform.rotation = Quaternion.Euler(
+                lockedEuler.x,  // keep original tilt (X)
+                euler.y,        // allow yaw/turning
+                lockedEuler.z   // keep original tilt (Z)
+            );
+
+            // Apply controlled turning mid-air
+            float airTurnStrength = 0.5f; // tweak this
+            m_rb.AddTorque(Vector3.up * input.x * airTurnStrength, ForceMode.Acceleration);
+        }
+
+
+
     }
 
+    // Better ground check: simple raycast from car body
     private bool IsGrounded()
     {
-        float wheelRayLength = 0.2f; // slightly longer than suspension
-        return Physics.Raycast(m_frontLeft.transform.position, -transform.up, wheelRayLength) ||
-               Physics.Raycast(m_frontRight.transform.position, -transform.up, wheelRayLength) ||
-               Physics.Raycast(m_backLeft.transform.position, -transform.up, wheelRayLength) ||
-               Physics.Raycast(m_backRight.transform.position, -transform.up, wheelRayLength);
+        float rayLength = 0.5f; // adjust depending on car size
+        return Physics.Raycast(transform.position, Vector3.down, rayLength);
     }
-
 }
