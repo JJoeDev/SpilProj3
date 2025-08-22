@@ -12,13 +12,15 @@ public class PlayerMovement : MonoBehaviour
     InputManager m_iManager;
 
     public float Acceleration = 500f;
-    public float BreakingForce = 300f;
-    public float maxTurnAngle = 15f;
+    public float BreakingForce = 500f;
+    public float maxTurnAngle = 20f;
     public float maxSpeed = 100f; // km/h
+    public float jumpForce = 5000f;
 
     private float m_currentAcceleration = 0f;
     private float m_currentBreakForce = 0f;
     private float m_currentTurnAngle = 0f;
+    private Quaternion m_jumpRotation;
 
     private Rigidbody m_rb;
 
@@ -26,6 +28,8 @@ public class PlayerMovement : MonoBehaviour
     {
         m_iManager = InputManager.Instance;
         m_rb = GetComponent<Rigidbody>();
+
+        m_rb.centerOfMass = new Vector3(0, -0.1f, 0);
     }
 
     private void FixedUpdate()
@@ -37,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
         float speed = m_rb.velocity.magnitude * 3.6f;
 
         // Acceleration (only if under max speed OR braking/reversing)
-        if (speed < maxSpeed || input.x < 0f)
+        if (speed < maxSpeed || input.y < 0f)
         {
             m_currentAcceleration = Acceleration * input.y;
         }
@@ -74,5 +78,48 @@ public class PlayerMovement : MonoBehaviour
         m_currentTurnAngle = -maxTurnAngle * input.x;
         m_frontLeft.steerAngle = m_currentTurnAngle;
         m_frontRight.steerAngle = m_currentTurnAngle;
+
+        // Jump
+        if (m_iManager.OnJump().WasPressedThisFrame() && IsGrounded())
+        {
+            // Reset vertical velocity so every jump starts clean
+            Vector3 vel = m_rb.velocity;
+            vel.y = 0f;
+            m_rb.velocity = vel;
+
+            // Store rotation at jump start
+            m_jumpRotation = transform.rotation;
+
+            // Apply jump force
+            m_rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+
+        // Mid-air rotation handling
+        if (!IsGrounded())
+        {
+            // Lock roll (X) and pitch (Z) to jump rotation, keep current yaw
+            Vector3 euler = transform.eulerAngles;
+            Vector3 lockedEuler = m_jumpRotation.eulerAngles;
+
+            transform.rotation = Quaternion.Euler(
+                lockedEuler.x,  // keep original tilt (X)
+                euler.y,        // allow yaw/turning
+                lockedEuler.z   // keep original tilt (Z)
+            );
+
+            // Apply controlled turning mid-air
+            float airTurnStrength = 0.5f; // tweak this
+            m_rb.AddTorque(Vector3.up * input.x * airTurnStrength, ForceMode.Acceleration);
+        }
+
+
+
+    }
+
+    // Better ground check: simple raycast from car body
+    private bool IsGrounded()
+    {
+        float rayLength = 0.5f; // adjust depending on car size
+        return Physics.Raycast(transform.position, Vector3.down, rayLength);
     }
 }
