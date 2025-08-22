@@ -1,0 +1,43 @@
+
+
+
+
+void OnCollisionEnter(Collision collision)
+{
+    if (collision == null || m_rb == null) return;
+
+    GameObject hitGO = collision.collider ? collision.collider.gameObject : collision.gameObject;
+    GameObject target = ResolveTarget(hitGO);
+    if (target == null) return;
+
+    // Layer-filter (hardcoded) - ændr "Enemies","Destructible" efter behov
+    int allowedMask = LayerMask.GetMask("Enemies", "Destructible");
+    if ((allowedMask & (1 << target.layer)) == 0)
+    {
+        Debug.Log($"{name}: target '{target.name}' ligger på lag '{LayerMask.LayerToName(target.layer)}' — ignores.");
+        return;
+    }
+
+    float speedKmh = m_rb.velocity.magnitude * 3.6f;
+    float thresholdKmh = Mathf.Max(8f, maxSpeed * 0.15f);
+    float over = speedKmh - thresholdKmh;
+    if (over <= 0f) { Debug.Log($"{name}: speed {speedKmh:F1} km/h under threshold {thresholdKmh:F1} → ingen skade."); return; }
+
+    float damagePerKmh = 0.5f;
+    float dmg = Mathf.Round(over * damagePerKmh);
+
+    Debug.Log($"{name}: kollideret med {target.name}. speed={speedKmh:F1} km/h, over={over:F1} → damage={dmg}");
+
+    target.SendMessage("TakeDamage", dmg, SendMessageOptions.DontRequireReceiver);
+    target.SendMessage("ApplyDamage", dmg, SendMessageOptions.DontRequireReceiver);
+}
+
+// Søg efter IDamageable op i hierarkiet ellers return root (kompatibelt fallback)
+GameObject ResolveTarget(GameObject hit)
+{
+    var parents = hit.GetComponentsInParent<MonoBehaviour>(true);
+    foreach (var mb in parents)
+        if (mb is IDamageable) return mb.gameObject;
+
+    return hit.transform.root != null ? hit.transform.root.gameObject : hit;
+}
