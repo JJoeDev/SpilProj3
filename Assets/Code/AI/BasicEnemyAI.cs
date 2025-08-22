@@ -3,6 +3,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
+using Random = UnityEngine.Random;
+
 public class BasicEnemyAI : MonoBehaviour
 {
     [Header("Enemy vision")]
@@ -25,6 +27,10 @@ public class BasicEnemyAI : MonoBehaviour
     private bool m_playerVisible;
     private bool m_playerPathUpdating;
 
+    [Header("Roaming area")]
+    [SerializeField] private Vector3 m_roamAreaCenter = Vector3.zero;
+    [SerializeField] private Vector2 m_roamAreaSize = Vector2.one;
+
     // Nav mesh related variables
     private NavMeshPath m_path;
 
@@ -36,7 +42,7 @@ public class BasicEnemyAI : MonoBehaviour
     {
         m_path = new NavMeshPath();
 
-        NavMesh.CalculatePath(transform.position, m_playerTransform.position, NavMesh.AllAreas, m_path);
+        GetRandomWorldPath();
     }
 
     private void FixedUpdate()
@@ -54,15 +60,17 @@ public class BasicEnemyAI : MonoBehaviour
         if(m_playerVisible && !m_playerPathUpdating) StartCoroutine(ieUpdatePlayerPath());
         else if(!m_playerVisible)
         {
+            if (m_currentCorner == m_path.corners.Length) GetRandomWorldPath();
+
             m_targetDir = m_path.corners[m_currentCorner] - transform.position;
 
             if(m_targetDir.magnitude <= m_distanceToNewCorner) m_currentCorner++;
 
-            if(m_currentCorner != m_path.corners.Length - 1)
+            if(m_currentCorner != m_path.corners.Length)
             {
                 Vector3 cornerDir = m_path.corners[m_currentCorner] - transform.position;
                 cornerDir.y = 0;
-                float angleToCorner = Vector3.SignedAngle(transform.forward, cornerDir, Vector3.up);
+                float angleToCorner = Vector3.SignedAngle(transform.forward, m_targetDir, Vector3.up);
 
                 float steer = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
 
@@ -75,6 +83,22 @@ public class BasicEnemyAI : MonoBehaviour
         }
     }
 
+    Vector3 GetRandomWorldPosition()
+    {
+        Vector3 randomPos;
+        randomPos.x = Random.Range(m_roamAreaCenter.x - m_roamAreaSize.x * 0.5f, m_roamAreaCenter.x + m_roamAreaSize.x * 0.5f);
+        randomPos.z = Random.Range(m_roamAreaCenter.z - m_roamAreaSize.y * 0.5f, m_roamAreaCenter.z + m_roamAreaSize.y * 0.5f);
+        randomPos.y = 0;
+
+        return randomPos;
+    }
+
+    void GetRandomWorldPath()
+    {
+        NavMesh.CalculatePath(transform.position, GetRandomWorldPosition(), NavMesh.AllAreas, m_path);
+        m_currentCorner = 0;
+    }
+
     IEnumerator ieUpdatePlayerPath()
     {
         m_playerPathUpdating = true;
@@ -83,9 +107,11 @@ public class BasicEnemyAI : MonoBehaviour
 
         while(m_playerVisible)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
             NavMesh.CalculatePath(transform.position, m_playerTransform.position, NavMesh.AllAreas, m_path);
         }
+
+        GetRandomWorldPath();
 
         Debug.Log("PLAYER NOT VISIBLE");
 
@@ -94,14 +120,16 @@ public class BasicEnemyAI : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        // Visualize sight radius
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, m_sightRadius);
 
+        // Visualize radius for detecting corners on NavMesh
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, m_distanceToNewCorner);
 
+        // Visualize the sight angle
         Gizmos.color = Color.yellow;
-
         float minAngle = -m_sightAngle / 2;
         Vector3 leftAngle = Quaternion.Euler(0.0f, minAngle, 0.0f) * transform.forward;
         Vector3 rightAngle = Quaternion.Euler(0.0f, -minAngle, 0.0f) * transform.forward;
@@ -110,9 +138,11 @@ public class BasicEnemyAI : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + rightAngle * m_sightRadius);
         Gizmos.DrawLine(transform.position, transform.position + leftAngle * m_sightRadius);
 
+        // Visualize the target move direction
         Gizmos.color = Color.green;
         Gizmos.DrawLine(transform.position, transform.position + m_targetDir.normalized * 5);
 
+        // Visualize the complete NavMesh path to desiret position
         if(EditorApplication.isPlaying)
         {
             Gizmos.color = Color.blue;
@@ -134,5 +164,12 @@ public class BasicEnemyAI : MonoBehaviour
             if (m_currentCorner > m_path.corners.Length - 1) return;
             Gizmos.DrawSphere(m_path.corners[m_currentCorner], 0.3f);
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // Visualize enemy roam area
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireCube(m_roamAreaCenter, new Vector3(m_roamAreaSize.x, 2.0f, m_roamAreaSize.y));
     }
 }
