@@ -16,10 +16,12 @@ public class BasicEnemyAI : MonoBehaviour
     [SerializeField] WheelCollider m_backRight;
     [SerializeField] WheelCollider m_backLeft;
 
+    [SerializeField] private float m_acceleration;
+    [SerializeField] private float m_breakForce;
     [SerializeField] private float m_speed;
     [SerializeField] private float m_turnRadius;
     [Tooltip("The distance the center of the enemy needs to be to the NavMesh corner before it moves to a new corner")]
-    [SerializeField] private float m_distanceTillNewCorner = 1.0f;
+    [SerializeField] private float m_distanceToNewCorner = 1.0f;
     private bool m_playerVisible;
     private bool m_playerPathUpdating;
 
@@ -37,7 +39,7 @@ public class BasicEnemyAI : MonoBehaviour
         NavMesh.CalculatePath(transform.position, m_playerTransform.position, NavMesh.AllAreas, m_path);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Vector3 playerDir = m_playerTransform.position - transform.position;
 
@@ -54,15 +56,21 @@ public class BasicEnemyAI : MonoBehaviour
         {
             m_targetDir = m_path.corners[m_currentCorner] - transform.position;
 
-            if(m_targetDir.magnitude <= m_distanceTillNewCorner)
-            {
-                m_currentCorner++;
-                Debug.Log($"NEW CORNER: {m_path.corners[m_currentCorner]}");
-            }
+            if(m_targetDir.magnitude <= m_distanceToNewCorner) m_currentCorner++;
 
             if(m_currentCorner != m_path.corners.Length - 1)
             {
-                float angleToCorner = Vector3.Angle(transform.forward, m_path.corners[m_currentCorner]);
+                Vector3 cornerDir = m_path.corners[m_currentCorner] - transform.position;
+                cornerDir.y = 0;
+                float angleToCorner = Vector3.SignedAngle(transform.forward, cornerDir, Vector3.up);
+
+                float steer = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
+
+                m_frontRight.steerAngle = steer;
+                m_frontLeft.steerAngle = steer;
+
+                m_frontRight.motorTorque = m_acceleration;
+                m_frontLeft.motorTorque = m_acceleration;
             }
         }
     }
@@ -71,11 +79,15 @@ public class BasicEnemyAI : MonoBehaviour
     {
         m_playerPathUpdating = true;
 
+        Debug.Log("PLAYER VISIBLE");
+
         while(m_playerVisible)
         {
             yield return new WaitForSeconds(1);
             NavMesh.CalculatePath(transform.position, m_playerTransform.position, NavMesh.AllAreas, m_path);
         }
+
+        Debug.Log("PLAYER NOT VISIBLE");
 
         m_playerPathUpdating = false;
     }
@@ -86,7 +98,7 @@ public class BasicEnemyAI : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, m_sightRadius);
 
         Gizmos.color = Color.magenta;
-        Gizmos.DrawWireSphere(transform.position, m_distanceTillNewCorner);
+        Gizmos.DrawWireSphere(transform.position, m_distanceToNewCorner);
 
         Gizmos.color = Color.yellow;
 
