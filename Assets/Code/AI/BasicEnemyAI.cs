@@ -120,6 +120,11 @@ public class BasicEnemyAI : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+
+    }
+
+    private void OnDrawGizmosSelected()
+    {
         // Visualize sight radius
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, m_sightRadius);
@@ -143,7 +148,7 @@ public class BasicEnemyAI : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + m_targetDir.normalized * 5);
 
         // Visualize the complete NavMesh path to desiret position
-        if(EditorApplication.isPlaying)
+        if (EditorApplication.isPlaying)
         {
             Gizmos.color = Color.blue;
             Vector3 prev = Vector3.zero;
@@ -164,10 +169,7 @@ public class BasicEnemyAI : MonoBehaviour
             if (m_currentCorner > m_path.corners.Length - 1) return;
             Gizmos.DrawSphere(m_path.corners[m_currentCorner], 0.3f);
         }
-    }
 
-    private void OnDrawGizmosSelected()
-    {
         // Visualize enemy roam area
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireCube(m_roamAreaCenter, new Vector3(m_roamAreaSize.x, 2.0f, m_roamAreaSize.y));
