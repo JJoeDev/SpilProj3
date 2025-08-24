@@ -1,77 +1,137 @@
-using UnityEngine;
-using System.Collections.Generic;
+Ôªøusing UnityEngine;
 
-/*public class CollisionDamage : MonoBehaviour
+// Denne komponent sidder p√• et objekts hierarki (fx Spiller eller Fjende) :) 
+// og beregner skade ved en fysisk kollision. Kun den part, der er hurtigst
+// (ud over en "buffer"), giver skade til modparten.
+public class DamageCollision2 : MonoBehaviour
 {
-    [Header("Skadesindstillinger")]
-    [Tooltip("Skade pr. 1 enhed hastighed (enheder/sek).")]
-    [SerializeField] private float damagePerSpeed = 2f; // eksemepl ( 2 * bilenshastighed = x skade ) 
+    [Header("Lag & Filter")]
+    [SerializeField] private LayerMask m_damageableLayers = ~0;
 
-    [Tooltip("Mindste hastighed der krÊves for at give skade.")]
-    [SerializeField] private float minSpeedToDealDamage = 1f; // bestemer hvor hurtigt bilen skal k¯re for at kunne skade.... 
+    [Header("Skadeberegning")]
+    // En t√¶rskel/buffer som skal overvindes f√∏r der gives skade.
+    // Formlen er: (min_fart - din_fart - buffer). Hvis resultat <= 0 ‚Üí ingen skade.
+    [SerializeField] private float m_buffer = 2f;
+    
+    [SerializeField] private float m_damageMultiplier = 1f;
 
-    [Tooltip("Valgfrit loft for skaden. SÊt <= 0 for at deaktivere.")]
-    [SerializeField] private float maxDamage = 0f; // kun vigtigt hvis i ¯nsker en max skade.... 
+   
+    [SerializeField] private bool m_roundDamageToInt = true;
 
-    [Header("Kollisionsfiltrering")]
-    [Tooltip("Kun objekter pÂ disse lag modtager skade.")]
-    [SerializeField] private LayerMask damageableLayers = ~0; // bestemer hvilken layer der kan tags skade... 
+    [Header("Afh√¶ngigheder")]
+    [SerializeField] private Rigidbody m_rb;
 
-    [Header("TrÊf-kontrol")]
-    [Tooltip("Sekunder der skal gÂ, f¯r samme mÂl kan tage skade igen.")]
-    [SerializeField] private float perTargetCooldown = 0.25f;
-
-    [Tooltip("Hvis sand, giv ogsÂ skade ved trigger-ber¯ringer (for trigger-colliders).")]
-    [SerializeField] private bool damageOnTrigger = true;
-
-    // Reference til din bevÊgelsesscript (skal have public float speed)
-    private PlayerMovementTest playerMovement;
-
-    // Holder styr pÂ sidste tidspunkt et mÂl fik skade (via instanceID) for at undgÂ spam
-    private readonly Dictionary<int, float> lastHitTime = new Dictionary<int, float>();
+    [Header("Debug")]
+    // Sl√• log p√•/af. N√•r den er true, skriver vi tal i Console ved kollision.
+    [SerializeField] private bool m_log = false;
+    private Vector3 m_lastVelocity; // egen pre-collision velocity
+    private float m_lastSpeed; // egen pre-collision speed (|v|)
+    public float PreSpeed => m_lastSpeed;
 
     void Awake()
     {
-        playerMovement = GetComponentInParent<PlayerMovementTest>();  
-    } 
+        if (m_rb == null)
+        {
+            m_rb = GetComponent<Rigidbody>();
+            if (m_rb == null) m_rb = GetComponentInParent<Rigidbody>();
+            if (m_rb == null) m_rb = GetComponentInChildren<Rigidbody>();
+        }
+    }
+    void FixedUpdate()
+    {
+        if (m_rb != null)
+        {
+            m_lastVelocity = m_rb.velocity; // vektor-retning + st√∏rrelse
+            m_lastSpeed = m_lastVelocity.magnitude; // kun st√∏rrelsen (|v|)
+        }
+        else
+        {
+            m_lastVelocity = Vector3.zero;
+            m_lastSpeed = 0f;
+        }
+    }
+
     void OnCollisionEnter(Collision collision)
     {
-        TryApplyDamage(collision.collider); 
-    }
-    void OnTriggerEnter(Collider other)
-    {
-        if (damageOnTrigger)
-            TryApplyDamage(other);
-    }
-    private void TryApplyDamage(Collider hitCollider)
-    {
-        
-        if (((1 << hitCollider.gameObject.layer) & damageableLayers) == 0)
-            return;
-        
-        // Afg¯r aktuel hastighed udelukkende fra PlayerMovement
-        float currentSpeed = (playerMovement != null) ? playerMovement.speed : 0f;
-        if (currentSpeed < minSpeedToDealDamage)
-            return;
-        
-        // Beregn skade ud fra hastighed
-        float damage = currentSpeed * damagePerSpeed;
-        if (maxDamage > 0f) damage = Mathf.Min(damage, maxDamage);
-        
-        
-        GameObject targetRoot = hitCollider.attachedRigidbody
-            ? hitCollider.attachedRigidbody.gameObject
-            : hitCollider.gameObject;
+        // Sikkerhed: hvis Unity af en eller anden grund sender en null, g√∏r ingenting.
+        if (collision == null) return;
 
-        int id = targetRoot.GetInstanceID();
-        float now = Time.time;
-        if (lastHitTime.TryGetValue(id, out float lastTime))
+        GameObject hitGO = collision.collider != null ? collision.collider.gameObject : collision.gameObject;
+        GameObject target = ResolveDamageTarget(hitGO);
+        if (target == null) return; // Intet at skade
+
+        if (((1 << target.layer) & m_damageableLayers) == 0) // M√• vi skade target? Ja hvis target.layer er inkluderet i m_damageableLayers; ellers nej.
         {
-            if (now - lastTime < perTargetCooldown) return;
+            if (m_log) Debug.Log($"[{name}] Skip: target layer '{LayerMask.LayerToName(target.layer)}' ikke i maske."); 
+            return;
         }
-        lastHitTime[id] = now;
+
+        // Hent begge parters pre-hastighed:
+        // selfPreSpeed kommer fra vores egen cache (sat i FixedUpdate).
+        float selfPreSpeed = m_lastSpeed;
+
+        // otherPreSpeed: vi pr√∏ver f√∏rst at finde modpartens DamageCollision2,
+        // s√• vi kan l√¶se dens PreSpeed direkte (det er den bedste kilde).
+        float otherPreSpeed;
+        DamageCollision2 otherDC = hitGO.GetComponentInParent<DamageCollision2>();
+        if (otherDC != null)
+        {
+            otherPreSpeed = otherDC.PreSpeed;
+        }
+        else if (collision.rigidbody != null)
+        {
+            otherPreSpeed = collision.rigidbody.velocity.magnitude;
+        }
+        else
+        {
+            // Hvis der slet ingen RB er, antager vi 0.
+            otherPreSpeed = 0f;
+        }
+    
+        // Kun hvis r√•Skade > 0 giver vi skade (dvs. vi var reelt hurtigere).
+        float raw = (selfPreSpeed - otherPreSpeed) - m_buffer;
+
         
-        targetRoot.SendMessageUpwards("TakeDamage", damage, SendMessageOptions.DontRequireReceiver);
+        if (m_log) // fjen denne linje eller set m_log = false. f√•r at ung√• denne debug. 
+        {
+            string tName = target != null ? target.name : "null";
+            string tLayer = target != null ? LayerMask.LayerToName(target.layer) : "?"; // du kan fjernde dette vis du √∏nsker det. er kun til debugs.
+            Debug.Log($"[{name}] selfPre={selfPreSpeed:F2}, otherPre={otherPreSpeed:F2}, buffer={m_buffer:F2}, raw={raw:F2} ‚Üí target={tName}({tLayer})");
+        }
+        if (raw <= 0f) return;   
+
+        float dmg = raw * m_damageMultiplier;
+        if (m_roundDamageToInt) dmg = Mathf.Round(dmg);
+
+        ApplyDamage(target, dmg);
+    }
+    GameObject ResolveDamageTarget(GameObject hit)
+    {
+        // Find IDamageable opad i hierarkiet
+        var parents = hit.GetComponentsInParent<MonoBehaviour>(true);
+        foreach (var mb in parents)
+            if (mb is IDamageable) return mb.gameObject;
+
+        // Fallback: brug root (typisk hvor health sidder)
+        return hit.transform.root != null ? hit.transform.root.gameObject : hit;
+    }
+    void ApplyDamage(GameObject target, float amount)
+    {
+        if (target == null || amount <= 0f) return;
+
+        // Interface (foretrukket og mest robuste l√∏sning)
+        foreach (var mb in target.GetComponentsInParent<MonoBehaviour>(true))
+        {
+            if (mb is IDamageable idmg)
+            {
+                // Kalder jeres egen health-implementations TakeDamage(amount, source)
+                idmg.TakeDamage(amount, gameObject);
+                return;
+            }
+        }
+
+        // Fjern denne linje, hvis I ikke vil have mere konsol-output.
+        target.SendMessage("TakeDamage", amount, SendMessageOptions.DontRequireReceiver);
+        target.SendMessage("ApplyDamage", amount, SendMessageOptions.DontRequireReceiver);
     }
 }
-*/
