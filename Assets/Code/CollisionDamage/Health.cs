@@ -10,7 +10,7 @@ public class Health : MonoBehaviour, IDamageable
     [SerializeField]private float _currentHealth = 0; 
     [SerializeField]private float _maxHealth = 100;
 
-    VehicleExplosion vehicleExplosion;
+    [SerializeField] VehicleExplosion vehicleExplosion;
     public void Awake()
     {
         GetComponent<VehicleExplosion>();
