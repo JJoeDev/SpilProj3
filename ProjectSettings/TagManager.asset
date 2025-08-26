@@ -9,8 +9,8 @@ TagManager:
   - TransparentFX
   - Ignore Raycast
   - Enemy
-  - Player
   - Water
+  - UI
   - UI
   - Player
   - Wall
@@ -36,8 +36,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Wheels
   m_SortingLayers:
   - name: Default
     uniqueID: 0
