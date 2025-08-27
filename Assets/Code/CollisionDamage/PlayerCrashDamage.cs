@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 
 [DisallowMultipleComponent]
 public class PlayerCrashDamage : MonoBehaviour
@@ -97,3 +97,4 @@ public class PlayerCrashDamage : MonoBehaviour
         if (m_cooldownSeconds < 0f) m_cooldownSeconds = 0f;
     }
 }
+*/

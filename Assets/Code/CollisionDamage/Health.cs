@@ -19,12 +19,6 @@ public class Health : MonoBehaviour
     public FloatEvent onHealthRatio; // current/max (0..1)
     public UnityEvent onDied;
 
-    [Tooltip("If true the GameObject will be destroyed after destroyDelay seconds when it dies.")]
-    public bool destroyOnDeath = true;
-
-    [Tooltip("Seconds to wait before destroying the GameObject after death.")]
-    public float destroyDelay = 10f;
-
     // --- World-healthbar / visual feedback (optional) ---
     [Header("World Healthbar (OnGUI)")]
     [Tooltip("Max distance player->this for healthbar to be allowed to show.")]
@@ -40,7 +34,6 @@ public class Health : MonoBehaviour
     [Tooltip("If true: only show this bar when this instance was recently attacked and is within the global top-N recent list.")]
     public bool onlyShowIfLastAttacked = true;
 
-    // NY: toggle pr instance: skal denne instans bruge den indbyggede world/OnGUI healthbar?
     [Tooltip("If false: this instance will NOT draw the built-in world OnGUI health bar.")]
     public bool enableWorldHealthBar = true;
 
@@ -57,7 +50,6 @@ public class Health : MonoBehaviour
     private class RecentEntry { public Health h; public float time; }
     private static readonly List<RecentEntry> s_recentAttacks = new List<RecentEntry>();
     private static int s_globalMaxVisibleBars = 3;
-    private bool m_destroyScheduled = false;
 
     // cache
     private Camera m_mainCam;
@@ -117,7 +109,7 @@ public class Health : MonoBehaviour
         m_cachedHitFlashYield = new WaitForSeconds(hitFlashDuration);
 
         // NOTE: heavy GetComponentsInChildren(...) calls removed from Awake.
-        // Instead we use EnsureCachedChildren() lazily when we actually need child arrays (e.g. on death/ScheduleDestroy).
+        // Instead we use EnsureCachedChildren() lazily when we actually need child arrays (e.g. on death).
     }
 
     void OnValidate()
@@ -126,7 +118,6 @@ public class Health : MonoBehaviour
         if (m_currentHealth < 0f) m_currentHealth = -1f;
         m_currentHealth = Mathf.Clamp(m_currentHealth, -1f, Mathf.Max(1f, maxHealth));
         maxVisibleBars = Mathf.Max(1, maxVisibleBars);
-        destroyDelay = Mathf.Max(0f, destroyDelay);
 
         // Keep cached WaitForSeconds in sync in editor (if you change hitFlashDuration)
         m_cachedHitFlashYield = new WaitForSeconds(hitFlashDuration);
@@ -200,17 +191,14 @@ public class Health : MonoBehaviour
                     if (col != null) col.enabled = false;
             }
 
-            // schedule destruction after delay if requested (default 10s)
-            if (destroyOnDeath && !m_destroyScheduled)
-            {
-                StartCoroutine(ScheduleDestroy());
-            }
+            // destruction/hide-on-death removed — object stays in scene.
         }
     }
 
     public void Heal(float amount)
     {
         if (amount <= 0f || IsDead)
+            
             return;
 
         m_currentHealth = Mathf.Min(maxHealth, m_currentHealth + amount);
@@ -229,9 +217,6 @@ public class Health : MonoBehaviour
 
         var rb = GetComponent<Rigidbody>();
         if (rb) rb.isKinematic = false;
-
-        // allow re-scheduling destruction in future if needed
-        m_destroyScheduled = false;
     }
 
     public void MarkAsAttackedExternally()
@@ -263,94 +248,6 @@ public class Health : MonoBehaviour
             yield return m_cachedHitFlashYield;
         }
         m_isFlashing = false;
-    }
-
-    // coroutine that hides visual/audio parts immediately and destroys after delay
-    private IEnumerator ScheduleDestroy()
-    {
-        m_destroyScheduled = true;
-
-        // Ensure we have cached children before use
-        EnsureCachedChildren();
-
-        // 1) Hide visual components immediately (keep GameObject active so coroutine continues)
-        if (m_cachedRenderers != null)
-        {
-            foreach (var r in m_cachedRenderers)
-                if (r != null) r.enabled = false;
-        }
-        else
-        {
-            var renderers = GetComponentsInChildren<Renderer>(true);
-            foreach (var r in renderers) if (r != null) r.enabled = false;
-        }
-
-        if (m_cachedCanvases != null)
-        {
-            foreach (var c in m_cachedCanvases)
-                if (c != null) c.enabled = false;
-        }
-        else
-        {
-            var canvases = GetComponentsInChildren<Canvas>(true);
-            foreach (var c in canvases) if (c != null) c.enabled = false;
-        }
-
-        if (m_cachedParticleSystems != null)
-        {
-            foreach (var ps in m_cachedParticleSystems)
-            {
-                if (ps != null)
-                {
-                    ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-                    ps.Clear(true);
-                }
-            }
-        }
-        else
-        {
-            var particleSystems = GetComponentsInChildren<ParticleSystem>(true);
-            foreach (var ps in particleSystems)
-            {
-                if (ps != null)
-                {
-                    ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-                    ps.Clear(true);
-                }
-            }
-        }
-
-        if (m_cachedAudioSources != null)
-        {
-            foreach (var a in m_cachedAudioSources)
-                if (a != null) a.Stop();
-        }
-        else
-        {
-            var audioSources = GetComponentsInChildren<AudioSource>(true);
-            foreach (var a in audioSources) if (a != null) a.Stop();
-        }
-
-        // Ensure colliders remain disabled (defensive)
-        if (m_cachedColliders != null)
-        {
-            foreach (var col in m_cachedColliders)
-                if (col != null) col.enabled = false;
-        }
-        else
-        {
-            var colliders = GetComponentsInChildren<Collider>(true);
-            foreach (var col in colliders) if (col != null) col.enabled = false;
-        }
-
-        // 2) Wait for the requested delay
-        if (destroyDelay > 0f)
-            yield return new WaitForSeconds(destroyDelay);
-        else
-            yield return null; // at least one frame
-
-        // 3) Destroy the GameObject
-        Destroy(gameObject);
     }
 
     // Add or update this Health in the global recent list, then prune/trim
