@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "01818f37-7df8-422a-8840-63e9e91721cd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -147,11 +156,22 @@
                 {
                     "name": "",
                     "id": "b7107edf-78c4-4060-b005-cc2aa1b7fd01",
-                    "path": "<Keyboard>/space",
+                    "path": "<Keyboard>/leftCtrl",
                     "interactions": "Hold",
                     "processors": "",
                     "groups": "",
                     "action": "HandBreak",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5e9ea74e-c3c7-4bad-a26c-3826f7139a20",
+                    "path": "<Keyboard>/space",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

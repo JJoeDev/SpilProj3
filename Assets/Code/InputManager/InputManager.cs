@@ -28,4 +28,5 @@ public class InputManager : MonoBehaviour
     public Vector2 OnMove() => pInput.Player.Move.ReadValue<Vector2>().normalized;
     public Vector2 OnLook() => pInput.Player.Look.ReadValue<Vector2>();
     public InputAction OnHandBreak() => pInput.Player.HandBreak;
+    public InputAction OnJump() => pInput.Player.Jump;
 }
