@@ -79,7 +79,7 @@ public class Health : MonoBehaviour
  
     private WaitForSeconds m_cachedHitFlashYield;
 
-    [SerializeField] private ExplosionScript _vehicleExplosion;
+    [SerializeField] private ExplosionScript m_vehicleExplosion;
 
 
     void Awake()
@@ -110,15 +110,15 @@ public class Health : MonoBehaviour
 
         m_cachedHitFlashYield = new WaitForSeconds(hitFlashDuration);
 
-        if (_vehicleExplosion == null)
+        if (m_vehicleExplosion == null)
         {
-            _vehicleExplosion = GetComponent<ExplosionScript>()
+            m_vehicleExplosion = GetComponent<ExplosionScript>()
                                 ?? GetComponentInParent<ExplosionScript>()
                                 ?? GetComponentInChildren<ExplosionScript>();
         }
 
         // --- fallback: find nærmeste ExplosionScript i scenen (hvis ingen fundet endnu) ---
-        if (_vehicleExplosion == null)
+        if (m_vehicleExplosion == null)
         {
             var all = FindObjectsOfType<ExplosionScript>();
             if (all != null && all.Length > 0)
@@ -134,7 +134,7 @@ public class Health : MonoBehaviour
                         best = ex;
                     }
                 }
-                _vehicleExplosion = best;
+                m_vehicleExplosion = best;
             }
         }
 
@@ -185,7 +185,7 @@ public class Health : MonoBehaviour
             onDied?.Invoke();
 
             // Kald explosion på death (sikker null-check)
-            _vehicleExplosion?.Explode();
+            m_vehicleExplosion?.Explode();
 
             var specific = GetComponent("PrometeoCarController") as Behaviour;
             if (specific != null) specific.enabled = false;
