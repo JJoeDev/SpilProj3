@@ -46,26 +46,25 @@ public class Health : MonoBehaviour
     [Tooltip("Requested max simultaneous bars for this instance. Global cap will be the maximum requested by awakened Healths (default 3).")]
     public int maxVisibleBars = 3;
 
-    // --- Internal / static for 'recent attacked' logic ---
     private class RecentEntry { public Health h; public float time; }
     private static readonly List<RecentEntry> s_recentAttacks = new List<RecentEntry>();
     private static int s_globalMaxVisibleBars = 3;
 
-    // cache
+
     private Camera m_mainCam;
     private Transform m_playerTransform;
     private Color m_originalRendererColor = Color.white;
     private bool m_isFlashing = false;
 
-    // per-instance last hit time
+
     private float m_lastHitTime = -999f;
 
-    // Exposed state
+    
     public bool IsDead { get; private set; }
     public float Current => m_currentHealth;
     public float Max => maxHealth;
 
-    // Cached component arrays (lazy)
+    
     private Renderer[] m_cachedRenderers;
     private Canvas[] m_cachedCanvases;
     private ParticleSystem[] m_cachedParticleSystems;
@@ -73,11 +72,13 @@ public class Health : MonoBehaviour
     private Collider[] m_cachedColliders;
     private bool m_cachedChildrenCollected = false;
 
-    // MaterialPropertyBlock for flash color changes (no material instancing)
+   
     private MaterialPropertyBlock m_propBlock;
 
-    // Cached WaitForSeconds for flash to avoid allocations
+ 
     private WaitForSeconds m_cachedHitFlashYield;
+
+    private VehicleExplosion _vehicleExplosion;
 
     void Awake()
     {
@@ -90,7 +91,6 @@ public class Health : MonoBehaviour
         m_currentHealth = Mathf.Clamp(m_currentHealth, 0f, maxHealth);
         IsDead = m_currentHealth <= 0f;
 
-        // default flash renderer
         if (flashRenderer == null)
             flashRenderer = GetComponentInChildren<Renderer>();
 
@@ -99,34 +99,28 @@ public class Health : MonoBehaviour
 
         onHealthRatio?.Invoke(Current / Max);
 
-        // update global max visible bars to respect inspector requests
+  
         s_globalMaxVisibleBars = Mathf.Max(s_globalMaxVisibleBars, Mathf.Max(1, maxVisibleBars));
 
-        // prepare property block
+  
         m_propBlock = new MaterialPropertyBlock();
 
-        // cache WaitForSeconds for flash to reduce allocations
+
         m_cachedHitFlashYield = new WaitForSeconds(hitFlashDuration);
 
-        // NOTE: heavy GetComponentsInChildren(...) calls removed from Awake.
-        // Instead we use EnsureCachedChildren() lazily when we actually need child arrays (e.g. on death).
+        _vehicleExplosion = GetComponent<VehicleExplosion>();
+
     }
 
     void OnValidate()
     {
-        // keep currentHealth within sensible bounds in editor
         if (m_currentHealth < 0f) m_currentHealth = -1f;
         m_currentHealth = Mathf.Clamp(m_currentHealth, -1f, Mathf.Max(1f, maxHealth));
         maxVisibleBars = Mathf.Max(1, maxVisibleBars);
 
-        // Keep cached WaitForSeconds in sync in editor (if you change hitFlashDuration)
         m_cachedHitFlashYield = new WaitForSeconds(hitFlashDuration);
     }
 
-    /// <summary>
-    /// Apply damage. Amount must be > 0.
-    /// Updates recent list and last-hit timestamp.
-    /// </summary>
     public void ApplyDamage(float amount)
     {
         if (IsDead || amount <= 0f)
@@ -138,7 +132,6 @@ public class Health : MonoBehaviour
 
         m_lastHitTime = Time.time;
 
-        // only mark in global recent list if player is nearby (mirrors earlier behaviour)
         bool markGlobally = false;
         if (m_playerTransform != null)
         {
@@ -147,7 +140,7 @@ public class Health : MonoBehaviour
         }
         else
         {
-            // fallback: mark anyway
+
             markGlobally = true;
         }
 
@@ -156,7 +149,7 @@ public class Health : MonoBehaviour
             AddOrUpdateRecent(this, m_lastHitTime);
         }
 
-        // flash renderer
+
         if (!m_isFlashing && flashRenderer != null)
             StartCoroutine(FlashHit());
 
@@ -165,21 +158,21 @@ public class Health : MonoBehaviour
             IsDead = true;
             onDied?.Invoke();
 
-            // try to disable PrometeoCarController if present (best-effort)
+
             var specific = GetComponent("PrometeoCarController") as Behaviour;
             if (specific != null) specific.enabled = false;
 
             var rb = GetComponent<Rigidbody>();
             if (rb)
             {
-                // stop motion and make kinematic so it no longer interacts physically
+
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
                 rb.isKinematic = true;
             }
 
-            // disable all colliders to avoid further collisions after death
-            EnsureCachedChildren(); // only now we gather children arrays if needed
+            
+            EnsureCachedChildren(); 
             if (m_cachedColliders != null)
             {
                 foreach (var col in m_cachedColliders)
@@ -191,15 +184,18 @@ public class Health : MonoBehaviour
                     if (col != null) col.enabled = false;
             }
 
-            // destruction/hide-on-death removed — object stays in scene.
         }
     }
 
     public void Heal(float amount)
     {
-        if (amount <= 0f || IsDead)
-            
+        if (amount <= 0f) return;
+
+        if (IsDead)                           
+        {
+            _vehicleExplosion?.Explode();        
             return;
+        }
 
         m_currentHealth = Mathf.Min(maxHealth, m_currentHealth + amount);
         onHealthRatio?.Invoke(Current / Max);
@@ -230,14 +226,12 @@ public class Health : MonoBehaviour
         m_isFlashing = true;
         if (flashRenderer != null && flashRenderer.sharedMaterial != null && flashRenderer.sharedMaterial.HasProperty("_Color"))
         {
-            // Use MaterialPropertyBlock so we DON'T instantiate a new Material
             Color prior = m_originalRendererColor;
 
             flashRenderer.GetPropertyBlock(m_propBlock);
             m_propBlock.SetColor("_Color", Color.red);
             flashRenderer.SetPropertyBlock(m_propBlock);
 
-            // use cached WaitForSeconds to avoid allocations
             yield return m_cachedHitFlashYield;
 
             m_propBlock.SetColor("_Color", prior);
@@ -250,10 +244,9 @@ public class Health : MonoBehaviour
         m_isFlashing = false;
     }
 
-    // Add or update this Health in the global recent list, then prune/trim
     private static void AddOrUpdateRecent(Health h, float time)
     {
-        // remove null entries first (non-allocating)
+
         RemoveNullEntries();
 
         var existing = s_recentAttacks.Find(e => e.h == h);
@@ -266,10 +259,9 @@ public class Health : MonoBehaviour
             s_recentAttacks.Insert(0, new RecentEntry { h = h, time = time });
         }
 
-        // sort newest first (use static compare to avoid lambda allocation)
+
         s_recentAttacks.Sort(CompareRecent);
 
-        // prune entries older than their showDuration
         float now = Time.time;
         float maxShow = 0f;
         for (int i = 0; i < s_recentAttacks.Count; i++)
@@ -279,7 +271,7 @@ public class Health : MonoBehaviour
         }
         if (maxShow > 0f)
         {
-            // Remove entries older than maxShow - use for-loop removal
+  
             for (int i = s_recentAttacks.Count - 1; i >= 0; i--)
             {
                 if (now - s_recentAttacks[i].time > maxShow)
@@ -287,12 +279,11 @@ public class Health : MonoBehaviour
             }
         }
 
-        // Trim to global cap
+
         if (s_recentAttacks.Count > s_globalMaxVisibleBars)
             s_recentAttacks.RemoveRange(s_globalMaxVisibleBars, s_recentAttacks.Count - s_globalMaxVisibleBars);
     }
 
-    // non-alloc remove-null helper
     private static void RemoveNullEntries()
     {
         int write = 0;
@@ -310,10 +301,9 @@ public class Health : MonoBehaviour
 
     private static int CompareRecent(RecentEntry a, RecentEntry b) => b.time.CompareTo(a.time);
 
-    // Simple screen-space world bar using OnGUI (good for quick testing / prototypes).
     void OnGUI()
     {
-        // NY: hvis denne instans ikke ønsker at bruge world-bar, så gør vi ingenting.
+
         if (!enableWorldHealthBar) return;
 
         if (m_currentHealth <= 0f) return;
@@ -322,26 +312,25 @@ public class Health : MonoBehaviour
 
         float now = Time.time;
 
-        // Remove dead/null entries occasionally
         RemoveNullEntries();
 
-        // Determine whether this instance is eligible to draw:
+
         bool timeOk = (now - m_lastHitTime) <= showDuration;
-        // find index in recent list (newest=0)
+
         int idx = s_recentAttacks.FindIndex(e => e.h == this);
         bool inRecentTop = idx >= 0 && idx < s_globalMaxVisibleBars;
 
-        // Distance check
+
         if (m_playerTransform != null)
         {
             if (Vector3.Distance(m_playerTransform.position, transform.position) > showDistance) return;
         }
 
-        // Decide visibility:
+
         bool shouldShow = false;
         if (onlyShowIfLastAttacked)
         {
-            // only show if we're among the recent top-N and within that entry's duration
+
             if (inRecentTop)
             {
                 var entry = s_recentAttacks[idx];
@@ -350,7 +339,7 @@ public class Health : MonoBehaviour
         }
         else
         {
-            // show if we were hit recently AND we're among the top-N recent entries (to cap total bars)
+
             if (timeOk && inRecentTop) shouldShow = true;
         }
 
@@ -358,7 +347,7 @@ public class Health : MonoBehaviour
 
         Vector3 worldPos = transform.position + healthbarWorldOffset;
         Vector3 screenPos = m_mainCam.WorldToScreenPoint(worldPos);
-        if (screenPos.z < 0f) return; // behind camera
+        if (screenPos.z < 0f) return; 
 
         float x = screenPos.x - barWidth * 0.5f;
         float y = Screen.height - screenPos.y - barHeight;
@@ -377,13 +366,12 @@ public class Health : MonoBehaviour
         GUI.color = Color.white;
     }
 
-    // Public accessor to change global max bars at runtime if preferred
+
     public static void SetGlobalMaxVisibleBars(int n)
     {
         s_globalMaxVisibleBars = Mathf.Max(1, n);
     }
 
-    // NY: public metode så andre scripts kan slå denne instans' world-bar til eller fra
     public void SetWorldBarEnabled(bool enabled)
     {
         enableWorldHealthBar = enabled;
