@@ -3,7 +3,7 @@ using UnityEngine;
 public class ExplosionScript : MonoBehaviour
 {
     [SerializeField] private GameObject m_explosionPrefab; // assign prefab-asset i Inspector
-    [SerializeField] private bool m_destroySelfAfterExplode = false; // kun hvis du vil fjerne objektet
+    [SerializeField] private bool m_destroySelfAfterExplode = false;
 
     public void Explode()
     {
