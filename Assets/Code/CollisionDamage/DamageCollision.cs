@@ -4,9 +4,10 @@
 [RequireComponent(typeof(Rigidbody))]
 public class DamageCollision : MonoBehaviour
 {
+    // virker både til fjende og player. 
     public Rigidbody rb; // Reference til dette objekts Rigidbody. Hvis den er tom i inspector, bliver den typisk udfyldt i Awake().
-    public float currentDamage = 0f; // Den sidst beregnede skadeværdi (fx ved en kollision) — bruges til debugging/visning.
-    public float maxDamage = 100f; // Maksimum skade der kan påføres i et enkelt hit (skade-cappen).
+    public float currentDamage = 0f;
+    public float maxDamage = 100f;
     public float minSpeedBeforeDamable = 5f; // Mindste hastighed (m/s) før et hit kan gøre skade. (5 m/s ≈ 18 km/t)
 
     [Range(0f, 1f)]

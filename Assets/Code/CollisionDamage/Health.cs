@@ -6,6 +6,7 @@ using UnityEngine.Events;
 [DisallowMultipleComponent]
 public class Health : MonoBehaviour
 {
+    // virker både til player og enemy 
     [Header("Health")]
     [Min(1f)] public float maxHealth = 100f;
     [SerializeField, Min(0f)]
@@ -78,7 +79,8 @@ public class Health : MonoBehaviour
  
     private WaitForSeconds m_cachedHitFlashYield;
 
-    private VehicleExplosion _vehicleExplosion;
+    [SerializeField] private ExplosionScript _vehicleExplosion;
+
 
     void Awake()
     {
@@ -108,7 +110,33 @@ public class Health : MonoBehaviour
 
         m_cachedHitFlashYield = new WaitForSeconds(hitFlashDuration);
 
-        _vehicleExplosion = GetComponent<VehicleExplosion>();
+        if (_vehicleExplosion == null)
+        {
+            _vehicleExplosion = GetComponent<ExplosionScript>()
+                                ?? GetComponentInParent<ExplosionScript>()
+                                ?? GetComponentInChildren<ExplosionScript>();
+        }
+
+        // --- fallback: find nærmeste ExplosionScript i scenen (hvis ingen fundet endnu) ---
+        if (_vehicleExplosion == null)
+        {
+            var all = FindObjectsOfType<ExplosionScript>();
+            if (all != null && all.Length > 0)
+            {
+                float bestDist = float.MaxValue;
+                ExplosionScript best = null;
+                foreach (var ex in all)
+                {
+                    float d = Vector3.Distance(transform.position, ex.transform.position);
+                    if (d < bestDist)
+                    {
+                        bestDist = d;
+                        best = ex;
+                    }
+                }
+                _vehicleExplosion = best;
+            }
+        }
 
     }
 
@@ -140,7 +168,6 @@ public class Health : MonoBehaviour
         }
         else
         {
-
             markGlobally = true;
         }
 
@@ -148,7 +175,6 @@ public class Health : MonoBehaviour
         {
             AddOrUpdateRecent(this, m_lastHitTime);
         }
-
 
         if (!m_isFlashing && flashRenderer != null)
             StartCoroutine(FlashHit());
@@ -158,6 +184,8 @@ public class Health : MonoBehaviour
             IsDead = true;
             onDied?.Invoke();
 
+            // Kald explosion på death (sikker null-check)
+            _vehicleExplosion?.Explode();
 
             var specific = GetComponent("PrometeoCarController") as Behaviour;
             if (specific != null) specific.enabled = false;
@@ -165,14 +193,12 @@ public class Health : MonoBehaviour
             var rb = GetComponent<Rigidbody>();
             if (rb)
             {
-
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
                 rb.isKinematic = true;
             }
 
-            
-            EnsureCachedChildren(); 
+            EnsureCachedChildren();
             if (m_cachedColliders != null)
             {
                 foreach (var col in m_cachedColliders)
@@ -183,23 +209,24 @@ public class Health : MonoBehaviour
                 foreach (var col in GetComponentsInChildren<Collider>(true))
                     if (col != null) col.enabled = false;
             }
-
         }
     }
 
     public void Heal(float amount)
     {
-        if (amount <= 0f) return;
+        if (amount <= 0f)
+            return;
 
-        if (IsDead)                           
+        if (IsDead)
         {
-            _vehicleExplosion?.Explode();        
+            // Hvis du vil genoplive i stedet for at ignorere, kald ResetHealth() her før Heal
             return;
         }
 
         m_currentHealth = Mathf.Min(maxHealth, m_currentHealth + amount);
         onHealthRatio?.Invoke(Current / Max);
     }
+
 
     public void ResetHealth(float? newMax = null)
     {

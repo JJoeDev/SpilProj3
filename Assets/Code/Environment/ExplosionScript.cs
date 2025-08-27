@@ -1,13 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class VehicleExplosion : MonoBehaviour {
-    [SerializeField] private GameObject m_explosion;
-   public void Explode()
+public class ExplosionScript : MonoBehaviour
+{
+    [SerializeField] private GameObject m_explosionPrefab; // assign prefab-asset i Inspector
+    [SerializeField] private bool m_destroySelfAfterExplode = false; // kun hvis du vil fjerne objektet
+
+    public void Explode()
     {
-        m_explosion = Instantiate(m_explosion, transform.position, Quaternion.identity);
-        Instantiate(m_explosion);
-        GameObject.Destroy(gameObject);
+        if (m_explosionPrefab != null)
+        {
+            Instantiate(m_explosionPrefab, transform.position, Quaternion.identity);
+        }
+
+        if (m_destroySelfAfterExplode)
+            Destroy(gameObject);
     }
 }
