@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UIMeter : MonoBehaviour
 {
     public float value = 100f;
     public float maxValue = 100f;
+    public TMP_Text Text;
 
     RectTransform m_rectTransform;
     float m_startingWidth;
@@ -24,5 +26,9 @@ public class UIMeter : MonoBehaviour
     public void UpdateMeter()
     {
         m_rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, m_startingWidth * (value / maxValue));
-    }
+        if (Text != null )
+        {
+            Text.text = $"{value} / {maxValue}";
+        }
+    }   
 }
