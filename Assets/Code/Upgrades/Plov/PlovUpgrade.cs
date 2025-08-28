@@ -18,7 +18,7 @@ public class Plov : Upgrade
     }
 
 
-    private void OnTriggerEnter(Collision m_collision)
+    private void OnTriggerEnter(Collider m_collision)
     {
 
         if (m_collision.gameObject.CompareTag("Enemy"))
