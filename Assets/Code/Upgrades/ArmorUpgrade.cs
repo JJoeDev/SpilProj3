@@ -5,6 +5,7 @@ using UnityEngine;
 public class ArmorUpgrade : Upgrade
 {
     public float armorHealth = 50f;
+    public GameObject armorVisual;
 
     bool applied;
 
@@ -15,11 +16,16 @@ public class ArmorUpgrade : Upgrade
     }
     public override void EnableUpgrade()
     {
-        // Gets the Health component and adds health to it
+        // Adds health
         Health health = GetComponent<Health>();
         if (health != null)
         {
             health.AddMaxHealth(armorHealth);
+        }
+        // Activates the armor visually
+        if (armorVisual != null)
+        {
+            armorVisual.SetActive(true);
         }
     }
 }
