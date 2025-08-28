@@ -10,6 +10,6 @@ public class VehicleExplosion : Explodable
     {
         m_explosion = Instantiate(m_explosion, transform.position, Quaternion.identity);
         Instantiate(m_explosion);
-        GameObject.Destroy(gameObject);
+        Destroy(gameObject);
     }
 }

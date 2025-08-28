@@ -9,17 +9,17 @@ public class HealthManager : MonoBehaviour
 
     private void Awake()
     {
-        currentHealth = maxHealth;  
+        currentHealth = maxHealth;
+        
     }
 
     public void TakeDamage(float amount)
     {
         currentHealth -= amount;
-        Debug.Log($"{gameObject.name} took {amount} damage. health remaining: {currentHealth}");
         
-            if (currentHealth <= 0f)
+        if (currentHealth <= 0f)
         {
-            gameObject.GetComponent<VehicleExplosion>().Explode();
+            GetComponent<VehicleExplosion>().Explodes();
         }
     }
 }

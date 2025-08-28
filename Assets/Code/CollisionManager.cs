@@ -5,127 +5,90 @@ using static UnityEditor.Progress;
 
 public class CollisionManager : MonoBehaviour
 {
-    private Transform m_player;
-    private GameObject m_hitObject;
-    Vector3 contactNormal;
-    Vector3 relativeVelocity;
-   [SerializeField] float m_damage;
-   [SerializeField] float m_damageMultiplier;
-    float m_dotFoward;
-    float m_dotSideway;
-    float m_baseDamage;
-    private Rigidbody m_rigidbody;
-    private Rigidbody m_hitObjectRigidbody;
-    private HealthManager currentHealt;
-    string collisionType;
+    private float m_baseDamage = 1f; //used to tweak damagescaling
 
+    private Rigidbody m_rb;
+    private HealthManager m_health;
 
-    // float damageMultiplier = 0.5f;
-
-    private void Awake()
+    void Awake()
     {
-        m_rigidbody = GetComponent<Rigidbody>();
-        currentHealt = GetComponent<HealthManager>();
+        m_rb = GetComponent<Rigidbody>();
+        m_health = GetComponent<HealthManager>();
     }
 
-     void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
-        HealthManager m_hitObjectHealt = collision.gameObject.GetComponent<HealthManager>();
-        m_hitObjectRigidbody = collision.rigidbody;
 
-        if (m_hitObjectRigidbody != null && m_hitObjectHealt != null)
-        {
-            ProcessCollision(currentHealt, m_hitObjectRigidbody);
-            Debug.Log(collision.gameObject.name);
-        }
-    }
+        HealthManager otherHealth = collision.gameObject.GetComponent<HealthManager>();
+        if (otherHealth == null) return; // not a damageable object
 
-    void ProcessCollision(HealthManager m_hitObject, Rigidbody rigidbody)
-    {
-        Vector3 playerVec = m_rigidbody.velocity;
-        Vector3 hitObjectVec = m_hitObjectRigidbody.velocity;
-        
-        float m_speedDiff = (playerVec - hitObjectVec).magnitude;
-        
-        Vector3 playerDir = playerVec.normalized;
-        Vector3 hitObjectDir = hitObjectVec.normalized;
-        Vector3 toOther = (m_hitObjectRigidbody.transform.position - transform.position).normalized;
+        Rigidbody otherRb = collision.rigidbody;
+        if (otherRb == null) return;
+
+        if (m_rb.GetInstanceID() < otherRb.GetInstanceID()) return; //Reassure that only 1 CollisionManager does damage
        
-        float dotForward = Vector3.Dot(transform.forward, toOther);
-        float dotRight = Vector3.Dot(transform.right, toOther);
-        float direction = Vector3.Dot(playerDir, -toOther);
+        // Velocities at impact
+        Vector3 v1 = m_rb.velocity;
+        Vector3 v2 = otherRb.velocity;
 
-        if (direction > 0.5f) collisionType = "head-on";
-        else if (direction < 0.7f) collisionType = "rear-end";
-        else if (Mathf.Abs(dotRight) > 0.7f) collisionType = "side-hit";
-
-        m_baseDamage = m_speedDiff * m_damageMultiplier;
-
-        switch (collisionType)
-
-        {
-            case "head-on":
-                currentHealt.TakeDamage(m_baseDamage * 0.5f);
-                // m_hitObjectHealt.TakeDamage(m_baseDamage * 0.5f);
-                Debug.Log(gameObject.name + "head-on");
-                break;
-
-            case "rear-end":
-                // m_hitObjectHealth.TakeDamage(m_baseDamage);
-                Debug.Log(gameObject.name + "rear-end");
-                break;
-
-            case "side-hit":
-                // m_hitObjectHealth.TakeDamage(m_baseDamage);
-                Debug.Log(gameObject.name + "side-hit");
-
-                break;
-
-        }
-
-
-    }
-    /*private void OnCollisionEnter(Collision collision)
-    {
-        m_hitObject = collision.gameObject;
-        Vector3 contactNormal = collision.contacts[0].normal;
+        // Relative velocity
         Vector3 relativeVelocity = collision.relativeVelocity;
-        Vector3 localHitDir = transform.InverseTransformDirection(-contactNormal); //Converts global vector into local, relavant to cars rotation
-       //Debug.Log("Normal of the first point: " + collision.contacts[0].normal);
-        m_damage = collision.relativeVelocity.magnitude;
-       
+        float relativeSpeed = relativeVelocity.magnitude;
 
-        foreach (var item in collision.contacts)
+        // Direction to other car
+        Vector3 toOther = (otherRb.position - m_rb.position).normalized;
+
+        // My forward
+        Vector3 myForward = transform.forward;
+
+        // Angle between my forward and "toOther"
+        float angle = Vector3.Angle(myForward, toOther);
+
+        // Base scaling from collision force
+        float baseImpactDamage = relativeSpeed * m_baseDamage;
+        if (relativeSpeed < 5)
         {
-            Debug.DrawRay(item.point, item.normal * 100, Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f), 10f);
-        }
-        Debug.Log("Normal of the first point: " + contactNormal);
-
-
-
-        if (Mathf.Abs(localHitDir.x) > Mathf.Abs(localHitDir.z))
-        {
-            GetComponent<VehicleExplosion>().TakeDamage(damage);
+            return;
         }
         else
         {
-            GetComponent<VehicleExplosion>().TakeDamage(damage);
-            collision.gameObject.GetComponent<VehicleExplosion>().TakeDamage(damage);
+            if (angle < 45f) // I hit them with my front
+            {
+                // Check if they’re also facing me (head-on)
+                float otherAngle = Vector3.Angle(collision.transform.forward, -toOther);
+
+                if (otherAngle < 45f)
+                {
+                    // --- HEAD-ON ---
+                    float mySpeed = v1.magnitude;
+                    float theirSpeed = v2.magnitude;
+                    float totalSpeed = mySpeed + theirSpeed;
+
+                    if (totalSpeed <= 0f) return; // avoid div by zero
+
+                    // Damage is split proportionally:
+                    // Faster car takes less, slower car takes more
+                    float myShare = theirSpeed / totalSpeed;   // I take damage relative to their speed
+                    float theirShare = mySpeed / totalSpeed;   // They take damage relative to my speed
+
+                    m_health.TakeDamage(baseImpactDamage * myShare);
+                    otherHealth.TakeDamage(baseImpactDamage * theirShare);
+                }
+                else
+                {
+                    // I rammed their side/rear: they take damage
+                    otherHealth.TakeDamage(baseImpactDamage);
+                }
+            }
+            else if (angle > 135f) // They hit me from behind
+            {
+                m_health.TakeDamage(baseImpactDamage);
+            }
+            else // Side impact
+            {
+                m_health.TakeDamage(baseImpactDamage);
+            }
         }
-         */
-
-    /* public void OnCollisionEnter(Collision collision)
-     {
-         HealthManager self = GetComponent<HealthManager>();
-         HealthManager other = collision.gameObject.GetComponent<HealthManager>();
-
-         if (self != null && other != null)
-         {
-            CollisionDamageManager.ResolveCollision(self, other, collision);
-         }
-
-     }
-    */
-
+    }
 
 }
