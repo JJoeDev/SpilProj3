@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PreGameCamera : MonoBehaviour
+public class PreGameCameraFollow : MonoBehaviour
 {
     [SerializeField] GameObject[] m_cameraFollowPoints;
     [SerializeField] GameObject m_car;
