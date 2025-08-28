@@ -10,7 +10,7 @@ public class GameOver : MonoBehaviour
 
     void Start()
     {
-        // The screen starts hidden
+        // Makes sure the screen starts hidden
         if (GameOverScreen != null)
             GameOverScreen.SetActive(false);
     }
@@ -27,6 +27,7 @@ public class GameOver : MonoBehaviour
 
     public void ShowGameOver()
     {
+        // makes sure the game over screen is shown
         if (GameOverScreen != null)
             GameOverScreen.SetActive(true);
 
@@ -34,14 +35,18 @@ public class GameOver : MonoBehaviour
 
     public void UpgradesButton()
     {
+        // All these three buttons needs to be changed to the correct scene unless we dont use scenes for the menu or upgrades
+        // Needs to be our Upgrades scene
         SceneManager.LoadScene("Upgrades");
     }
     public void ContinueButton()
     {
+        // Needs to be the our main scene
         SceneManager.LoadScene("William");
     }
     public void MainMenuButton()
     {
+        // Needs to be our main menu
         SceneManager.LoadScene("MainMenu");
     }
 }
