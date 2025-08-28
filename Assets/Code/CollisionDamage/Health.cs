@@ -26,4 +26,10 @@ public class Health : MonoBehaviour, IDamageable
         }
     }
 
+    public void AddMaxHealth(float amount)
+    {
+        _maxHealth += amount;
+        _currentHealth += amount; // also heal the player so upgrade feels immediate
+    }
+
 }
