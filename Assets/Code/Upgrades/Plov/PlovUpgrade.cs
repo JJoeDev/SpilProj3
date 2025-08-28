@@ -20,16 +20,17 @@ public class Plov : Upgrade
 
     private void OnTriggerEnter(Collider m_collision)
     {
-
         if (m_collision.gameObject.CompareTag("Enemy"))
         {
+            Debug.Log("Plow collided with " + m_collision.name);
             
             if (m_collision.gameObject.TryGetComponent<Rigidbody>(out Rigidbody m_enemyRB))
             {
-                m_enemyRB.velocity = (transform.position - m_collision.transform.position).normalized * m_knockbackForce;
+                m_enemyRB.velocity = (m_collision.transform.position - transform.position).normalized * m_knockbackForce + Vector3.up * 3;
             }
 
             // TODO: Make it deal more damage
+
         }
     }
 }
