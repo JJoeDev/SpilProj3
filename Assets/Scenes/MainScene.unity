@@ -631,9 +631,64 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5334735167744236527, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
         type: 3}
+      propertyPath: m_maxSpeed
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334735167744236527, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
+        type: 3}
+      propertyPath: m_minSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334735167744236527, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
+        type: 3}
+      propertyPath: m_maxTorque
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334735167744236527, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
+        type: 3}
+      propertyPath: m_breakForce
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334735167744236527, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
+        type: 3}
+      propertyPath: m_turnRadius
+      value: 36
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334735167744236527, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
+        type: 3}
+      propertyPath: m_sightRadius
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334735167744236527, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
+        type: 3}
+      propertyPath: m_maxBreakForce
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334735167744236527, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
+        type: 3}
+      propertyPath: m_roamAreaSize.x
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334735167744236527, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
+        type: 3}
+      propertyPath: m_roamAreaSize.y
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334735167744236527, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
+        type: 3}
       propertyPath: m_playerTransform
       value: 
       objectReference: {fileID: 1340815558}
+    - target: {fileID: 5334735167744236527, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
+        type: 3}
+      propertyPath: m_roamAreaCenter.z
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334735167744236527, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
+        type: 3}
+      propertyPath: m_slowDownDistance
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 7109853836760191339, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
         type: 3}
       propertyPath: m_Name
@@ -642,7 +697,7 @@ PrefabInstance:
     - target: {fileID: 7109853836760191339, guid: 8bea28cfa44a8c54fb1e0ee234e3f2ac,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1483,6 +1538,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prometheus
       objectReference: {fileID: 0}
+    - target: {fileID: 642287924342879162, guid: 79d0ca8b77e301442afdb49f102e8aed,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2196,7 +2256,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2018940122}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.12160317, y: 0.000000017078689, z: -0.0000000020923505, w: 0.9925788}
+  m_LocalRotation: {x: 0.12160317, y: -0.000000017078689, z: 0.0000000020923505, w: 0.9925788}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

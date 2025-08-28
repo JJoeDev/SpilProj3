@@ -17,6 +17,9 @@ public class CarCamera : MonoBehaviour
     private void Start()
     {
         m_rb = GetComponent<Rigidbody>();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Update()
