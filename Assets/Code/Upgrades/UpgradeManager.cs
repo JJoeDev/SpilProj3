@@ -6,19 +6,22 @@ using UnityEngine;
 public class UpgradeManager : MonoBehaviour
 {
     [SerializeField] private UIMeter m_scoreMeter;
-    [SerializeField] private Upgrade[] m_upgrades;
+    [SerializeField] private UpgradeCard[] upgradeCards;
+    public Upgrade[] upgrades;
 
-    private int m_upgradeCount = 0;
+    public int upgradeCount = 0;
 
     private void Update()
     {
-        if(m_upgradeCount < m_upgrades.Length)
+        if(upgradeCount < upgradeCards.Length)
         {
-            if (m_scoreMeter.value >= m_scoreMeter.maxValue)
+            if (m_scoreMeter.value >= (m_scoreMeter.maxValue / 3) * (upgradeCount + 1))
             {
+                Debug.Log("Got upgrade: " + upgradeCards[upgradeCount].name);
                 m_scoreMeter.value = 0;
-                m_upgrades[m_upgradeCount].EnableUpgrade();
-                m_upgradeCount++;
+                upgradeCards[upgradeCount].enabled = true;
+                upgradeCards[upgradeCount].UpdateCard();
+                upgradeCount++;
             }
         }
         else
