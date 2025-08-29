@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 839f0dd612625f64cadc0ac4e078e2ae
+guid: c261e5b123c0f8245a84ab6f3087211c
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,49 +7,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material.004
-    second: {fileID: 2100000, guid: 9de6acb911a57fd49a251644aa4e8129, type: 2}
+      name: ramps_texture
+    second: {fileID: 2100000, guid: a6b29734aeb9bf744990d8b8805426a3, type: 2}
   - first:
-      type: UnityEngine:Material
+      type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
-      name: Material.011
-    second: {fileID: 2100000, guid: 174bb6b54f587c947a104ddcdbf25844, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.012
-    second: {fileID: 2100000, guid: bec7b76ac74a03c4793b77bf3978cf2a, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.013
-    second: {fileID: 2100000, guid: 652abe490a69ad243a2b7a8e5b5ee66b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.014
-    second: {fileID: 2100000, guid: a4eb369ff52738947b4a451dd2811ad7, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.015
-    second: {fileID: 99656467281103303, guid: 5c4f274efcbeb9348912429c4739fd40, type: 3}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.016
-    second: {fileID: -876546973899608171, guid: 5c4f274efcbeb9348912429c4739fd40,
-      type: 3}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.017
-    second: {fileID: 2100000, guid: f77e98ead309c6141843f8fc1691350c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material.065
-    second: {fileID: 2100000, guid: 897a946a7cbf33848af7977f6e094579, type: 2}
+      name: ramp_text
+    second: {fileID: 2800000, guid: 0f9175c72dc0a074890c22959b36fd84, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
