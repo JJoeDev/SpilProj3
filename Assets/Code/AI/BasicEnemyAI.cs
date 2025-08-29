@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
-
+using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 public class BasicEnemyAI : MonoBehaviour
@@ -10,7 +10,7 @@ public class BasicEnemyAI : MonoBehaviour
     [Header("Enemy vision")]
     [SerializeField] private float m_sightRadius;
     [SerializeField] private float m_sightAngle;
-    [SerializeField] private Transform m_playerTransform;
+    [SerializeField] private Transform m_playerTransform = null;
 
     [Header("Enemy movement")]
     [SerializeField] WheelCollider m_frontRight;
@@ -46,6 +46,8 @@ public class BasicEnemyAI : MonoBehaviour
     private Vector3 m_targetDir = Vector3.zero;
     private int m_currentCorner = 0;
 
+    bool IsInitialized = false;
+
     enum ENEMY_STATE 
     {
         PATROLE,
@@ -54,16 +56,30 @@ public class BasicEnemyAI : MonoBehaviour
 
     private ENEMY_STATE m_state;
 
-    private void Start()
+    private IEnumerator Start()
     {
         m_rb = GetComponent<Rigidbody>();
         m_path = new NavMeshPath();
 
+        yield return new WaitForSeconds(1.0f);
+
         GetRandomWorldPath();
+
+        m_playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        Assert.AreNotEqual(m_playerTransform, null, "PLAYER TRANSFORM IS NULL");
+
+        Debug.Log("End of Start");
+        IsInitialized = true;
     }
 
     private void FixedUpdate()
     {
+        if (!IsInitialized)
+        {
+            m_currentCorner = 0;
+            return;
+        }
+
         Vector3 playerDir = m_playerTransform.position - transform.position;
 
         // Is the player inside the visible radius and inside the visible angle

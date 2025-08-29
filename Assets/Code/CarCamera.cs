@@ -7,7 +7,7 @@ public class CarCamera : MonoBehaviour
     [SerializeField] private CinemachineFreeLook m_freeLookCam;
 
     [Header("CAR FIELDS")]
-    [SerializeField] private PrometeoCarController m_prometeoController;
+    [SerializeField] private CarController m_prometeoController;
     [Space(10)]
     [SerializeField] private float m_lookAheadCarSpeed = 30.0f;
     [SerializeField] private float m_lookAheadRotationSpeed;

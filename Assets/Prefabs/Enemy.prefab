@@ -481,17 +481,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e145e47cf00b6248b7f86f2b56b134e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_sightRadius: 10
+  m_sightRadius: 30
   m_sightAngle: 215
   m_playerTransform: {fileID: 0}
   m_frontRight: {fileID: 5481972541602363292}
   m_frontLeft: {fileID: 7639496242170159362}
   m_backRight: {fileID: 4346760663666590554}
   m_backLeft: {fileID: 6968953766468568830}
-  m_acceleration: 300
-  m_breakForce: 0
-  m_speed: 0
-  m_turnRadius: 12
+  m_maxTorque: 300
+  m_minSpeed: 10
+  m_maxSpeed: 300
+  m_breakForce: 15
+  m_maxBreakForce: 1
+  m_slowDownDistance: 30
+  m_turnRadius: 36
   m_distanceToNewCorner: 1
   m_roamAreaCenter: {x: 0, y: 1, z: 0}
   m_roamAreaSize: {x: 30, y: 30}
