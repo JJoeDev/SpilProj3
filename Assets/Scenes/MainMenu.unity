@@ -1177,7 +1177,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Destructo truck
+  m_text: Arena of steel
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3d9f11f1c780e124dbb9ceebfe6cec4b, type: 2}
   m_sharedMaterial: {fileID: 9125939840058068565, guid: 3d9f11f1c780e124dbb9ceebfe6cec4b,
