@@ -17,10 +17,10 @@ public class ArmorUpgrade : Upgrade
     public override void EnableUpgrade()
     {
         // Adds health
-        Health health = GetComponent<Health>();
+        HealthManager health = GetComponent<HealthManager>();
         if (health != null)
         {
-            health.AddMaxHealth(armorHealth);
+            health.maxHealth = armorHealth;
         }
         // Activates the armor visually
         if (armorVisual != null)
