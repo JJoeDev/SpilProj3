@@ -5,41 +5,90 @@ using static UnityEditor.Progress;
 
 public class CollisionManager : MonoBehaviour
 {
-    private Transform m_player;
-    private GameObject m_hitObject;
-    Vector3 contactNormal;
-    Vector3 relativeVelocity;
-    float damage;
-   // float damageMultiplier = 0.5f;
-    private void OnCollisionEnter(Collision collision)
+    private float m_baseDamage = 1f; //used to tweak damagescaling
+
+    private Rigidbody m_rb;
+    private HealthManager m_health;
+
+    void Awake()
     {
-        m_hitObject = collision.gameObject;
-        Vector3 contactNormal = collision.contacts[0].normal;
+        m_rb = GetComponent<Rigidbody>();
+        m_health = GetComponent<HealthManager>();
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+
+        HealthManager otherHealth = collision.gameObject.GetComponent<HealthManager>();
+        if (otherHealth == null) return; // not a damageable object
+
+        Rigidbody otherRb = collision.rigidbody;
+        if (otherRb == null) return;
+
+        if (m_rb.GetInstanceID() < otherRb.GetInstanceID()) return; //Reassure that only 1 CollisionManager does damage
+       
+        // Velocities at impact
+        Vector3 v1 = m_rb.velocity;
+        Vector3 v2 = otherRb.velocity;
+
+        // Relative velocity
         Vector3 relativeVelocity = collision.relativeVelocity;
-        Vector3 localHitDir = transform.InverseTransformDirection(-contactNormal); //Converts global vector into local, relavant to cars rotation
-       //Debug.Log("Normal of the first point: " + collision.contacts[0].normal);
-        damage = collision.relativeVelocity.magnitude;
+        float relativeSpeed = relativeVelocity.magnitude;
 
-        foreach (var item in collision.contacts)
-        {
-            Debug.DrawRay(item.point, item.normal * 100, Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f), 10f);
-        }
-        Debug.Log("Normal of the first point: " + contactNormal);
+        // Direction to other car
+        Vector3 toOther = (otherRb.position - m_rb.position).normalized;
 
-        if (Mathf.Abs(localHitDir.x) > Mathf.Abs(localHitDir.z))
+        // My forward
+        Vector3 myForward = transform.forward;
+
+        // Angle between my forward and "toOther"
+        float angle = Vector3.Angle(myForward, toOther);
+
+        // Base scaling from collision force
+        float baseImpactDamage = relativeSpeed * m_baseDamage;
+        if (relativeSpeed < 5)
         {
-            GetComponent<VehicleExplosion>().TakeDamage(damage);
+            return;
         }
         else
         {
-            GetComponent<VehicleExplosion>().TakeDamage(damage);
-            collision.gameObject.GetComponent<VehicleExplosion>().TakeDamage(damage);
+            if (angle < 45f) // I hit them with my front
+            {
+                // Check if they’re also facing me (head-on)
+                float otherAngle = Vector3.Angle(collision.transform.forward, -toOther);
+
+                if (otherAngle < 45f)
+                {
+                    // --- HEAD-ON ---
+                    float mySpeed = v1.magnitude;
+                    float theirSpeed = v2.magnitude;
+                    float totalSpeed = mySpeed + theirSpeed;
+
+                    if (totalSpeed <= 0f) return; // avoid div by zero
+
+                    // Damage is split proportionally:
+                    // Faster car takes less, slower car takes more
+                    float myShare = theirSpeed / totalSpeed;   // I take damage relative to their speed
+                    float theirShare = mySpeed / totalSpeed;   // They take damage relative to my speed
+
+                    m_health.TakeDamage(baseImpactDamage * myShare);
+                    otherHealth.TakeDamage(baseImpactDamage * theirShare);
+                }
+                else
+                {
+                    // I rammed their side/rear: they take damage
+                    otherHealth.TakeDamage(baseImpactDamage);
+                }
+            }
+            else if (angle > 135f) // They hit me from behind
+            {
+                m_health.TakeDamage(baseImpactDamage);
+            }
+            else // Side impact
+            {
+                m_health.TakeDamage(baseImpactDamage);
+            }
         }
-         
     }
-    // Update is called once per frame
-    void Update()
-    {
-            
-    }
+
 }
