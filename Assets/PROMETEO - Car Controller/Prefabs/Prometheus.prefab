@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 627556911}
   - component: {fileID: 3625949566278453146}
   - component: {fileID: 531137640579384486}
+  - component: {fileID: 5385177353420496701}
   m_Layer: 0
   m_Name: Prometheus
   m_TagString: Untagged
@@ -177,8 +178,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scoreMeter: {fileID: 0}
-  m_upgrades:
+  m_upgradeCards:
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  m_upgradeMenu: {fileID: 0}
+  upgrades: []
+  upgradeCount: 0
+--- !u!114 &5385177353420496701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642287924342879162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17dae0683df3c414b895c3b04cf68a0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_freeLookCam: {fileID: 0}
+  m_prometeoController: {fileID: 627556911}
+  m_lookAheadCarSpeed: 0.1
+  m_lookAheadRotationSpeed: 5
 --- !u!1 &934883528070179459
 GameObject:
   m_ObjectHideFlags: 0
