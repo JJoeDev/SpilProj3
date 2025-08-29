@@ -33,27 +33,27 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Car_undercarriage
-    second: {fileID: 2800000, guid: bae41ce549364d04db84366dfa970125, type: 3}
+    second: {fileID: 2800000, guid: 4fe212c1755209f46a22a0bda3b3cb42, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: armor_ugrade_textures
-    second: {fileID: 2800000, guid: 0649a4303a4424043a2b1619a1d56a62, type: 3}
+    second: {fileID: 2800000, guid: aa111d59274d3ef45998b83551e929e4, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: car_plough_upgrade_textures
-    second: {fileID: 2800000, guid: 716abdce7bcc0544e8231f5ad0b112b2, type: 3}
+    second: {fileID: 2800000, guid: 51d0600805291374d8513dae6ddb19b0, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: player_car_body_text_2
-    second: {fileID: 2800000, guid: 54a559be8a0e1e541baf416608234c29, type: 3}
+    second: {fileID: 2800000, guid: d67f01acdd9b33144a55487fcd693a1e, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: wheel_texture
-    second: {fileID: 2800000, guid: cc144cfe1e4197f4fb74a2d4030eee80, type: 3}
+    second: {fileID: 2800000, guid: d53e90c97576e9442bd5cd3cc8af3605, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -102,7 +102,7 @@ ModelImporter:
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
-    bakeAxisConversion: 0
+    bakeAxisConversion: 1
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
@@ -140,7 +140,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.01
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
