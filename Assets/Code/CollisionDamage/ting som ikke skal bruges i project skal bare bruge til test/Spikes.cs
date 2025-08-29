@@ -56,9 +56,9 @@ public class SpikeTrigger : MonoBehaviour
         Vector3 vOther = otherRb ? otherRb.GetPointVelocity(P) : Vector3.zero;
 
         Vector3 rel = vSelf - vOther;
-        float sideSpeed = Mathf.Abs(Vector3.Dot(rel, sideDir));     // m/s
+        float sideSpeed = Mathf.Abs(Vector3.Dot(rel, sideDir)); // m/s
         float forwardCmp = Mathf.Abs(Vector3.Dot(rel, carTf.forward));
-        float relMag = rel.magnitude;                            // m/s
+        float relMag = rel.magnitude; // m/s
 
         // Gates
         bool allowByDot = (dot >= 0.90f);
@@ -90,11 +90,11 @@ public class SpikeTrigger : MonoBehaviour
             float relKmh = relMag * 3.6f; // m/s -> km/t
             float damage = damagePerHit;
 
-            // 1) bonus pr. km/t
+            // bonus pr. km/t
             if (damagePerKmh > 0f)
                 damage += damagePerKmh * relKmh;
 
-            // 2) vinkelbonus
+            // vinkelbonus
             if (angleBonusMax > 0f)
                 damage *= Mathf.Lerp(1f, 1f + angleBonusMax, Mathf.Clamp01(dot));
 
