@@ -35,14 +35,12 @@ public class GameOver : MonoBehaviour
 
     public void UpgradesButton()
     {
-        // All these three buttons needs to be changed to the correct scene unless we dont use scenes for the menu or upgrades
-        // Needs to be our Upgrades scene
-        SceneManager.LoadScene("Upgrades");
+        // These two buttons needs to be changed to the correct scene unless we dont use scenes for the menu
     }
     public void RestartButton()
     {
         // Needs to be the our main scene
-        SceneManager.LoadScene("William");
+        SceneManager.LoadScene("MainScene");
     }
     public void MainMenuButton()
     {
