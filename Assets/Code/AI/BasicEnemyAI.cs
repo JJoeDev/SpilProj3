@@ -99,7 +99,7 @@ public class BasicEnemyAI : MonoBehaviour
         m_targetDir = m_path.corners[m_currentCorner] - transform.position;
 
         float distanceToCorner = m_targetDir.sqrMagnitude;
-        if (distanceToCorner <= m_distanceToNewCorner) m_currentCorner++;
+        if (distanceToCorner <= m_distanceToNewCorner && m_currentCorner < m_path.corners.Length - 1) m_currentCorner++;
 
         if (m_currentCorner >= m_path.corners.Length)
         {
@@ -138,7 +138,7 @@ public class BasicEnemyAI : MonoBehaviour
     void EnemyTargeting()
     {
         m_targetDir = m_path.corners[m_currentCorner] - transform.position;
-        if (m_targetDir.sqrMagnitude <= m_distanceToNewCorner && m_currentCorner < m_path.corners.Length) m_currentCorner++;
+        if (m_targetDir.sqrMagnitude <= m_distanceToNewCorner && m_currentCorner < m_path.corners.Length - 1) m_currentCorner++;
 
         m_targetDir = m_path.corners[m_currentCorner] - transform.position;
         m_targetDir.y = 0;
