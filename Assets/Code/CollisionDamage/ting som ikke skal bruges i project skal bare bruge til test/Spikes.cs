@@ -1,60 +1,66 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.InputSystem.EnhancedTouch;
-using UnityEngine.SocialPlatforms;
 
 public class SpikeTrigger : MonoBehaviour
 {
     [Header("Refs")]
-    public Transform carTf; // Bilens transform.Bruges til at måle retninger (left/right/forward) og om et hit ligger ved siden(lokal Z).
+    public Transform carTf;
     public Rigidbody rb;
-    public LayerMask damageableLayers; // Hvilke layers må tage skade. Alt på andre layers ignoreres.
+    public LayerMask damageableLayers;
 
     [Header("Tuning")]
-    [Range(0f, 1f)] public float minContactDot = 0.75f; // Vinkelkrav for at det tæller som “side-hit”. 1 = perfekt parallelt med siden; 0 = 90°. Jo højere tal, jo mere “rent” sideswipe kræves.
-    [Range(0f, 100f)] public float zThreshold = 1f; // (meter): Hvor langt fra bilens midterlinje i lokal Z et hit stadig betragtes som “side” (filtrerer front/bag).
-    [Range(0f, 100f)] public float minSideSpeed = 3f; // (m/s): Minimum lateral (sideværts) relativ hastighed, før et hit tæller (forhindrer næsten-stillestående skrab).
-    [Range(0f, 100f)] public float minRelativeSpeed = 2f; // minRelativeSpeed (m/s): Minimum total relativ hastighed mellem biler for at undgå “mikro-kontakt”.
-    [Range(0f, 100f)] public float damagePerHit = 1f; // damagePerHit: Grundskade pr. gyldigt hit (før evt. fremtidige bonusser).
+    [Range(0f, 1f)] public float minContactDot = 0.75f;
+    [Range(0f, 100f)] public float zThreshold = 1f;
+    [Range(0f, 100f)] public float minSideSpeed = 3f; // m/s
+    [Range(0f, 100f)] public float minRelativeSpeed = 2f; // m/s
+    [Range(0f, 100f)] public float damagePerHit = 1f; // Min. skade pr. hit
+
+    [Header("Damage scaling")]
+    [Tooltip("Ekstra skade pr. km/t relativ hastighed.")]
+    public float damagePerKmh = 0.01f; // fx 0.01 => +0.01 dmg pr km/t
+    [Tooltip("Maks vinkelbonus som faktor over 1 (0.5 = op til +50%).")]
+    public float angleBonusMax = 0.5f; // 0.5 => op til +50% ved dot=1
 
     [Header("Timing")]
-    public float cooldown = 1.5f; // delay mellem hits pr. target (sek)
+    public float cooldown = 1.5f; // sek pr. target mellem hits
 
     private Health m_selfHealth;
-    private readonly HashSet<int> m_scraping = new HashSet<int>(); // kan godt være i skal bruge jeres health script som i har lavet. 
-    private readonly Dictionary<int, float> m_lastHitTime = new Dictionary<int, float>(); // Hvornår hver modstander sidst fik skade — håndterer cooldown pr. modstander.
+    private readonly HashSet<int> m_scraping = new HashSet<int>();
+    private readonly Dictionary<int, float> m_lastHitTime = new Dictionary<int, float>();
 
     private void Start()
     {
         if (!carTf) carTf = transform.root;
         if (!rb) rb = carTf.GetComponent<Rigidbody>();
         m_selfHealth = carTf.GetComponent<Health>();
-
-        var c = GetComponent<Collider>();
-        if (c) c.isTrigger = true;
     }
     private void OnTriggerStay(Collider other)
     {
+        // Layer-gate
         if ((damageableLayers.value & (1 << other.gameObject.layer)) == 0) return;
 
+        // Geometri
         Vector3 P = other.ClosestPoint(carTf.position);
         Vector3 localP = carTf.InverseTransformPoint(P);
 
         bool isSide = Mathf.Abs(localP.z) <= zThreshold;
         Vector3 sideDir = (localP.x >= 0f) ? -carTf.right : carTf.right;
 
+        // vinkel
         Vector3 approxNormalIn = (carTf.position - P).normalized;
         float dot = Vector3.Dot(approxNormalIn, sideDir);
 
+        // Hastighed
         Vector3 vSelf = rb ? rb.GetPointVelocity(P) : Vector3.zero;
         Rigidbody otherRb = other.attachedRigidbody;
         Vector3 vOther = otherRb ? otherRb.GetPointVelocity(P) : Vector3.zero;
 
         Vector3 rel = vSelf - vOther;
-        float sideSpeed = Mathf.Abs(Vector3.Dot(rel, sideDir));
+        float sideSpeed = Mathf.Abs(Vector3.Dot(rel, sideDir));     // m/s
         float forwardCmp = Mathf.Abs(Vector3.Dot(rel, carTf.forward));
-        float relMag = rel.magnitude;
+        float relMag = rel.magnitude;                            // m/s
 
+        // Gates
         bool allowByDot = (dot >= 0.90f);
         bool validHit =
             isSide &&
@@ -67,21 +73,32 @@ public class SpikeTrigger : MonoBehaviour
         bool wasScraping = m_scraping.Contains(id);
 
         if (!validHit) { if (wasScraping) m_scraping.Remove(id); return; }
-        if (wasScraping) return;
+        if (wasScraping) return; // én skade pr. “scrape”
 
         float now = Time.time;
         if (m_lastHitTime.TryGetValue(id, out float lastTime))
-        {
             if (now - lastTime < cooldown) return;
-        }
 
         m_scraping.Add(id);
         m_lastHitTime[id] = now;
 
+        // Find health
         Health target = FindTargetHealth(other);
-        if (target && target != m_selfHealth) // sikker at vi ikke rasiker at vi skader oselv. 
+        if (target && target != m_selfHealth)
         {
-            target.ApplyDamage(damagePerHit);
+            // Skadeberegning
+            float relKmh = relMag * 3.6f; // m/s -> km/t
+            float damage = damagePerHit;
+
+            // 1) bonus pr. km/t
+            if (damagePerKmh > 0f)
+                damage += damagePerKmh * relKmh;
+
+            // 2) vinkelbonus
+            if (angleBonusMax > 0f)
+                damage *= Mathf.Lerp(1f, 1f + angleBonusMax, Mathf.Clamp01(dot));
+
+            target.ApplyDamage(damage);
         }
     }
     private void OnTriggerExit(Collider other)
