@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PrometeoCarController : MonoBehaviour
+public class CarController : MonoBehaviour
 {
 
     //CAR SETUP
@@ -26,7 +26,7 @@ public class PrometeoCarController : MonoBehaviour
       public int maxSpeed = 90; //The maximum speed that the car can reach in km/h.
       [Range(10, 120)]
       public int maxReverseSpeed = 45; //The maximum speed that the car can reach while going on reverse in km/h.
-      //[Range(1, 100)]
+      [Range(1, 100)]
       public int accelerationMultiplier = 2; // How fast the car can accelerate. 1 is a slow acceleration and 10 is the fastest.
       [Space(10)]
       [Range(10, 45)]

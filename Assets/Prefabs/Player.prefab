@@ -74,12 +74,12 @@ GameObject:
   m_Component:
   - component: {fileID: 5877150516581978285}
   - component: {fileID: 3777105918626671760}
-  - component: {fileID: 130131411747124088}
   - component: {fileID: 7063588717338299344}
   - component: {fileID: 7608821518641193324}
   - component: {fileID: 2756139008681808850}
   - component: {fileID: 4844216852583963681}
   - component: {fileID: 3553300526799805270}
+  - component: {fileID: 2396910173577997027}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -134,54 +134,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &130131411747124088
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 451024516442597160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0fefceefe666bb4682b272ec8c5bdd0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxSpeed: 190
-  maxReverseSpeed: 60
-  accelerationMultiplier: 10
-  maxSteeringAngle: 27
-  steeringSpeed: 0.5
-  brakeForce: 350
-  decelerationMultiplier: 2
-  handbrakeDriftMultiplier: 5
-  bodyMassCenter: {x: 0, y: 0, z: 0}
-  frontLeftMesh: {fileID: 7663430935665004238}
-  frontLeftCollider: {fileID: 7872143744667235958}
-  frontRightMesh: {fileID: 5896496992362120058}
-  frontRightCollider: {fileID: 7768291585296230553}
-  rearLeftMesh: {fileID: 6497127547384400775}
-  rearLeftCollider: {fileID: 4189106314968080646}
-  rearRightMesh: {fileID: 6843791014006579484}
-  rearRightCollider: {fileID: 8595081004779744903}
-  useEffects: 0
-  RLWParticleSystem: {fileID: 0}
-  RRWParticleSystem: {fileID: 0}
-  RLWTireSkid: {fileID: 0}
-  RRWTireSkid: {fileID: 0}
-  useUI: 0
-  carSpeedText: {fileID: 0}
-  useSounds: 0
-  carEngineSound: {fileID: 0}
-  tireScreechSound: {fileID: 0}
-  useTouchControls: 0
-  throttleButton: {fileID: 0}
-  reverseButton: {fileID: 0}
-  turnRightButton: {fileID: 0}
-  turnLeftButton: {fileID: 0}
-  handbrakeButton: {fileID: 0}
-  carSpeed: 0
-  isDrifting: 0
-  isTractionLocked: 0
 --- !u!114 &7063588717338299344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +209,54 @@ MonoBehaviour:
   m_prometeoController: {fileID: 0}
   m_lookAheadCarSpeed: 30
   m_lookAheadRotationSpeed: 0
+--- !u!114 &2396910173577997027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 451024516442597160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c469ba8d2b62c44b3c1aab1f81d3de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSpeed: 190
+  maxReverseSpeed: 45
+  accelerationMultiplier: 20
+  maxSteeringAngle: 27
+  steeringSpeed: 0.5
+  brakeForce: 350
+  decelerationMultiplier: 2
+  handbrakeDriftMultiplier: 5
+  bodyMassCenter: {x: 0, y: 0, z: 0}
+  frontLeftMesh: {fileID: 7663430935665004238}
+  frontLeftCollider: {fileID: 7872143744667235958}
+  frontRightMesh: {fileID: 5896496992362120058}
+  frontRightCollider: {fileID: 7768291585296230553}
+  rearLeftMesh: {fileID: 6497127547384400775}
+  rearLeftCollider: {fileID: 4189106314968080646}
+  rearRightMesh: {fileID: 6843791014006579484}
+  rearRightCollider: {fileID: 8595081004779744903}
+  useEffects: 0
+  RLWParticleSystem: {fileID: 0}
+  RRWParticleSystem: {fileID: 0}
+  RLWTireSkid: {fileID: 0}
+  RRWTireSkid: {fileID: 0}
+  useUI: 0
+  carSpeedText: {fileID: 0}
+  useSounds: 0
+  carEngineSound: {fileID: 0}
+  tireScreechSound: {fileID: 0}
+  useTouchControls: 0
+  throttleButton: {fileID: 0}
+  reverseButton: {fileID: 0}
+  turnRightButton: {fileID: 0}
+  turnLeftButton: {fileID: 0}
+  handbrakeButton: {fileID: 0}
+  carSpeed: 0
+  isDrifting: 0
+  isTractionLocked: 0
 --- !u!1 &743830482656388663
 GameObject:
   m_ObjectHideFlags: 0
