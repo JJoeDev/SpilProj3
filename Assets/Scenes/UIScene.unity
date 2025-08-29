@@ -248,7 +248,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &27920966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1326,7 +1326,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &486270857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2356,10 +2356,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_scoreMeter: {fileID: 346989265}
-  upgradeCards:
+  m_upgradeCards:
   - {fileID: 1938811032}
   - {fileID: 1998552754}
   - {fileID: 818647242}
+  m_upgradeMenu: {fileID: 847041956}
   upgrades: []
   upgradeCount: 0
 --- !u!1 &972148555
@@ -2456,7 +2457,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &1059723559
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2629,7 +2630,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1201213723
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3567,7 +3568,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1535606101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4100,8 +4101,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1820178479}
-  - component: {fileID: 1820178478}
   - component: {fileID: 1820178477}
+  - component: {fileID: 1820178480}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -4122,22 +4123,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_UpdgradeGameObject: {fileID: 670353479}
---- !u!114 &1820178478
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1820178476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93cfbd58de7f84444b3dc3c6f726e529, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_scoreMeter: {fileID: 365687825}
-  upgradeCards: []
-  upgrades: []
-  upgradeCount: 0
 --- !u!4 &1820178479
 Transform:
   m_ObjectHideFlags: 0
@@ -4153,6 +4138,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1820178480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820178476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e14c45d1f1cdb44cb2b742c4d4cb258, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1863522573
 GameObject:
   m_ObjectHideFlags: 0

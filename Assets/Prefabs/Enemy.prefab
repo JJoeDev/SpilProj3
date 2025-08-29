@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7528079190874839488}
   - component: {fileID: 7397170708553163835}
   - component: {fileID: 7639496242170159362}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FrontLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 7473826415756138161}
   - component: {fileID: 998470517558576084}
   - component: {fileID: 6968953766468568830}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BackLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -255,7 +255,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5048561533899017044}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: wheels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 3076623760017186166}
   - component: {fileID: 4776468808253627410}
   - component: {fileID: 4346760663666590554}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BackRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -415,9 +415,12 @@ GameObject:
   - component: {fileID: 2718240719565824080}
   - component: {fileID: 8005672444571490669}
   - component: {fileID: 5334735167744236527}
-  m_Layer: 0
+  - component: {fileID: 6512977799005138301}
+  - component: {fileID: 2654978668696656642}
+  - component: {fileID: 3998975548287866794}
+  m_Layer: 3
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -492,6 +495,46 @@ MonoBehaviour:
   m_distanceToNewCorner: 1
   m_roamAreaCenter: {x: 0, y: 1, z: 0}
   m_roamAreaSize: {x: 30, y: 30}
+--- !u!114 &6512977799005138301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7109853836760191339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c7cb57efd6aae34e9cd583933930bfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 0.1
+  currentHealth: 0.1
+--- !u!114 &2654978668696656642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7109853836760191339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38cbc9bc02b0a0947b5083630313a001, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3998975548287866794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7109853836760191339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804536a38a26994409ed0ee2633a9189, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_explosion: {fileID: 7371277966341323998, guid: f4563bb67950c6049929320f958aa374,
+    type: 3}
 --- !u!1 &7478774960546996045
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,7 +547,7 @@ GameObject:
   - component: {fileID: 3865006055234790473}
   - component: {fileID: 7333451153986494823}
   - component: {fileID: 5481972541602363292}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FrontRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -627,7 +670,7 @@ GameObject:
   - component: {fileID: 2038134989145947420}
   - component: {fileID: 7167797655009696615}
   - component: {fileID: 4859146132275907717}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: EnemyBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
