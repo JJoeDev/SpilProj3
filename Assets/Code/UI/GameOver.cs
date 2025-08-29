@@ -39,7 +39,7 @@ public class GameOver : MonoBehaviour
         // Needs to be our Upgrades scene
         SceneManager.LoadScene("Upgrades");
     }
-    public void ContinueButton()
+    public void RestartButton()
     {
         // Needs to be the our main scene
         SceneManager.LoadScene("William");
