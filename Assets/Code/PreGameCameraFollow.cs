@@ -6,28 +6,28 @@ public class PreGameCameraFollow : MonoBehaviour
 {
     [SerializeField] GameObject[] m_cameraFollowPoints;
     [SerializeField] GameObject m_car;
-    [SerializeField] float cameraMoveSpeed = 10f;
+    [SerializeField] float m_cameraMoveSpeed = 10f;
 
-    Transform targetPos;
-    int cameraFollowIndex = 0;
+    Transform m_targetPos;
+    int m_cameraFollowIndex = 0;
 
     private void Awake()
     {
-        targetPos = m_cameraFollowPoints[0].transform;
+        m_targetPos = m_cameraFollowPoints[0].transform;
     }
 
     private void Update()
     {
         transform.LookAt(m_car.transform.position);
 
-        if ((transform.position - m_cameraFollowPoints[cameraFollowIndex].transform.position).magnitude < 0.01f)
+        if ((transform.position - m_cameraFollowPoints[m_cameraFollowIndex].transform.position).magnitude < 0.01f)
         {
-            if (cameraFollowIndex >= m_cameraFollowPoints.Length - 1) cameraFollowIndex = 0;
-            if (cameraFollowIndex < m_cameraFollowPoints.Length) cameraFollowIndex++;
+            if (m_cameraFollowIndex >= m_cameraFollowPoints.Length - 1) m_cameraFollowIndex = 0;
+            if (m_cameraFollowIndex < m_cameraFollowPoints.Length) m_cameraFollowIndex++;
         }
 
 
 
-        transform.position = Vector3.MoveTowards(transform.position, m_cameraFollowPoints[cameraFollowIndex].transform.position, cameraMoveSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, m_cameraFollowPoints[m_cameraFollowIndex].transform.position, m_cameraMoveSpeed * Time.deltaTime);
     }
 }
