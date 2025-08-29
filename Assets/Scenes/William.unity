@@ -3050,7 +3050,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 852258087}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.16793163, y: 0.33245635, z: -0.060285833, w: 0.92608714}
+  m_LocalRotation: {x: 0.16793162, y: 0.33245632, z: -0.06028583, w: 0.92608714}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4149,6 +4149,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3de11aae712ac974cb0c73708651d108, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHealth: 0
+  _maxHealth: 100
+  vehicleExplosion: {fileID: 0}
 --- !u!114 &1340815564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4161,6 +4164,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c6d5147066fc44081257ee84932e4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  armorHealth: 50
+  armorVisual: {fileID: 0}
 --- !u!114 &1340815565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5634,6 +5639,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3de11aae712ac974cb0c73708651d108, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHealth: 0
+  _maxHealth: 100
+  vehicleExplosion: {fileID: 0}
 --- !u!1 &1952951193
 GameObject:
   m_ObjectHideFlags: 3
