@@ -24,6 +24,11 @@ public class SpikeTrigger : MonoBehaviour
     [Header("Timing")]
     public float cooldown = 1.5f; // sek pr. target mellem hits
 
+    [Header("Filtering")]
+    public string spikeTag = "Spike";
+    public float selfSpikeProbeRadius = 0.02f; // radius (i meter) på en lille "OverlapSphere"-probe, der tjekker om kontaktpunktet rører en collider med tag "Spike"
+    public bool requireSelfSpikeContact = true;
+
     private Health m_selfHealth;
     private readonly HashSet<int> m_scraping = new HashSet<int>();
     private readonly Dictionary<int, float> m_lastHitTime = new Dictionary<int, float>();
@@ -41,6 +46,20 @@ public class SpikeTrigger : MonoBehaviour
 
         // Geometri
         Vector3 P = other.ClosestPoint(carTf.position);
+        if (requireSelfSpikeContact)
+        {
+            var hits = Physics.OverlapSphere(P, Mathf.Max(0.001f, selfSpikeProbeRadius), ~0, QueryTriggerInteraction.Collide);
+            bool spikeTouch = false;
+            for (int i = 0; i < hits.Length; i++)
+            {
+                var c = hits[i];
+                if (!c || !c.enabled) continue;
+                if (!c.CompareTag(spikeTag)) continue;
+                var t = c.transform;
+                if (t == carTf || t.IsChildOf(carTf)) { spikeTouch = true; break; }
+            }
+            if (!spikeTouch) return;
+        }
         Vector3 localP = carTf.InverseTransformPoint(P);
 
         bool isSide = Mathf.Abs(localP.z) <= zThreshold;
