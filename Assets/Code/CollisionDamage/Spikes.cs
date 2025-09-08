@@ -29,7 +29,7 @@ public class SpikeTrigger : MonoBehaviour
     public float selfSpikeProbeRadius = 0.02f; // radius (i meter) på en lille "OverlapSphere"-probe, der tjekker om kontaktpunktet rører en collider med tag "Spike"
     public bool requireSelfSpikeContact = true;
 
-    private Health m_selfHealth;
+    //private Health m_selfHealth;
     private readonly HashSet<int> m_scraping = new HashSet<int>();
     private readonly Dictionary<int, float> m_lastHitTime = new Dictionary<int, float>();
 
