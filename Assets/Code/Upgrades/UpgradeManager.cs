@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class UpgradeManager : MonoBehaviour
 {
-    [SerializeField] private UIMeter m_scoreMeter;
+    public UIMeter scoreMeter;
     [SerializeField] private UpgradeCard[] m_upgradeCards;
     [SerializeField] private GameObject m_upgradeMenu;
     private InputManager m_inputManager;
@@ -29,10 +29,9 @@ public class UpgradeManager : MonoBehaviour
 
         if(upgradeCount < m_upgradeCards.Length)
         {
-            if (m_scoreMeter.value >= (m_scoreMeter.maxValue / 3) * (upgradeCount + 1))
+            if (scoreMeter.value >= (scoreMeter.maxValue / 3) * (upgradeCount + 1))
             {
                 Debug.Log("Got upgrade: " + m_upgradeCards[upgradeCount].name);
-                m_scoreMeter.value = 0;
                 m_upgradeCards[upgradeCount].enabled = true;
                 m_upgradeCards[upgradeCount].UpdateCard();
                 upgradeCount++;
@@ -40,7 +39,7 @@ public class UpgradeManager : MonoBehaviour
         }
         else
         {
-            m_scoreMeter.value = m_scoreMeter.maxValue;
+            scoreMeter.value = scoreMeter.maxValue;
         }
     }
 

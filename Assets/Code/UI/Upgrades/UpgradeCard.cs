@@ -39,7 +39,7 @@ public class UpgradeCard : MenuButton
     {
         if (enabled)
         {
-            m_upgradeManager.upgrades[m_upgradeManager.upgradeCount].EnableUpgrade();
+            m_upgradeManager.upgrades[m_upgradeManager.upgradeCount - 1].EnableUpgrade();
         }
         else
         {

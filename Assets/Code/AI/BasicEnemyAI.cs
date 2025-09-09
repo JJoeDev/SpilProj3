@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
-
+using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 public class BasicEnemyAI : MonoBehaviour
@@ -10,7 +10,7 @@ public class BasicEnemyAI : MonoBehaviour
     [Header("Enemy vision")]
     [SerializeField] private float m_sightRadius;
     [SerializeField] private float m_sightAngle;
-    [SerializeField] private Transform m_playerTransform;
+    [SerializeField] private Transform m_playerTransform = null;
 
     [Header("Enemy movement")]
     [SerializeField] WheelCollider m_frontRight;
@@ -18,12 +18,18 @@ public class BasicEnemyAI : MonoBehaviour
     [SerializeField] WheelCollider m_backRight;
     [SerializeField] WheelCollider m_backLeft;
 
-    [SerializeField] private float m_acceleration;
+    [SerializeField] private float m_maxTorque;
+    [SerializeField] private float m_minSpeed;
+    [SerializeField] private float m_maxSpeed;
     [SerializeField] private float m_breakForce;
-    [SerializeField] private float m_speed;
+    [SerializeField] private float m_maxBreakForce;
+    [Tooltip("When the distance from the ai position to the target corner is lower than this distance, the ai will start to slow down")]
+    [SerializeField] private float m_slowDownDistance;
+    //[SerializeField] private float m_speed;
     [SerializeField] private float m_turnRadius;
     [Tooltip("The distance the center of the enemy needs to be to the NavMesh corner before it moves to a new corner")]
     [SerializeField] private float m_distanceToNewCorner = 1.0f;
+
     private bool m_playerVisible;
     private bool m_playerPathUpdating;
 
@@ -34,53 +40,134 @@ public class BasicEnemyAI : MonoBehaviour
     // Nav mesh related variables
     private NavMeshPath m_path;
 
+    private Rigidbody m_rb;
+
     //private Vector3 m_targetPos = Vector3.zero;
     private Vector3 m_targetDir = Vector3.zero;
     private int m_currentCorner = 0;
 
-    private void Start()
+    bool IsInitialized = false;
+
+    enum ENEMY_STATE 
     {
+        PATROLE,
+        PLAYER_TARGETING,
+    }
+
+    private ENEMY_STATE m_state;
+
+    private IEnumerator Start()
+    {
+        m_rb = GetComponent<Rigidbody>();
         m_path = new NavMeshPath();
 
+        yield return new WaitForSeconds(1.0f);
+
         GetRandomWorldPath();
+
+        m_playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        Assert.AreNotEqual(m_playerTransform, null, "PLAYER TRANSFORM IS NULL");
+
+        Debug.Log("End of Start");
+        IsInitialized = true;
     }
 
     private void FixedUpdate()
     {
+        if (!IsInitialized)
+        {
+            m_currentCorner = 0;
+            return;
+        }
+
         Vector3 playerDir = m_playerTransform.position - transform.position;
 
-        if(playerDir.magnitude <= m_sightRadius)
+        // Is the player inside the visible radius and inside the visible angle
+        if(playerDir.sqrMagnitude <= m_sightRadius * m_sightRadius)
         {
             float angleToPlayer = Vector3.Angle(transform.forward, playerDir);
-            if (angleToPlayer <= m_sightAngle / 2) m_playerVisible = true;
-            else if (m_playerVisible) m_playerVisible = false;
-        }
-        else if(m_playerVisible) m_playerVisible = false;
 
-        if(m_playerVisible && !m_playerPathUpdating) StartCoroutine(ieUpdatePlayerPath());
-        else if(!m_playerVisible)
+            if (angleToPlayer <= m_sightAngle / 2) m_state = ENEMY_STATE.PLAYER_TARGETING; 
+            else if (m_state != ENEMY_STATE.PATROLE) m_state = ENEMY_STATE.PATROLE;
+        }
+        else if(m_state != ENEMY_STATE.PATROLE) m_state= ENEMY_STATE.PATROLE;
+
+        // If the player is seen and we are not following the player, follow the player
+        if (m_state == ENEMY_STATE.PLAYER_TARGETING && !m_playerPathUpdating) StartCoroutine(ieUpdatePlayerPath());
+
+        switch(m_state)
         {
-            if (m_currentCorner == m_path.corners.Length) GetRandomWorldPath();
-
-            m_targetDir = m_path.corners[m_currentCorner] - transform.position;
-
-            if(m_targetDir.magnitude <= m_distanceToNewCorner) m_currentCorner++;
-
-            if(m_currentCorner != m_path.corners.Length)
-            {
-                Vector3 cornerDir = m_path.corners[m_currentCorner] - transform.position;
-                cornerDir.y = 0;
-                float angleToCorner = Vector3.SignedAngle(transform.forward, m_targetDir, Vector3.up);
-
-                float steer = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
-
-                m_frontRight.steerAngle = steer;
-                m_frontLeft.steerAngle = steer;
-
-                m_frontRight.motorTorque = m_acceleration;
-                m_frontLeft.motorTorque = m_acceleration;
-            }
+            case ENEMY_STATE.PATROLE:
+                EnemyPatrole();
+                break;
+            case ENEMY_STATE.PLAYER_TARGETING:
+                EnemyTargeting();
+                break;
+            default:
+                Debug.LogError("How did you end up here?");
+                break;
         }
+    }
+
+    // Slows down and drives smoother
+    void EnemyPatrole()
+    {
+        m_targetDir = m_path.corners[m_currentCorner] - transform.position;
+
+        float distanceToCorner = m_targetDir.sqrMagnitude;
+        if (distanceToCorner <= m_distanceToNewCorner && m_currentCorner < m_path.corners.Length - 1) m_currentCorner++;
+
+        if (m_currentCorner >= m_path.corners.Length)
+        {
+            GetRandomWorldPath();
+            m_frontLeft.brakeTorque = 0;
+            m_frontRight.brakeTorque = 0;
+        }
+
+        m_targetDir = m_path.corners[m_currentCorner] - transform.position;
+        m_targetDir.y = 0;
+        distanceToCorner = m_targetDir.magnitude;
+
+        float angleToCorner = Vector3.SignedAngle(transform.forward, m_targetDir, Vector3.up);
+        float steeringAngle = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
+
+        float maxAllowedSpeed = Mathf.Sqrt(2 * m_breakForce * distanceToCorner);
+        float desiredSpeed = m_maxSpeed;
+
+        if (distanceToCorner <= m_slowDownDistance)
+        {
+            desiredSpeed = Mathf.Min(Mathf.Lerp(m_minSpeed, m_maxSpeed, Mathf.Clamp01(distanceToCorner / m_slowDownDistance)), maxAllowedSpeed);
+        }
+
+        float calculatedAcceleration = (desiredSpeed / m_maxSpeed) * m_maxTorque;
+
+        m_frontLeft.steerAngle = steeringAngle;
+        m_frontRight.steerAngle = steeringAngle;
+
+        m_frontLeft.motorTorque = calculatedAcceleration;
+        m_frontRight.motorTorque = calculatedAcceleration;
+
+        Debug.Log($"CALC ACCELERATION: {calculatedAcceleration} - DESIRED SPEED: {desiredSpeed}");
+    }
+
+    // Just full throttle towards the player
+    void EnemyTargeting()
+    {
+        m_targetDir = m_path.corners[m_currentCorner] - transform.position;
+        if (m_targetDir.sqrMagnitude <= m_distanceToNewCorner && m_currentCorner < m_path.corners.Length - 1) m_currentCorner++;
+
+        m_targetDir = m_path.corners[m_currentCorner] - transform.position;
+        m_targetDir.y = 0;
+
+        float angleToCorner = Vector3.SignedAngle(transform.forward, m_targetDir, Vector3.up);
+
+        float steeringAngle = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
+
+        m_frontLeft.steerAngle = steeringAngle;
+        m_frontRight.steerAngle = steeringAngle;
+
+        m_frontLeft.motorTorque = m_maxTorque;
+        m_frontRight.motorTorque = m_maxTorque;
     }
 
     Vector3 GetRandomWorldPosition()
@@ -105,22 +192,15 @@ public class BasicEnemyAI : MonoBehaviour
 
         Debug.Log("PLAYER VISIBLE");
 
-        while(m_playerVisible)
+        while(m_state == ENEMY_STATE.PLAYER_TARGETING)
         {
             yield return new WaitForSeconds(0.5f);
             NavMesh.CalculatePath(transform.position, m_playerTransform.position, NavMesh.AllAreas, m_path);
         }
 
-        GetRandomWorldPath();
-
         Debug.Log("PLAYER NOT VISIBLE");
 
         m_playerPathUpdating = false;
-    }
-
-    private void OnDrawGizmos()
-    {
-
     }
 
     private void OnDrawGizmosSelected()
@@ -168,6 +248,10 @@ public class BasicEnemyAI : MonoBehaviour
 
             if (m_currentCorner > m_path.corners.Length - 1) return;
             Gizmos.DrawSphere(m_path.corners[m_currentCorner], 0.3f);
+
+            // Visualize slow down distance
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(m_path.corners[m_currentCorner], m_slowDownDistance);
         }
 
         // Visualize enemy roam area
