@@ -8,13 +8,13 @@ using UnityEngine.UI;
 public class UpgradeCard : MenuButton
 {
     [Header("Upgrade Data")]
-    [SerializeField] private string upgradeID;   // Unique ID for saving/loading
-    public string UpgradeID => upgradeID;        // Read-only accessor
+    [SerializeField] private string upgradeID; // Unique ID for saving/loading
+    public string UpgradeID => upgradeID; // Read-only accessor
 
     [SerializeField] private Image m_cardImage;
     [SerializeField] private UpgradeManager m_upgradeManager;
-    [SerializeField] private Upgrade linkedUpgrade;   // Drag in Inspector
-    public Upgrade LinkedUpgrade => linkedUpgrade;    // Public read-only accessor
+    [SerializeField] private Upgrade linkedUpgrade; // Drag in Inspector
+    public Upgrade LinkedUpgrade => linkedUpgrade;    
 
     [Tooltip("Whether this upgrade is unlocked")]
     public bool isUnlocked = false;              

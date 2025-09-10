@@ -27,7 +27,7 @@ public class UpgradeManager : MonoBehaviour
     private void Start()
     {
         m_inputManager = InputManager.Instance;
-        ReapplySavedUpgrades(); // Also handle initial scene
+        ReapplySavedUpgrades();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -97,7 +97,7 @@ public class UpgradeManager : MonoBehaviour
             scoreMeter.value = scoreMeter.maxValue;
         }
 
-        // Save current score every frame (or after changes)
+        // Save current score every frame
         if (UpgradeSaving.Instance != null)
         {
             UpgradeSaving.Instance.SetScore((int)scoreMeter.value);
