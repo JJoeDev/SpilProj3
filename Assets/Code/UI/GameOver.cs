@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,6 +22,8 @@ public class GameOver : MonoBehaviour
         // We could change this to if the player has 0 health or something else
         if (Player == null)
         {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
             ShowGameOver();
         }
     }
@@ -32,15 +35,10 @@ public class GameOver : MonoBehaviour
             GameOverScreen.SetActive(true);
 
     }
-
-    public void UpgradesButton()
-    {
-        // These two buttons needs to be changed to the correct scene unless we dont use scenes for the menu
-    }
     public void RestartButton()
     {
         // Needs to be the our main scene
-        SceneManager.LoadScene("MainScene");
+        SceneManager.LoadScene("William1");
     }
     public void MainMenuButton()
     {
