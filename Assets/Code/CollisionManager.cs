@@ -9,6 +9,7 @@ public class CollisionManager : MonoBehaviour
 
     private Rigidbody m_rb;
     private HealthManager m_health;
+   [SerializeField] private ParticleSystem m_collisionSparks;
 
     void Awake()
     {
@@ -18,6 +19,10 @@ public class CollisionManager : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        foreach (ContactPoint contact in collision.contacts)
+        {
+            Instantiate(m_collisionSparks, contact.point, Quaternion.identity);
+        }
 
         HealthManager otherHealth = collision.gameObject.GetComponent<HealthManager>();
         if (otherHealth == null) return; // not a damageable object
