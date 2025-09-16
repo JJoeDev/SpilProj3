@@ -10,6 +10,7 @@ public class UpgradeCard : MenuButton
 {
     [SerializeField] Image m_cardImage;
     [SerializeField] UpgradeManager m_upgradeManager;
+    [SerializeField] GameObject m_lock;
     public bool enabled = false;
 
     // Update is called once per frame
@@ -28,10 +29,12 @@ public class UpgradeCard : MenuButton
         if (enabled)
         {
             m_cardImage.color = Color.white;
+            m_lock.SetActive(false);
         }
         else
         {
             m_cardImage.color = new Color(0.5f, 0.5f, 0.5f);
+            m_lock.SetActive(true);
         }
     }
 
