@@ -62,6 +62,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpenUpgradeRoadmap"",
+                    ""type"": ""Button"",
+                    ""id"": ""1c6acacd-b18a-46c6-84b7-4d71f17ca0a9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -196,6 +205,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a647bb69-fe4e-4fac-b2c6-1da01536a7cd"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenUpgradeRoadmap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -208,6 +228,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_HandBreak = m_Player.FindAction("HandBreak", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_OpenUpgradeRoadmap = m_Player.FindAction("OpenUpgradeRoadmap", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -273,6 +294,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_HandBreak;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_OpenUpgradeRoadmap;
     public struct PlayerActions
     {
         private @PlayerInputs m_Wrapper;
@@ -281,6 +303,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @HandBreak => m_Wrapper.m_Player_HandBreak;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @OpenUpgradeRoadmap => m_Wrapper.m_Player_OpenUpgradeRoadmap;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -302,6 +325,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
+            @OpenUpgradeRoadmap.started += instance.OnOpenUpgradeRoadmap;
+            @OpenUpgradeRoadmap.performed += instance.OnOpenUpgradeRoadmap;
+            @OpenUpgradeRoadmap.canceled += instance.OnOpenUpgradeRoadmap;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -318,6 +344,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
+            @OpenUpgradeRoadmap.started -= instance.OnOpenUpgradeRoadmap;
+            @OpenUpgradeRoadmap.performed -= instance.OnOpenUpgradeRoadmap;
+            @OpenUpgradeRoadmap.canceled -= instance.OnOpenUpgradeRoadmap;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -341,5 +370,6 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnHandBreak(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnOpenUpgradeRoadmap(InputAction.CallbackContext context);
     }
 }

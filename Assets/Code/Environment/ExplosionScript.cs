@@ -1,18 +1,13 @@
 using UnityEngine;
 
-public class ExplosionScript : MonoBehaviour
+public class VehicleExplosion : Explodable 
 {
-    [SerializeField] private GameObject m_explosionPrefab; // assign prefab-asset i Inspector
-    [SerializeField] private bool m_destroySelfAfterExplode = false;
-
-    public void Explode()
+    [SerializeField] private GameObject m_explosion;
+   // [SerializeField] public float  health;
+   public void Explodes()
     {
-        if (m_explosionPrefab != null)
-        {
-            Instantiate(m_explosionPrefab, transform.position, Quaternion.identity);
-        }
-
-        if (m_destroySelfAfterExplode)
-            Destroy(gameObject);
+        m_explosion = Instantiate(m_explosion, transform.position, Quaternion.identity);
+        Instantiate(m_explosion);
+        Destroy(gameObject);
     }
 }
