@@ -19,8 +19,8 @@ public class SpeeduMeter : MonoBehaviour
 
     [Header("Skala & visning")]
     [Tooltip("Min/max vinkel på nålen (grader). F.eks. -130 til +130")]
-    public float needleMinAngle = -130f;
-    public float needleMaxAngle = 130f;
+    public float needleMinAngle = 99.555f;  // venstre (max hastighed)
+    public float needleMaxAngle = -100.485f;  // højre (0 km/t)
 
     [Tooltip("Visuel max-værdi på skiven (km/t). Typisk = bilens maxSpeed, men kan være højere for headroom.")]
     public float gaugeMaxKmh = 200f;
@@ -68,7 +68,7 @@ public class SpeeduMeter : MonoBehaviour
 
         // Clamp til skivens max
         float t = Mathf.InverseLerp(0f, Mathf.Max(1f, gaugeMaxKmh), Mathf.Min(kmh, gaugeMaxKmh));
-        float angle = Mathf.Lerp(needleMinAngle, needleMaxAngle, t);
+        float angle = Mathf.Lerp(needleMaxAngle, needleMinAngle, t);
         needle.localEulerAngles = new Vector3(0f, 0f, angle);
     }
 
