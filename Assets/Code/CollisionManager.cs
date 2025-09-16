@@ -19,10 +19,7 @@ public class CollisionManager : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        foreach (ContactPoint contact in collision.contacts)
-        {
-            Instantiate(m_collisionSparks, contact.point, Quaternion.identity);
-        }
+       
 
         HealthManager otherHealth = collision.gameObject.GetComponent<HealthManager>();
         if (otherHealth == null) return; // not a damageable object
@@ -51,12 +48,19 @@ public class CollisionManager : MonoBehaviour
 
         // Base scaling from collision force
         float baseImpactDamage = relativeSpeed * m_baseDamage;
+       // m_sparkScaling = relativeSpeed * m_scaleMultiplier;
+       // transScale.localScale *= m_sparkScaling;
         if (relativeSpeed < 5)
         {
             return;
         }
         else
         {
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                Instantiate(m_collisionSparks, contact.point, Quaternion.identity);
+            }
+
             if (angle < 45f) // I hit them with my front
             {
                 // Check if they’re also facing me (head-on)
