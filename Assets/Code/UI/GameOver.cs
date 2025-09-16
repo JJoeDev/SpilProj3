@@ -32,7 +32,7 @@ public class GameOver : MonoBehaviour
     {
         // makes sure the game over screen is shown
         if (m_gameOverScreen != null)
-            g_ameOverScreen.SetActive(true);
+            m_gameOverScreen.SetActive(true);
 
     }
     
