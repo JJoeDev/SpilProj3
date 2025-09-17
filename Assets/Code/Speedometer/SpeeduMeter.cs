@@ -84,22 +84,23 @@ public class SpeeduMeter : MonoBehaviour
             }
             else
             {
-                speedText.text = Mathf.RoundToInt(kmh).ToString();
+                speedText.text = $"{Mathf.RoundToInt(kmh)} km/h";
             }
         }
-
-        // Hvis du bruger TMP:
-        // if (speedTMP)
-        // {
-        //     if (showMphToo)
-        //     {
-        //         float mph = kmh * kmhToMph;
-        //         speedTMP.text = $"{Mathf.RoundToInt(kmh)} km/h\n{Mathf.RoundToInt(mph)} mph";
-        //     }
-        //     else
-        //     {
-        //         speedTMP.text = Mathf.RoundToInt(kmh).ToString();
-        //     }
-        // }
+        /*
+        // Hvis i heller vil bruge TMP:
+           if (speedTMP)
+           {
+               if (showMphToo)
+              {
+          float mph = kmh * kmhToMph;
+                speedTMP.text = $"{Mathf.RoundToInt(kmh)} km/h\n{Mathf.RoundToInt(mph)} mph";
+              }
+              else
+            {
+                 speedTMP.text = Mathf.RoundToInt(kmh).ToString();
+             }
+         }
+        */
     }
 }
