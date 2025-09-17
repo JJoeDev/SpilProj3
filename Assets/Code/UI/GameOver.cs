@@ -5,22 +5,25 @@ using UnityEngine.SceneManagement;
 
 public class GameOver : MonoBehaviour
 {
-    public GameObject GameOverScreen;
-    public GameObject Player;
+    [SerializeField] private GameObject m_gameOverScreen;
+    [SerializeField] private GameObject m_player;
 
     void Start()
     {
         // Makes sure the screen starts hidden
-        if (GameOverScreen != null)
-            GameOverScreen.SetActive(false);
+        if (m_gameOverScreen != null)
+            m_gameOverScreen.SetActive(false);
     }
 
     void Update()
     {
         // if the player object is destroyed the screen is displayed
         // We could change this to if the player has 0 health or something else
-        if (Player == null)
+        if (m_player == null)
         {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            
             ShowGameOver();
         }
     }
@@ -28,20 +31,17 @@ public class GameOver : MonoBehaviour
     public void ShowGameOver()
     {
         // makes sure the game over screen is shown
-        if (GameOverScreen != null)
-            GameOverScreen.SetActive(true);
+        if (m_gameOverScreen != null)
+            m_gameOverScreen.SetActive(true);
 
     }
-
-    public void UpgradesButton()
-    {
-        // These two buttons needs to be changed to the correct scene unless we dont use scenes for the menu
-    }
+    
     public void RestartButton()
     {
         // Needs to be the our main scene
-        SceneManager.LoadScene("MainScene");
+        SceneManager.LoadScene("William1");
     }
+    
     public void MainMenuButton()
     {
         // Needs to be our main menu
