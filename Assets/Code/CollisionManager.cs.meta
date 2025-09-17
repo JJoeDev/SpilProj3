@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Code/Spikes.cs.meta
+guid: fe71e260fc8084f4cbd4fd9003238ebf
+========
 guid: 38cbc9bc02b0a0947b5083630313a001
+>>>>>>>> main:Assets/Code/CollisionManager.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
