@@ -8,7 +8,7 @@ public class PhysicExplodable : Explodable
     Rigidbody m_rigidBody;
     private void Start()
     {
-        if (!GetComponent<Rigidbody>())
+        if (GetComponent<Rigidbody>())
         {
             Debug.LogWarning("Physics explodable object: " + name + ", requires a rigidbody!");
         }

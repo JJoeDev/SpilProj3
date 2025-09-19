@@ -146,8 +146,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38cbc9bc02b0a0947b5083630313a001, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_collisionSparks: {fileID: 0}
-  m_collSparks: {fileID: 0}
+  m_collisionSparks: {fileID: 3319173436419418051, guid: a48b7a8dbd6517e4babb50a9126666b7,
+    type: 3}
+  m_collSparks: {fileID: 5324098961240299986, guid: a48b7a8dbd6517e4babb50a9126666b7,
+    type: 3}
   m_collSparkScaleMultiplier: 1
 --- !u!114 &7608821518641193324
 MonoBehaviour:
