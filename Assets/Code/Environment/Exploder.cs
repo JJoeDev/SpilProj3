@@ -21,6 +21,7 @@ public class Exploder : Explodable
        
         m_affectedObjects = new Collider[m_affectedObjectsCount];
         Physics.OverlapSphereNonAlloc(transform.position, m_explodeRadius, m_affectedObjects);
+
         
         foreach (Collider collider in m_affectedObjects)
         {

@@ -11,7 +11,7 @@ public class CollisionManager : MonoBehaviour
     private HealthManager m_health;
    [SerializeField] private ParticleSystem m_collisionSparks;
     [SerializeField] private Transform m_collSparks;
-    [SerializeField] private float m_collSparkScaleMultiplier = 1;
+    [SerializeField] private float m_collSparkScaleMultiplier = 0.1f;
     private float m_transScale;
     
 

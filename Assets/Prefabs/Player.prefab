@@ -146,6 +146,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38cbc9bc02b0a0947b5083630313a001, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_collisionSparks: {fileID: 0}
+  m_collSparks: {fileID: 0}
+  m_collSparkScaleMultiplier: 1
 --- !u!114 &7608821518641193324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,7 +224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4c469ba8d2b62c44b3c1aab1f81d3de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 250
+  maxSpeed: 100
   maxReverseSpeed: 45
   accelerationMultiplier: 40
   maxSteeringAngle: 27
