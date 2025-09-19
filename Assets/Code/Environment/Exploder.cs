@@ -6,13 +6,19 @@ public class Exploder : Explodable
 {
     [SerializeField] float m_explodeRadius = 5;
     [SerializeField] float m_explosionForce = 15;
+    private HealthManager m_healthManager;
 
+    private void Awake()
+    {
+        m_healthManager = GetComponent<HealthManager>();
+    }
 
     Collider[] m_affectedObjects;
     int m_affectedObjectsCount = 20;
 
     public override void Explode()
     {
+       
         m_affectedObjects = new Collider[m_affectedObjectsCount];
         Physics.OverlapSphereNonAlloc(transform.position, m_explodeRadius, m_affectedObjects);
         
