@@ -67,7 +67,6 @@ public class CollisionManager : MonoBehaviour
             foreach (ContactPoint contact in collision.contacts)
             {
                 Instantiate(m_collisionSparks, contact.point, Quaternion.identity);
-                
             }
 
             if (angle < 45f) // I hit them with my front
