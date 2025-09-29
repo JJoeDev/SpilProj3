@@ -12,6 +12,7 @@ public class UpgradeCard : MenuButton
     public string UpgradeID => upgradeID; // Read-only accessor
 
     [SerializeField] private Image m_cardImage;
+    [SerializeField] private GameObject m_lock;
     [SerializeField] private UpgradeManager m_upgradeManager;
     [SerializeField] private Upgrade linkedUpgrade; // Drag in Inspector
     public Upgrade LinkedUpgrade => linkedUpgrade;    
@@ -34,10 +35,12 @@ public class UpgradeCard : MenuButton
         if (isUnlocked)
         {
             m_cardImage.color = Color.white;
+            m_lock.SetActive(false);
         }
         else
         {
             m_cardImage.color = new Color(0.5f, 0.5f, 0.5f);
+            m_lock.SetActive(true);
         }
     }
 
