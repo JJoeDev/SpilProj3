@@ -71,6 +71,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RevealEnemies"",
+                    ""type"": ""Button"",
+                    ""id"": ""9dda0454-10b1-45b2-89b8-d55022c1a027"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -216,6 +225,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""OpenUpgradeRoadmap"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""57bce3fa-a02f-4e6b-bf15-0f4b3ff3a30b"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RevealEnemies"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -229,6 +249,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_Player_HandBreak = m_Player.FindAction("HandBreak", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_OpenUpgradeRoadmap = m_Player.FindAction("OpenUpgradeRoadmap", throwIfNotFound: true);
+        m_Player_RevealEnemies = m_Player.FindAction("RevealEnemies", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -295,6 +316,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_HandBreak;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_OpenUpgradeRoadmap;
+    private readonly InputAction m_Player_RevealEnemies;
     public struct PlayerActions
     {
         private @PlayerInputs m_Wrapper;
@@ -304,6 +326,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         public InputAction @HandBreak => m_Wrapper.m_Player_HandBreak;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @OpenUpgradeRoadmap => m_Wrapper.m_Player_OpenUpgradeRoadmap;
+        public InputAction @RevealEnemies => m_Wrapper.m_Player_RevealEnemies;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -328,6 +351,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @OpenUpgradeRoadmap.started += instance.OnOpenUpgradeRoadmap;
             @OpenUpgradeRoadmap.performed += instance.OnOpenUpgradeRoadmap;
             @OpenUpgradeRoadmap.canceled += instance.OnOpenUpgradeRoadmap;
+            @RevealEnemies.started += instance.OnRevealEnemies;
+            @RevealEnemies.performed += instance.OnRevealEnemies;
+            @RevealEnemies.canceled += instance.OnRevealEnemies;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -347,6 +373,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @OpenUpgradeRoadmap.started -= instance.OnOpenUpgradeRoadmap;
             @OpenUpgradeRoadmap.performed -= instance.OnOpenUpgradeRoadmap;
             @OpenUpgradeRoadmap.canceled -= instance.OnOpenUpgradeRoadmap;
+            @RevealEnemies.started -= instance.OnRevealEnemies;
+            @RevealEnemies.performed -= instance.OnRevealEnemies;
+            @RevealEnemies.canceled -= instance.OnRevealEnemies;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -371,5 +400,6 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         void OnHandBreak(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnOpenUpgradeRoadmap(InputAction.CallbackContext context);
+        void OnRevealEnemies(InputAction.CallbackContext context);
     }
 }
