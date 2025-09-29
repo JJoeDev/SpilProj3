@@ -5,11 +5,12 @@ using UnityEngine.AI;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(Rigidbody))]
 public class BasicEnemyAI : MonoBehaviour
 {
     [Header("Enemy vision")]
-    [SerializeField] private float m_sightRadius;
-    [SerializeField] private float m_sightAngle;
+    [SerializeField] private float m_sightRadius = 30;
+    [SerializeField] private float m_sightAngle = 215;
     [SerializeField] private Transform m_playerTransform = null;
 
     [Header("Enemy movement")]
@@ -18,19 +19,19 @@ public class BasicEnemyAI : MonoBehaviour
     [SerializeField] WheelCollider m_backRight;
     [SerializeField] WheelCollider m_backLeft;
 
-    [SerializeField] private float m_maxTorque;
-    [SerializeField] private float m_minSpeed;
-    [SerializeField] private float m_maxSpeed;
-    [SerializeField] private float m_breakForce;
-    [SerializeField] private float m_maxBreakForce;
+    [SerializeField] private float m_maxTorque = 300;
+    [SerializeField] private float m_minSpeed = 10;
+    [SerializeField] private float m_maxSpeed = 300;
+    [SerializeField] private float m_breakForce = 15;
+    [SerializeField] private float m_maxBreakForce = 1;
     [Tooltip("When the distance from the ai position to the target corner is lower than this distance, the ai will start to slow down")]
-    [SerializeField] private float m_slowDownDistance;
+    [SerializeField] private float m_slowDownDistance = 30;
     //[SerializeField] private float m_speed;
-    [SerializeField] private float m_turnRadius;
+    [SerializeField] private float m_turnRadius = 36;
     [Tooltip("The distance the center of the enemy needs to be to the NavMesh corner before it moves to a new corner")]
     [SerializeField] private float m_distanceToNewCorner = 1.0f;
 
-    private bool m_playerVisible;
+    // private bool m_playerVisible;
     private bool m_playerPathUpdating;
 
     [Header("Roaming area")]
@@ -46,8 +47,6 @@ public class BasicEnemyAI : MonoBehaviour
     private Vector3 m_targetDir = Vector3.zero;
     private int m_currentCorner = 0;
 
-    bool IsInitialized = false;
-
     enum ENEMY_STATE 
     {
         PATROLE,
@@ -56,30 +55,19 @@ public class BasicEnemyAI : MonoBehaviour
 
     private ENEMY_STATE m_state;
 
-    private IEnumerator Start()
+    private void Start()
     {
         m_rb = GetComponent<Rigidbody>();
         m_path = new NavMeshPath();
-
-        yield return new WaitForSeconds(1.0f);
 
         GetRandomWorldPath();
 
         m_playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         Assert.AreNotEqual(m_playerTransform, null, "PLAYER TRANSFORM IS NULL");
-
-        Debug.Log("End of Start");
-        IsInitialized = true;
     }
 
     private void FixedUpdate()
     {
-        if (!IsInitialized)
-        {
-            m_currentCorner = 0;
-            return;
-        }
-
         Vector3 playerDir = m_playerTransform.position - transform.position;
 
         // Is the player inside the visible radius and inside the visible angle
@@ -146,8 +134,6 @@ public class BasicEnemyAI : MonoBehaviour
 
         m_frontLeft.motorTorque = calculatedAcceleration;
         m_frontRight.motorTorque = calculatedAcceleration;
-
-        Debug.Log($"CALC ACCELERATION: {calculatedAcceleration} - DESIRED SPEED: {desiredSpeed}");
     }
 
     // Just full throttle towards the player
@@ -190,15 +176,11 @@ public class BasicEnemyAI : MonoBehaviour
     {
         m_playerPathUpdating = true;
 
-        Debug.Log("PLAYER VISIBLE");
-
         while(m_state == ENEMY_STATE.PLAYER_TARGETING)
         {
             yield return new WaitForSeconds(0.5f);
             NavMesh.CalculatePath(transform.position, m_playerTransform.position, NavMesh.AllAreas, m_path);
         }
-
-        Debug.Log("PLAYER NOT VISIBLE");
 
         m_playerPathUpdating = false;
     }
