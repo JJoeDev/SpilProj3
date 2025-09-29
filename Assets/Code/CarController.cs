@@ -34,7 +34,7 @@ public class CarController : MonoBehaviour
       [Range(0.1f, 1f)]
       public float steeringSpeed = 0.5f; // How fast the steering wheel turns.
       [Space(10)]
-      [Range(100, 600)]
+      [Range(500, 1500)]
       public int brakeForce = 350; // The strength of the wheel brakes.
       [Range(1, 10)]
       public int decelerationMultiplier = 2; // How fast the car decelerates when the user is not using the throttle.
