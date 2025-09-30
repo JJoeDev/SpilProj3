@@ -6,7 +6,7 @@ public class CarCamera : MonoBehaviour
 {
     [Header("CINEMACHINE FIELDS")]
     [SerializeField] private CinemachineFreeLook m_freeLookCam;
-    [SerializeField] private CinemachineVirtualCamera m_ballCam;
+    [SerializeField] private CinemachineVirtualCamera m_trackCam;
 
     [Header("CAR FIELDS")]
     [SerializeField] private CarController m_carController;
@@ -14,9 +14,9 @@ public class CarCamera : MonoBehaviour
     [SerializeField] private float m_lookAheadRotationSpeed = 5f;
 
     [Header("ENEMY FIELDS")]
-    [SerializeField] private string m_enemyTag = "Enemy"; // Tag your enemies
-    [SerializeField] private float m_ballCamDistance = 10f;
-    [SerializeField] private float m_ballCamHeight = 3f;
+    [SerializeField] private string m_enemyTag = "Enemy";
+    [SerializeField] private float m_trackCamDistance = 8f;
+    [SerializeField] private float m_trackCamHeight = 7f;
 
     private Rigidbody m_rb;
     private bool m_useBallCam = false;
@@ -34,12 +34,12 @@ public class CarCamera : MonoBehaviour
 
     private void Update()
     {
-        // Toggle camera with a key (example: C)
+        // Toggle camera with a key (currently C)
         if (Input.GetKeyDown(KeyCode.C))
         {
             m_useBallCam = !m_useBallCam;
             if (m_useBallCam)
-                ActivateBallCam();
+                ActivateTrackCam();
             else
                 ActivateFreeLook();
         }
@@ -47,7 +47,7 @@ public class CarCamera : MonoBehaviour
         if (!m_useBallCam)
             HandleFreeLookCamera();
         else
-            HandleBallCam();
+            HandleTrackCam();
     }
 
     private void HandleFreeLookCamera()
@@ -69,7 +69,7 @@ public class CarCamera : MonoBehaviour
         }
     }
 
-    private void HandleBallCam()
+    private void HandleTrackCam()
     {
         Transform closestEnemy = FindClosestEnemy();
         if (closestEnemy == null)
@@ -85,15 +85,15 @@ public class CarCamera : MonoBehaviour
         directionToEnemy.y = 0f; // flatten so height doesn't skew camera
         directionToEnemy.Normalize();
 
-        // Opposite position relative to player
-        Vector3 oppositePos = transform.position - directionToEnemy * m_ballCamDistance;
+        // Opposite position relative to enemy
+        Vector3 oppositePos = transform.position - directionToEnemy * m_trackCamDistance;
 
         // Lock camera height to player's height + offset
-        oppositePos.y = transform.position.y + m_ballCamHeight;
+        oppositePos.y = transform.position.y + m_trackCamHeight;
 
         // Smooth camera move and always look at enemy
-        m_ballCam.transform.position = Vector3.Lerp(m_ballCam.transform.position, oppositePos, Time.deltaTime * 15f);
-        m_ballCam.LookAt = closestEnemy;
+        m_trackCam.transform.position = Vector3.Lerp(m_trackCam.transform.position, oppositePos, Time.deltaTime * 15f);
+        m_trackCam.LookAt = closestEnemy;
     }
 
     private Transform FindClosestEnemy()
@@ -109,19 +109,16 @@ public class CarCamera : MonoBehaviour
     private void ActivateFreeLook()
     {
         m_freeLookCam.Priority = 10;
-        m_ballCam.Priority = 0;
+        m_trackCam.Priority = 0;
 
         var brain = Camera.main.GetComponent<CinemachineBrain>();
-        brain.m_DefaultBlend.m_Time = 0f; // instant cut
     }
 
-    private void ActivateBallCam()
+    private void ActivateTrackCam()
     {
         m_freeLookCam.Priority = 0;
-        m_ballCam.Priority = 10;
+        m_trackCam.Priority = 10;
 
         var brain = Camera.main.GetComponent<CinemachineBrain>();
-        brain.m_DefaultBlend.m_Time = 0f; // instant cut
     }
-
 }
