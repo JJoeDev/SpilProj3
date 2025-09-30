@@ -31,7 +31,6 @@ public class BasicEnemyAI : MonoBehaviour
     [Tooltip("The distance the center of the enemy needs to be to the NavMesh corner before it moves to a new corner")]
     [SerializeField] private float m_distanceToNewCorner = 1.0f;
 
-    // private bool m_playerVisible;
     private bool m_playerPathUpdating;
 
     [Header("Roaming area")]
@@ -40,10 +39,8 @@ public class BasicEnemyAI : MonoBehaviour
 
     // Nav mesh related variables
     private NavMeshPath m_path;
-
     private Rigidbody m_rb;
 
-    //private Vector3 m_targetPos = Vector3.zero;
     private Vector3 m_targetDir = Vector3.zero;
     private int m_currentCorner = 0;
 
@@ -68,6 +65,11 @@ public class BasicEnemyAI : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (m_path == null)
+        {
+            Debug.LogWarning("M_PATH IS NULL");
+        }
+
         Vector3 playerDir = m_playerTransform.position - transform.position;
 
         // Is the player inside the visible radius and inside the visible angle
@@ -75,10 +77,18 @@ public class BasicEnemyAI : MonoBehaviour
         {
             float angleToPlayer = Vector3.Angle(transform.forward, playerDir);
 
-            if (angleToPlayer <= m_sightAngle / 2) m_state = ENEMY_STATE.PLAYER_TARGETING; 
-            else if (m_state != ENEMY_STATE.PATROLE) m_state = ENEMY_STATE.PATROLE;
+            if (angleToPlayer <= m_sightAngle / 2)
+            {
+                m_state = ENEMY_STATE.PLAYER_TARGETING;
+                m_currentCorner = 0;
+            }
+            else if (m_state != ENEMY_STATE.PATROLE)
+            {
+                m_state = ENEMY_STATE.PATROLE;
+                m_currentCorner = 0;
+            }
         }
-        else if(m_state != ENEMY_STATE.PATROLE) m_state= ENEMY_STATE.PATROLE;
+        else if(m_state != ENEMY_STATE.PATROLE) m_state = ENEMY_STATE.PATROLE;
 
         // If the player is seen and we are not following the player, follow the player
         if (m_state == ENEMY_STATE.PLAYER_TARGETING && !m_playerPathUpdating) StartCoroutine(ieUpdatePlayerPath());
@@ -100,6 +110,12 @@ public class BasicEnemyAI : MonoBehaviour
     // Slows down and drives smoother
     void EnemyPatrole()
     {
+        if (m_path == null || m_path.corners.Length == 0)
+        {
+            GetRandomWorldPath();
+            return;
+        }
+
         m_targetDir = m_path.corners[m_currentCorner] - transform.position;
 
         float distanceToCorner = m_targetDir.sqrMagnitude;
@@ -127,7 +143,7 @@ public class BasicEnemyAI : MonoBehaviour
             desiredSpeed = Mathf.Min(Mathf.Lerp(m_minSpeed, m_maxSpeed, Mathf.Clamp01(distanceToCorner / m_slowDownDistance)), maxAllowedSpeed);
         }
 
-        float calculatedAcceleration = (desiredSpeed / m_maxSpeed) * m_maxTorque;
+        float calculatedAcceleration = desiredSpeed / m_maxSpeed * m_maxTorque;
 
         m_frontLeft.steerAngle = steeringAngle;
         m_frontRight.steerAngle = steeringAngle;
@@ -139,15 +155,21 @@ public class BasicEnemyAI : MonoBehaviour
     // Just full throttle towards the player
     void EnemyTargeting()
     {
-        m_targetDir = m_path.corners[m_currentCorner] - transform.position;
-        if (m_targetDir.sqrMagnitude <= m_distanceToNewCorner && m_currentCorner < m_path.corners.Length - 1) m_currentCorner++;
-
-        m_targetDir = m_path.corners[m_currentCorner] - transform.position;
+        if (m_path.corners.Length < 1)
+        {
+            m_targetDir = m_playerTransform.position - transform.position;
+        }
+        else
+        {
+            m_targetDir = m_path.corners[m_currentCorner] - transform.position;
+            if (m_targetDir.sqrMagnitude <= m_distanceToNewCorner && m_currentCorner < m_path.corners.Length - 1) m_currentCorner++;
+        }
+        
         m_targetDir.y = 0;
 
         float angleToCorner = Vector3.SignedAngle(transform.forward, m_targetDir, Vector3.up);
 
-        float steeringAngle = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
+        float steeringAngle = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;    
 
         m_frontLeft.steerAngle = steeringAngle;
         m_frontRight.steerAngle = steeringAngle;
