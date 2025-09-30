@@ -8,6 +8,7 @@ public class BarrelExplosion : Explodable
     [SerializeField] private float m_explosionForce;
     [SerializeField] private float m_explosionLiftMultiplier;
 
+
     private HealthManager m_health;
 
     private void Awake()
@@ -17,9 +18,14 @@ public class BarrelExplosion : Explodable
 
     private void OnCollisionEnter(Collision collision)
     {
+        float hitSpeed;
         GameObject m_hitObject = collision.gameObject;
-        if (m_hitObject.GetComponent<VehicleExplosion>())
-        
+        Vector3 relativeVel = collision.relativeVelocity;
+        hitSpeed = relativeVel.magnitude;
+       
+
+        if (m_hitObject.GetComponent<VehicleExplosion>() && hitSpeed >= 5f)
+        { 
             Explode(transform.position, m_explosionForce);
         }
     }
@@ -43,7 +49,7 @@ public class BarrelExplosion : Explodable
             HealthManager health = collider.gameObject.GetComponentInParent<HealthManager>();
             if (health != null && health && !damagedObjects.Contains(health))
             {
-                health.TakeDamage(15/4f);
+                health.TakeDamage(15/4);
             }
         }
 
