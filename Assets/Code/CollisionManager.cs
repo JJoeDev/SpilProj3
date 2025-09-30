@@ -9,6 +9,11 @@ public class CollisionManager : MonoBehaviour
 
     private Rigidbody m_rb;
     private HealthManager m_health;
+   [SerializeField] private ParticleSystem m_collisionSparks;
+    [SerializeField] private Transform m_collSparks;
+    [SerializeField] private float m_collSparkScaleMultiplier = 0.1f;
+    private float m_transScale;
+    
 
     void Awake()
     {
@@ -18,6 +23,7 @@ public class CollisionManager : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+       
 
         HealthManager otherHealth = collision.gameObject.GetComponent<HealthManager>();
         if (otherHealth == null) return; // not a damageable object
@@ -46,12 +52,23 @@ public class CollisionManager : MonoBehaviour
 
         // Base scaling from collision force
         float baseImpactDamage = relativeSpeed * m_baseDamage;
+
+        //m_collSparks.localScale = Vector3.one;
+        m_transScale = relativeSpeed * m_collSparkScaleMultiplier;
+        
         if (relativeSpeed < 5)
         {
             return;
         }
         else
-        {
+        { 
+            m_collSparks.localScale *= m_transScale;
+
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                Instantiate(m_collisionSparks, contact.point, Quaternion.identity);
+            }
+
             if (angle < 45f) // I hit them with my front
             {
                 // Check if they’re also facing me (head-on)
@@ -89,6 +106,11 @@ public class CollisionManager : MonoBehaviour
                 m_health.TakeDamage(baseImpactDamage);
             }
         }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        m_collSparks.localScale = Vector3.one;
     }
 
 }
