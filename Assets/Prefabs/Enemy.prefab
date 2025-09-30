@@ -436,7 +436,7 @@ MonoBehaviour:
   m_frontLeft: {fileID: 3591608584131450819}
   m_backRight: {fileID: 6441563432041185785}
   m_backLeft: {fileID: 3588349612943415598}
-  m_maxTorque: 3000
+  m_maxTorque: 3100
   m_minSpeed: 10
   m_maxSpeed: 300
   m_breakForce: 15
