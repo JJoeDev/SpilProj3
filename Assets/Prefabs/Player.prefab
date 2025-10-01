@@ -146,6 +146,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38cbc9bc02b0a0947b5083630313a001, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_collisionSparks: {fileID: 3319173436419418051, guid: a48b7a8dbd6517e4babb50a9126666b7,
+    type: 3}
+  m_collSparks: {fileID: 5324098961240299986, guid: a48b7a8dbd6517e4babb50a9126666b7,
+    type: 3}
+  m_collSparkScaleMultiplier: 1
 --- !u!114 &7608821518641193324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,7 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93cfbd58de7f84444b3dc3c6f726e529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_scoreMeter: {fileID: 0}
+  scoreMeter: {fileID: 0}
   m_upgradeCards: []
   m_upgradeMenu: {fileID: 0}
   upgrades:
@@ -221,9 +226,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4c469ba8d2b62c44b3c1aab1f81d3de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 190
+  maxSpeed: 100
   maxReverseSpeed: 45
-  accelerationMultiplier: 20
+  accelerationMultiplier: 40
   maxSteeringAngle: 27
   steeringSpeed: 0.5
   brakeForce: 350
@@ -1757,7 +1762,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2035,7 +2040,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
