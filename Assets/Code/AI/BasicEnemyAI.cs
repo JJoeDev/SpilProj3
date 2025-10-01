@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
+
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -39,22 +40,22 @@ public class BasicEnemyAI : MonoBehaviour
 
     // Nav mesh related variables
     private NavMeshPath m_path;
-    private Rigidbody m_rb;
 
     private Vector3 m_targetDir = Vector3.zero;
     private int m_currentCorner = 0;
 
-    enum ENEMY_STATE 
+    enum ENEMY_STATE
     {
-        PATROLE,
-        PLAYER_TARGETING,
+        PATROLE, // No player visible, just roaming
+        PLAYER_TARGETING, // Player visible, going for the kill
+        PLAYER_ESCAPE, // Player just hit, retrieve and try again
+        REVERSE, // Enemy hit a wall, try to get free
     }
 
     private ENEMY_STATE m_state;
 
     private void Start()
     {
-        m_rb = GetComponent<Rigidbody>();
         m_path = new NavMeshPath();
 
         GetRandomWorldPath();
@@ -95,11 +96,17 @@ public class BasicEnemyAI : MonoBehaviour
 
         switch (m_state)
         {
-            case ENEMY_STATE.PATROLE:
+            case ENEMY_STATE.PATROLE: // No player visible, just roaming
                 EnemyPatrole();
                 break;
-            case ENEMY_STATE.PLAYER_TARGETING:
+            case ENEMY_STATE.PLAYER_TARGETING: // Player visible, going for the kill
                 EnemyTargeting();
+                break;
+            case ENEMY_STATE.PLAYER_ESCAPE: // Player just hit, retrieve and try again
+                EnemyRetrieve();
+                break;
+            case ENEMY_STATE.REVERSE: // Enemy hit a wall, try to get free
+                EnemyReverse();
                 break;
             default:
                 Debug.LogError("How did you end up here?");
@@ -107,7 +114,11 @@ public class BasicEnemyAI : MonoBehaviour
         }
     }
 
-    // Slows down and drives smoother
+    /// <summary>
+    /// Function <c>EnemyPatrole</c> runs when the AI can't see the player
+    /// The enemy will find a random point inside roam area, and will drive towards that point.
+    /// Once close enough to the point the AI will attempt to slow down
+    /// </summary>
     void EnemyPatrole()
     {
         if (m_path == null || m_path.corners.Length == 0)
@@ -152,7 +163,11 @@ public class BasicEnemyAI : MonoBehaviour
         m_frontRight.motorTorque = calculatedAcceleration;
     }
 
-    // Just full throttle towards the player
+    /// <summary>
+    /// Function <c>EnemyTargeting</c> This function runs once the AI can see the player.
+    /// The AI will attempt to get a NavMesh path to the player, and then follow that path to get to the player.
+    /// The enemy will attempt to go full speed and ram the player.
+    /// </summary>
     void EnemyTargeting()
     {
         if (m_path.corners.Length < 1)
@@ -178,6 +193,37 @@ public class BasicEnemyAI : MonoBehaviour
         m_frontRight.motorTorque = m_maxTorque;
     }
 
+    /// <summary>
+    /// Function <c>EnemyRetrieve</c> is supposed to run once the enemy has hit the player.
+    /// Once a hit is registered the AI will attempt to escape the player, in order to come back for a second hit.
+    /// </summary>
+    void EnemyRetrieve()
+    {
+        
+    }
+
+    /// <summary>
+    /// Function <c>EnemyReverse</c> is for when the enemy hits a wall, and can't escape again.
+    /// This simply puts the enemy in the reverse gear and gives it an attempt to get free
+    /// </summary>
+    void EnemyReverse()
+    {
+        
+    }
+
+    /// <summary>
+    /// Function <c>GetRandomWorldPosition</c> gets a random world position to go to in the roam area
+    /// <example>
+    /// Example:
+    /// <code>
+    /// Vector3 randomPoint = GetRandomWorldPosition();
+    /// </code>
+    /// This example gets and stores a new random position in the randomPoint variable
+    /// </example>
+    /// </summary>
+    /// <returns>
+    /// A Vector3 position at a random position inside the defined roam area
+    /// </returns>
     Vector3 GetRandomWorldPosition()
     {
         Vector3 randomPos;
@@ -188,12 +234,22 @@ public class BasicEnemyAI : MonoBehaviour
         return randomPos;
     }
 
+    /// <summary>
+    /// Function <c>GetRandomWorldPath()</c> uses the <c>GetRandomWorldPosition</c> function for a random target position
+    /// and then creates a NavMesh path to that target position.
+    /// The NavMesh path is stored in m_path
+    /// </summary>
     void GetRandomWorldPath()
     {
         NavMesh.CalculatePath(transform.position, GetRandomWorldPosition(), NavMesh.AllAreas, m_path);
         m_currentCorner = 0;
     }
 
+    /// <summary>
+    /// IEnumerator <c>ieUpdatePlayerPath</c> updates the NavMesh path towards the Player every 0.5s
+    /// as long as the AI state is PLAYER_TARGETING
+    /// </summary>
+    /// <returns>WaitForSeconds(0.5f)</returns>
     IEnumerator ieUpdatePlayerPath()
     {
         m_playerPathUpdating = true;
