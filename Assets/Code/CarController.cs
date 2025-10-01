@@ -31,7 +31,7 @@ public class CarController : MonoBehaviour
       [Space(10)]
       [Range(10, 45)]
       public int maxSteeringAngle = 27; // The maximum angle that the tires can reach while rotating the steering wheel.
-      [Range(0.1f, 1f)]
+      [Range(0.1f, 3f)]
       public float steeringSpeed = 0.5f; // How fast the steering wheel turns.
       [Space(10)]
       [Range(500, 1500)]

@@ -72,6 +72,7 @@ public class UpgradeManager : MonoBehaviour
         {
             m_upgradeMenu.SetActive(!m_upgradeMenu.activeSelf);
             Cursor.lockState = m_upgradeMenu.activeSelf ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = m_upgradeMenu.activeSelf ? true : false;
         }
 
         if (upgradeCount < m_upgradeCards.Length)
