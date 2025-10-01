@@ -11,17 +11,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: f0accb135d925c349b5b2aa8a97151af,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17.54
+      value: -9.83
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f0accb135d925c349b5b2aa8a97151af,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.46
+      value: 0.0000019073486
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f0accb135d925c349b5b2aa8a97151af,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.63
+      value: 6.04
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f0accb135d925c349b5b2aa8a97151af,
         type: 3}
@@ -61,7 +61,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f0accb135d925c349b5b2aa8a97151af,
         type: 3}
       propertyPath: m_Name
-      value: barrel
+      value: ExplosiveBarrel
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -176,10 +176,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_explodeRadius: 9.67
-  m_explosionForce: 1500
-  m_explosionLiftMultiplier: 1.5
-  hitSpeed: 0
-  damagableObjects: []
+  m_explosionForce: 3000
+  m_explosionLiftMultiplier: 1
 --- !u!1 &7161512244874576639 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -2914413575082383075, guid: f0accb135d925c349b5b2aa8a97151af,

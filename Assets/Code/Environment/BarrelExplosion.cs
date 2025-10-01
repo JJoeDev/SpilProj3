@@ -47,7 +47,7 @@ public class BarrelExplosion : Explodable
             }
 
             HealthManager health = collider.gameObject.GetComponentInParent<HealthManager>();
-            if (health != null && health && !damagedObjects.Contains(health))
+            if (health != null  && !damagedObjects.Contains(health))
             {
                 health.TakeDamage(15/4);
             }
