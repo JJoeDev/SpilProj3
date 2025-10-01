@@ -93,7 +93,7 @@ public class BasicEnemyAI : MonoBehaviour
         // If the player is seen and we are not following the player, follow the player
         if (m_state == ENEMY_STATE.PLAYER_TARGETING && !m_playerPathUpdating) StartCoroutine(ieUpdatePlayerPath());
 
-        switch(m_state)
+        switch (m_state)
         {
             case ENEMY_STATE.PATROLE:
                 EnemyPatrole();
@@ -250,12 +250,14 @@ public class BasicEnemyAI : MonoBehaviour
                 prev = pos;
             }
 
-            if (m_currentCorner > m_path.corners.Length - 1) return;
-            Gizmos.DrawSphere(m_path.corners[m_currentCorner], 0.3f);
+            if (m_currentCorner < m_path.corners.Length - 1)
+            {
+                Gizmos.DrawSphere(m_path.corners[m_currentCorner], 0.3f);
 
-            // Visualize slow down distance
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(m_path.corners[m_currentCorner], m_slowDownDistance);
+                // Visualize slow down distance
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireSphere(m_path.corners[m_currentCorner], m_slowDownDistance);
+            }
         }
 
         // Visualize enemy roam area

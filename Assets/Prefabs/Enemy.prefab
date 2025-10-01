@@ -345,6 +345,7 @@ GameObject:
   - component: {fileID: 3213096357484507889}
   - component: {fileID: 597431371918639933}
   - component: {fileID: 4512875644321838927}
+  - component: {fileID: 8800439001727571166}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -398,10 +399,10 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2109208719790487100}
   serializedVersion: 4
-  m_Mass: 960
+  m_Mass: 700
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_CenterOfMass: {x: 0, y: -0.2, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
@@ -410,7 +411,7 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
+  m_ImplicitCom: 0
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -445,7 +446,7 @@ MonoBehaviour:
   m_turnRadius: 36
   m_distanceToNewCorner: 1
   m_roamAreaCenter: {x: 0, y: 0, z: 0}
-  m_roamAreaSize: {x: 10, y: 10}
+  m_roamAreaSize: {x: 45, y: 45}
 --- !u!114 &4512875644321838927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -460,6 +461,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 100
+--- !u!114 &8800439001727571166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109208719790487100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804536a38a26994409ed0ee2633a9189, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_explosion: {fileID: 0}
 --- !u!1 &2380840191936614776
 GameObject:
   m_ObjectHideFlags: 0
