@@ -6,20 +6,20 @@ using UnityEngine;
 public class SpeedBosst : MonoBehaviour
 {
     [Header("Boost")]
-    [SerializeField] private int m_SpeedBoost = 1;               // Hvor meget vi løfter bilens tophastighed, mens der boostes.
-    [SerializeField] private int m_accelerationSpeedBoost = 1;   // Hvor meget ekstra acceleration bilen får, mens der boostes.
-    [SerializeField] private float m_maxBoostTime = 10f;          // Den samlede “energi” til boost: tælles ned når aktiv, op når inaktiv.
+    [SerializeField] private int m_SpeedBoost = 1;               
+    [SerializeField] private int m_accelerationSpeedBoost = 1;   
+    [SerializeField] private float m_maxBoostTime = 10f;          
 
     [Header("Refs")]
-    [SerializeField] private CarController m_CarController;       // Bilens controller, som læser maxSpeed og accelerationMultiplier.
-    [SerializeField] private Rigidbody m_rb;                      // Bilens rigidbody til fysisk skub.
-    [SerializeField] private ParticleSystem m_RocketFire;         // Visuel effekt, der kører mens boost er aktivt.
+    [SerializeField] private CarController m_CarController;       
+    [SerializeField] private Rigidbody m_rb;                      
+    [SerializeField] private ParticleSystem m_RocketFire;         
 
     [Header("Fysik-hjælp")]
     [SerializeField] private float m_physicsBoostAccel = 15f;     // Et ekstra fremad-skub, men kun når hjulene rører jorden.
     [SerializeField] private float m_extraDownForce = 25f;      // Et ekstra nedad-skub, når bilen er i luften, så den falder hurtigere.
 
-    // Intern tilstand: vi gemmer bilens normale værdier og den aktuelle mængde boost-energi.
+   
     private float m_boostTime;
     private int m_startaccalertion;
     private int m_StarterMaxBil;
