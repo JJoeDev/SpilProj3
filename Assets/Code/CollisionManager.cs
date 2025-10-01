@@ -11,9 +11,9 @@ public class CollisionManager : MonoBehaviour
     private HealthManager m_health;
    [SerializeField] private ParticleSystem m_collisionSparks;
     [SerializeField] private Transform m_collSparks;
-    [SerializeField] private float m_collSparkScaleMultiplier = 0.1f;
+    [SerializeField] private float m_collSparkScaleMultiplier;
     private float m_transScale;
-    
+    //[SerializeField] private Vector3 m_effectDefaultScale;
 
     void Awake()
     {
@@ -54,7 +54,7 @@ public class CollisionManager : MonoBehaviour
         float baseImpactDamage = relativeSpeed * m_baseDamage;
 
         //m_collSparks.localScale = Vector3.one;
-        m_transScale = relativeSpeed * m_collSparkScaleMultiplier;
+        m_transScale = relativeSpeed / 5 * m_collSparkScaleMultiplier;
         
         if (relativeSpeed < 5)
         {
