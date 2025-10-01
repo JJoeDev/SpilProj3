@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[DefaultExecutionOrder(-1000)] // kør før CarController.Update
+
 public class SpeedBosst : MonoBehaviour
 {
     [Header("Boost")]
