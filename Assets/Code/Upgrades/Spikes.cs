@@ -18,6 +18,8 @@ public class SpikeHub : MonoBehaviour
     private void Awake()
     {
         myRoot = transform.root;
+
+        InvokeRepeating("ClearDict", 60, 30);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -25,6 +27,8 @@ public class SpikeHub : MonoBehaviour
         // Layer-filter: kun ram mål på de valgte lag
         if (((1 << other.gameObject.layer) & m_damageableLayers) == 0)
             return;
+
+        Debug.Log("ON SPIKE ENTER");
 
         // Find HealthManager på det ramte (eller dets Rigidbody/parent)
         HealthManager hp = null;
@@ -47,6 +51,14 @@ public class SpikeHub : MonoBehaviour
 
         // 5) Giver skade til fjenden når vi rammer. 
         hp.TakeDamage(m_Spikeskade);
+        Debug.Log("SpikesRammer");
         m_lastHitTime[hp] = Time.time; // Gemmer tidspunktet for dette hit og nulstil cooldown for denne fjende (forhindrer spam-skade).
+    }
+
+    void ClearDict()
+    {
+        // Cheaky work around, every 30 sec clear all cooldown for the demo. FIX ME LETER
+        m_lastHitTime.Clear();
+        Debug.LogWarning("(spikes.cs) CLEAR DICT");
     }
 }
