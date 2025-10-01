@@ -19,7 +19,7 @@ public class CarCamera : MonoBehaviour
     [SerializeField] private float m_trackCamHeight = 7f;
 
     private Rigidbody m_rb;
-    private bool m_useBallCam = false;
+    private bool m_useTrackCam = false;
 
     private void Start()
     {
@@ -37,18 +37,35 @@ public class CarCamera : MonoBehaviour
         // Toggle camera with a key (currently C)
         if (Input.GetKeyDown(KeyCode.C))
         {
-            m_useBallCam = !m_useBallCam;
-            if (m_useBallCam)
-                ActivateTrackCam();
-            else
+            if (!m_useTrackCam) // Trying to switch *into* track cam
+            {
+                Transform closestEnemy = FindClosestEnemy();
+                if (closestEnemy != null)
+                {
+                    m_useTrackCam = true;
+                    ActivateTrackCam();
+                }
+                else
+                {
+                    // No enemy, stay in freelook
+                    Debug.Log("No enemies found, staying in FreeLook.");
+                    m_useTrackCam = false;
+                    ActivateFreeLook();
+                }
+            }
+            else // Already in track cam, switch back
+            {
+                m_useTrackCam = false;
                 ActivateFreeLook();
+            }
         }
 
-        if (!m_useBallCam)
+        if (!m_useTrackCam)
             HandleFreeLookCamera();
         else
             HandleTrackCam();
     }
+
 
     private void HandleFreeLookCamera()
     {
@@ -75,12 +92,12 @@ public class CarCamera : MonoBehaviour
         if (closestEnemy == null)
         {
             // No enemy found, fallback to FreeLook
-            m_useBallCam = false;
+            m_useTrackCam = false;
             ActivateFreeLook();
             return;
         }
 
-        // Direction on XZ plane only (ignore height difference)
+        // Direction on XZ plane only 
         Vector3 directionToEnemy = (closestEnemy.position - transform.position);
         directionToEnemy.y = 0f; // flatten so height doesn't skew camera
         directionToEnemy.Normalize();
