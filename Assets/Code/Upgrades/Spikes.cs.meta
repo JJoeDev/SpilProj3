@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Code/Spikes.cs.meta
+guid: e6893a6cfbe435e44bc106d36f4eb8dd
+========
+guid: 38cbc9bc02b0a0947b5083630313a001
+>>>>>>>> main:Assets/Code/CollisionManager.cs.meta
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
