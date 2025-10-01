@@ -22,14 +22,14 @@ public class CarController : MonoBehaviour
       [Space(20)]
       //[Header("CAR SETUP")]
       [Space(10)]
-      [Range(20, 190)]
+      [Range(20, 890)]
       public int maxSpeed = 90; //The maximum speed that the car can reach in km/h.
       [Range(10, 120)]
       public int maxReverseSpeed = 45; //The maximum speed that the car can reach while going on reverse in km/h.
-      [Range(1, 100)]
+      [Range(1, 900)]
       public int accelerationMultiplier = 2; // How fast the car can accelerate. 1 is a slow acceleration and 10 is the fastest.
       [Space(10)]
-      [Range(10, 45)]
+      [Range(10, 55)]
       public int maxSteeringAngle = 27; // The maximum angle that the tires can reach while rotating the steering wheel.
       [Range(0.1f, 1f)]
       public float steeringSpeed = 0.5f; // How fast the steering wheel turns.
