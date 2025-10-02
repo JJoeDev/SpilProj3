@@ -20,9 +20,9 @@ public class SpeedBosst : MonoBehaviour
     [SerializeField] private float m_extraDownForce = 25f;      // Et ekstra nedad-skub, når bilen er i luften, så den falder hurtigere.
 
    
-    private float m_boostTime;
-    private int m_startaccalertion;
-    private int m_StarterMaxBil;
+    private float m_boostTime; // Hvor meget boost-energi der er tilbage.
+    private int m_startaccalertion; // Bilens standard-acceleration.
+    private int m_StarterMaxBil; // Bilens standard-tophastighed.
 
     void Start()
     {
@@ -42,38 +42,34 @@ public class SpeedBosst : MonoBehaviour
 
     void Update()
     {
-        // Hele logikken her handler om at hæve bilens grænser, mens spilleren holder Shift, og samtidig
-        // trække på boost-energien. Når Shift ikke holdes, sætter vi værdierne tilbage og lader energien op igen.
         if (m_CarController == null) return;
 
         bool boosting = Input.GetKey(KeyCode.LeftShift) && m_boostTime > 0f;
 
         if (boosting)
         {
-            // Vi hæver tophastighed og acceleration, så CarController tillader hurtigere kørsel og hurtigere optræk.
-            m_CarController.maxSpeed = m_StarterMaxBil + m_SpeedBoost;
-            m_CarController.accelerationMultiplier = m_startaccalertion + m_accelerationSpeedBoost;
+            m_CarController.maxSpeed = m_StarterMaxBil + m_SpeedBoost; // Øger tophastighed
+            m_CarController.accelerationMultiplier = m_startaccalertion + m_accelerationSpeedBoost; // Øger acceleration
 
-            // Boost-energien bruges op mens der boostes; når den rammer 0, stopper boost.
             m_boostTime -= Time.deltaTime;
-            if (m_boostTime < 0f) m_boostTime = 0f;
+            if (m_boostTime < 0f) m_boostTime = 0f; // når vi rammer 0 stopper vi med at booste
 
-            // Den visuelle effekt følger boost-tilstanden.
-            if (m_RocketFire != null && !m_RocketFire.isPlaying)
-                m_RocketFire.Play(true);
+            
+            if (m_RocketFire != null && !m_RocketFire.isPlaying) 
+                m_RocketFire.Play(true); // Starter effekten, hvis den ikke allerede kører
         }
         else
         {
-            // Når der ikke boostes, fører vi bilen tilbage til dens normale grænser.
-            m_CarController.maxSpeed = m_StarterMaxBil;
-            m_CarController.accelerationMultiplier = m_startaccalertion;
+            
+            m_CarController.maxSpeed = m_StarterMaxBil; // Sætter tophastighed tilbage til normal
+            m_CarController.accelerationMultiplier = m_startaccalertion; // Sætter acceleration tilbage til normal
 
-            // Effekten stopper og ryddes for at undgå efterglød.
+      
             if (m_RocketFire != null && m_RocketFire.isPlaying)
-                m_RocketFire.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                m_RocketFire.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear); // Stopper effekten, hvis den kører
 
-            // Boost-energien lader langsomt op igen, så spilleren kan booste senere.
-            if (m_boostTime < m_maxBoostTime)
+          
+            if (m_boostTime < m_maxBoostTime) // Genoplad boost-energien over tid
             {
                 m_boostTime += Time.deltaTime;
                 if (m_boostTime > m_maxBoostTime) m_boostTime = m_maxBoostTime;
@@ -83,36 +79,28 @@ public class SpeedBosst : MonoBehaviour
 
     void FixedUpdate()
     {
-        // I fysik-opdateringen afgør vi, om hjulene rører jorden. Kun der giver det mening at skubbe fremad.
+        // bruger extra fysik til at få bilen til at falde mere naturligt og få en bedre acceleration.
         if (m_rb == null || m_CarController == null) return;
 
         bool boosting = Input.GetKey(KeyCode.LeftShift) && m_boostTime > 0f;
-        bool grounded = IsGrounded();
+        bool grounded = IsGrounded(); // Tjekker om bilen er på jorden
 
-        // På jorden: et lille ekstra skub i bilens fremad-retning gør, at man hurtigere når den nye tophastighed.
-        if (boosting && grounded)
+      
+        if (boosting && !grounded)
         {
-            m_rb.AddForce(transform.forward * m_physicsBoostAccel, ForceMode.Acceleration);
-        }
-
-        // I luften: et kontrolleret nedad-skub gør, at bilen ikke “svæver”, men falder mere naturligt tilbage mod banen.
-        if (!grounded)
-        {
-            m_rb.AddForce(Vector3.down * m_extraDownForce, ForceMode.Acceleration);
+            m_rb.AddForce(transform.forward * m_physicsBoostAccel, ForceMode.Acceleration); // Ekstra frem i luften, når der boostes
+            m_rb.AddForce(Vector3.down * m_extraDownForce, ForceMode.Acceleration); // Ekstra nedad-skub, når bilen er i luften
         }
     }
-
-    // For at beslutte om bilen er “på jorden”, spørger vi først hvert hjul, om deres affjedring har kontakt.
-    // Hvis ingen hjul siger ja, laver vi en kort raycast ned under bilen som backup.
     bool IsGrounded()
     {
-        if (m_CarController.frontLeftCollider && m_CarController.frontLeftCollider.isGrounded) return true;
+        if (m_CarController.frontLeftCollider && m_CarController.frontLeftCollider.isGrounded) return true; // Tjekker hvert hjul
         if (m_CarController.frontRightCollider && m_CarController.frontRightCollider.isGrounded) return true;
         if (m_CarController.rearLeftCollider && m_CarController.rearLeftCollider.isGrounded) return true;
         if (m_CarController.rearRightCollider && m_CarController.rearRightCollider.isGrounded) return true;
 
-        Ray ray = new Ray(transform.position + Vector3.up * 0.2f, Vector3.down);
-        return Physics.Raycast(ray, 1.0f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        Ray ray = new Ray(transform.position + Vector3.up * 0.2f, Vector3.down); // Raycast som backup
+        return Physics.Raycast(ray, 1.0f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore); // Raycast på 1 meter
     }
 
 }

@@ -5323,7 +5323,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 852258087}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06096836, y: -0.000000017261488, z: 0.0000000010543664, w: 0.99813974}
+  m_LocalRotation: {x: 0.06096836, y: 0.00000001726149, z: -0.0000000010543664, w: 0.99813974}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -12621,13 +12621,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SpeedBoost: 300
-  m_accelerationSpeedBoost: 700
+  m_accelerationSpeedBoost: 150
   m_maxBoostTime: 10
   m_CarController: {fileID: 1591410493}
-  m_rb: {fileID: 0}
+  m_rb: {fileID: 1591410497}
   m_RocketFire: {fileID: 1307954349}
   m_physicsBoostAccel: 15
-  m_extraDownForce: 120
+  m_extraDownForce: 50
 --- !u!65 &1371470100
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14256,6 +14256,26 @@ PrefabInstance:
       propertyPath: m_lookAheadRotationSpeed
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 4189106314968080646, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
+        type: 3}
+      propertyPath: m_ForwardFriction.m_Stiffness
+      value: 2.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4189106314968080646, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
+        type: 3}
+      propertyPath: m_ForwardFriction.m_ExtremumSlip
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4189106314968080646, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
+        type: 3}
+      propertyPath: m_ForwardFriction.m_ExtremumValue
+      value: 1.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 4189106314968080646, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
+        type: 3}
+      propertyPath: m_ForwardFriction.m_AsymptoteValue
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 4803761830969673246, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
         type: 3}
       propertyPath: m_IsActive
@@ -14536,46 +14556,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21ac62df993187d44a692632e4867855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  car: {fileID: 1591410493}
-  rb: {fileID: 1591410497}
-  enableAntiSlide: 1
-  antiSlideStrength: 45
-  maxSideVel: 0.2
-  speedFactor:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.6
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 20
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 50
-      value: 1.3
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  enableDownforce: 1
-  downforceK: 0.015
 --- !u!1 &1599730087 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4877329403317207832, guid: 5199a3315903d7f40b2203db508c2583,
