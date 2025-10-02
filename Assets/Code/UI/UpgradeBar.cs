@@ -5,20 +5,20 @@ using UnityEngine.UI;
 
 public class UpgradeBar : MonoBehaviour
 {
-    RectMask2D m_mask;
-    public int upgradeIndex = 0;
-    public int enemiesKilled = 0;
-    [SerializeField] float[] m_progressStages;
+    public int enemiesKilled = 0; 
+    [SerializeField] UpgradeManager m_manager;
+    [SerializeField] Image[] roadMapPoints;
 
-    private void Start()
+    public void UpdateRoadMap()
     {
-        m_mask = GetComponent<RectMask2D>();
-    }
-
-    public void UpdateBar()
-    {
-
-        Mathf.Clamp(upgradeIndex, 0, m_progressStages.Length);
-        m_mask.padding = new Vector4(0,0,m_progressStages[upgradeIndex],0);
+        int i = 0;
+        for (; i < m_manager.upgradeCount; i++)
+        {
+            roadMapPoints[i].color = Color.HSVToRGB(1, 1, 1);
+        }
+        for (; i < roadMapPoints.Length; i++)
+        {
+            roadMapPoints[i].color = Color.HSVToRGB(1, 1, 0.5f);
+        } 
     }
 }
