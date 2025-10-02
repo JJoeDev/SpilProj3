@@ -143,9 +143,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 451024516442597160}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38cbc9bc02b0a0947b5083630313a001, type: 3}
+  m_Script: {fileID: 11500000, guid: fe71e260fc8084f4cbd4fd9003238ebf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_collisionSparks: {fileID: 3319173436419418051, guid: a48b7a8dbd6517e4babb50a9126666b7,
+    type: 3}
+  m_collSparks: {fileID: 5324098961240299986, guid: a48b7a8dbd6517e4babb50a9126666b7,
+    type: 3}
+  m_collSparkScaleMultiplier: 0.1
 --- !u!114 &7608821518641193324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,8 +191,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93cfbd58de7f84444b3dc3c6f726e529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_scoreMeter: {fileID: 0}
-  m_upgradeCards: []
+  scoreMeter: {fileID: 0}
+  m_upgradeCards:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   m_upgradeMenu: {fileID: 0}
   upgrades:
   - {fileID: 2914112198251052818}
@@ -206,9 +214,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_freeLookCam: {fileID: 0}
-  m_prometeoController: {fileID: 0}
+  m_trackCam: {fileID: 0}
+  m_carController: {fileID: 2396910173577997027}
   m_lookAheadCarSpeed: 30
   m_lookAheadRotationSpeed: 0
+  m_enemyTag: Enemy
+  m_trackCamDistance: 8
+  m_trackCamHeight: 7
 --- !u!114 &2396910173577997027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,15 +230,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 451024516442597160}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4c469ba8d2b62c44b3c1aab1f81d3de, type: 3}
+  m_Script: {fileID: 11500000, guid: 8fdfced1d6f6f724f94388e132b14607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 190
-  maxReverseSpeed: 45
-  accelerationMultiplier: 20
+  maxSpeed: 85
+  maxReverseSpeed: 60
+  accelerationMultiplier: 65
   maxSteeringAngle: 27
-  steeringSpeed: 0.5
-  brakeForce: 350
+  steeringSpeed: 0.7
+  brakeForce: 1200
   decelerationMultiplier: 2
   handbrakeDriftMultiplier: 5
   bodyMassCenter: {x: 0, y: 0, z: 0}
@@ -1757,7 +1769,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2035,7 +2047,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

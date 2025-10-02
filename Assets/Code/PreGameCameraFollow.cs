@@ -20,8 +20,10 @@ public class PreGameCameraFollow : MonoBehaviour
 
     private void Update()
     {
-        if (m_cameraFollowIndex >= m_cameraFollowPoints.Length) m_reachedEnd = true;
+        if (m_cameraFollowIndex >= m_cameraFollowPoints.Length - 1) m_reachedEnd = true;
         if (m_cameraFollowIndex <= 0) m_reachedEnd = false;
+
+        //m_cameraFollowIndex = Mathf.Clamp(m_cameraFollowIndex, 0, m_cameraFollowPoints.Length - 1);
 
         if ((transform.position - m_cameraFollowPoints[m_cameraFollowIndex].transform.position).magnitude < 0.01f)
         {
