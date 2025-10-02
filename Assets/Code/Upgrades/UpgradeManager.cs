@@ -56,12 +56,6 @@ public class UpgradeManager : MonoBehaviour
         }
 
         upgradeCount = UpgradeSaving.Instance.acquiredUpgrades.Count;
-
-        // Restore score
-        if (upgradeBar != null)
-        {
-            upgradeBar.upgradeIndex = UpgradeSaving.Instance.savedScore;
-        }
     }
 
 
@@ -80,8 +74,7 @@ public class UpgradeManager : MonoBehaviour
             if (upgradeBar.enemiesKilled >= 3)
             {
                 upgradeBar.enemiesKilled = 0;
-                upgradeBar.upgradeIndex = upgradeCount+1;
-                upgradeBar.UpdateBar();
+                upgradeBar.UpdateRoadMap();
                 var unlockedCard = m_upgradeCards[upgradeCount];
                 Debug.Log("Got upgrade: " + unlockedCard.UpgradeID);
 
@@ -100,7 +93,7 @@ public class UpgradeManager : MonoBehaviour
         // Save current score every frame
         if (UpgradeSaving.Instance != null)
         {
-            UpgradeSaving.Instance.SetScore((int)upgradeBar.upgradeIndex);
+            UpgradeSaving.Instance.SetScore((int)upgradeCount);
         }
     }
 

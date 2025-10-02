@@ -27,7 +27,7 @@ public class Plov : Upgrade
             if (m_collision.gameObject.TryGetComponent<Rigidbody>(out Rigidbody m_enemyRB))
             {
                 m_enemyRB.AddForce((m_collision.transform.position - transform.position).normalized * m_knockbackForce + Vector3.up * 3, ForceMode.Impulse);
-                m_collision.GetComponent<HealthManager>().currentHealth -= 35;
+                m_collision.GetComponent<HealthManager>().currentHealth -= 15;
             }
 
             // TODO: Make it deal more damage
