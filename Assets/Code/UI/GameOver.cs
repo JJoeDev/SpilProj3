@@ -7,7 +7,7 @@ public class GameOver : MonoBehaviour
 {
     [SerializeField] private GameObject m_gameOverScreen;
     [SerializeField] private GameObject m_player;
-    [SerializeField] private BoooSound m_sound;
+
     void Start()
     {
         // Makes sure the screen starts hidden
@@ -38,9 +38,8 @@ public class GameOver : MonoBehaviour
     
     public void RestartButton()
     {
-        m_sound.hasdied = false; // Reset the flag when restarting the game / så lyden stopper med at afspille
         // Needs to be the our main scene
-        SceneManager.LoadScene("William1");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Restart the current scene
     }
     
     public void MainMenuButton()
