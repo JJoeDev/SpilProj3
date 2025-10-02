@@ -10,12 +10,12 @@ public abstract class MenuButton : MonoBehaviour, IPointerClickHandler, IPointer
     [SerializeField] float m_easingTime = 0.15f;
 
 
-    TMP_Text m_buttonText;
-    float m_startFontSize;
+    RectTransform m_rectTransform;
+    Vector2 startSize;
     public void Awake()
     {
-        m_buttonText = GetComponent<TMP_Text>();
-        m_startFontSize = m_buttonText.fontSize;
+        m_rectTransform = GetComponent<RectTransform>();
+        startSize = m_rectTransform.sizeDelta;
     }
 
     public virtual void OnPointerClick(PointerEventData pointerEventData)
@@ -41,8 +41,8 @@ public abstract class MenuButton : MonoBehaviour, IPointerClickHandler, IPointer
         {
             elapsed += Time.deltaTime;
             t = elapsed / smoothTime;
-            m_buttonText.fontSize = Mathf.Lerp(
-                m_startFontSize, m_startFontSize * (1 + m_hoverSizeIncreasePercentage * 0.01f), 1 - Mathf.Pow(1 - t, 4)
+            m_rectTransform.sizeDelta = Vector2.Lerp(
+                startSize, startSize * (1 + m_hoverSizeIncreasePercentage * 0.01f), 1 - Mathf.Pow(1 - t, 4)
             );
             yield return null;
         }
@@ -55,8 +55,8 @@ public abstract class MenuButton : MonoBehaviour, IPointerClickHandler, IPointer
         {
             elapsed -= Time.deltaTime;
             t = elapsed / smoothTime;
-            m_buttonText.fontSize = Mathf.Lerp(
-                m_startFontSize, m_startFontSize * (1 + m_hoverSizeIncreasePercentage * 0.01f), 1 - Mathf.Pow(1 - t, 4)
+            m_rectTransform.sizeDelta = Vector2.Lerp(
+                startSize, startSize * (1 + m_hoverSizeIncreasePercentage * 0.01f), 1 - Mathf.Pow(1 - t, 4)
             );
             yield return null;
         }

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class HealthManager : MonoBehaviour
 {
-   [SerializeField] public float maxHealth;
+    [SerializeField] public float maxHealth;
+    [SerializeField] UIMeter healthBar;
     public float currentHealth;
 
     private void Awake()
@@ -17,12 +18,17 @@ public class HealthManager : MonoBehaviour
     {
         currentHealth -= amount;
         
+        if (healthBar != null)
+        {
+            healthBar.value = currentHealth;
+        }
+
         if (currentHealth <= 0f)
         {
             GetComponent<VehicleExplosion>().Explodes();
             if (gameObject.CompareTag("Enemy"))
             {
-                GameObject.FindGameObjectWithTag("Player").GetComponent<UpgradeManager>().scoreMeter.value += 3.5f;
+                GameObject.FindGameObjectWithTag("Player").GetComponent<UpgradeManager>().upgradeBar.enemiesKilled++;
             }
         }
     }

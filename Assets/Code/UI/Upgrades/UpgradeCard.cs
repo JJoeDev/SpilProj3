@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,38 +7,51 @@ using UnityEngine.UI;
 
 public class UpgradeCard : MenuButton
 {
-    [SerializeField] Image m_cardImage;
-    [SerializeField] UpgradeManager m_upgradeManager;
-    public bool enabled = false;
+    [Header("Upgrade Data")]
+    [SerializeField] private string upgradeID; // Unique ID for saving/loading
+    public string UpgradeID => upgradeID; // Read-only accessor
 
-    // Update is called once per frame
-    void Update()
-    {
-        UpdateCard();
-    }
+    [SerializeField] private Image m_cardImage;
+    [SerializeField] private GameObject m_lock;
+    [SerializeField] private UpgradeManager m_upgradeManager;
+    [SerializeField] private Upgrade linkedUpgrade; // Drag in Inspector
+    public Upgrade LinkedUpgrade => linkedUpgrade;    
+
+    [Tooltip("Whether this upgrade is unlocked")]
+    public bool isUnlocked = false;              
 
     private void Awake()
     {
         UpdateCard();
     }
 
+    private void Update()
+    {
+        UpdateCard();
+    }
+
     public void UpdateCard()
     {
-        if (enabled)
+        if (isUnlocked)
         {
             m_cardImage.color = Color.white;
+            m_lock.SetActive(false);
         }
         else
         {
             m_cardImage.color = new Color(0.5f, 0.5f, 0.5f);
+            m_lock.SetActive(true);
         }
     }
 
     public override void OnPointerClick(PointerEventData pointerEventData)
     {
-        if (enabled)
+        if (isUnlocked)
         {
-            m_upgradeManager.upgrades[m_upgradeManager.upgradeCount - 1].EnableUpgrade();
+            if (LinkedUpgrade != null)
+            {
+                LinkedUpgrade.EnableUpgrade();
+            }
         }
         else
         {
@@ -68,13 +80,8 @@ public class UpgradeCard : MenuButton
 
         transform.rotation = Quaternion.identity;
     }
-    public override void OnPointerEnter(PointerEventData pointerEventData)
-    {
-        
-    }
 
-    public override void OnPointerExit(PointerEventData pointerEventData)
-    {
-        
-    }
+    public override void OnPointerEnter(PointerEventData pointerEventData) { }
+
+    public override void OnPointerExit(PointerEventData pointerEventData) { }
 }
