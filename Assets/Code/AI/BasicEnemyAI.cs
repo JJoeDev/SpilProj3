@@ -1,4 +1,5 @@
 using System.Collections;
+using System.IO.Compression;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -137,12 +138,11 @@ public class BasicEnemyAI : MonoBehaviour
 
         if (m_currentCorner >= m_path.corners.Length - 1 || angleToCorner > m_deadAngle || angleToCorner < -m_deadAngle)
         {
+            // Really bad, if all available paths are behind the enemy. Find fix in future
             GetRandomWorldPath();
-            m_frontLeft.brakeTorque = 0;
-            m_frontRight.brakeTorque = 0;
+            SetAllWheelBrakes(0);
         }
 
-        distanceToCorner = Vector3.Distance(transform.position, m_path.corners[m_currentCorner]);
         float steeringAngle = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
 
         float maxAllowedSpeed = Mathf.Sqrt(2 * m_brakeForce * distanceToCorner);
@@ -161,22 +161,19 @@ public class BasicEnemyAI : MonoBehaviour
         if (currentSpeed > desiredSpeed)
         {
             float brakeForce = Mathf.Clamp(m_brakeForce * (currentSpeed - desiredSpeed), 0, m_brakeForce);
-            m_frontLeft.brakeTorque = brakeForce;
-            m_frontRight.brakeTorque = brakeForce;
-            m_backLeft.motorTorque = 0;
-            m_backRight.motorTorque = 0;
+
+            SetBackWheelTorque(0); // Why are we setting to 0 multiple times
+            SetAllWheelBrakes(brakeForce);
+
             Debug.Log($"BRAKING: {brakeForce} - DESIRED SPEED: {desiredSpeed} - SPEED {currentSpeed}");
         }
         else
         {
-            m_frontLeft.brakeTorque = 0;
-            m_frontRight.brakeTorque = 0;
-            m_backLeft.motorTorque = torque;
-            m_backRight.motorTorque = torque;
+            SetAllWheelBrakes(0); // Why are we setting to 0 multiple times
+            SetBackWheelTorque(torque);
         }
 
-        m_frontLeft.steerAngle = steeringAngle;
-        m_frontRight.steerAngle = steeringAngle;
+        SetFrontWheelSteeringAngle(steeringAngle);
     }
 
     /// <summary>
@@ -184,48 +181,18 @@ public class BasicEnemyAI : MonoBehaviour
     /// The AI will attempt to get a NavMesh path to the player, and then follow that path to get to the player.
     /// The enemy will attempt to go full speed and ram the player.
     /// </summary>
+    private float m_previouseSteeringAngle;
     void EnemyTargeting()
     {
-        float distanceToTarget = 0;
-        SetDirectionToTarget(ref distanceToTarget, true);
+        float distanceToTarget = 0.0f;
+        SetDirectionToTarget(ref distanceToTarget, true); // Allow direct targeting to player
 
-        float angleToCorner = Vector3.SignedAngle(transform.forward, m_targetDir, Vector3.up);
+        float angleToTarget = Vector3.SignedAngle(transform.forward, m_targetDir.normalized, Vector3.up);
+        float targetSteeringAngle = Mathf.Clamp(angleToTarget / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
 
-        float targetSteeringAngle = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
-        float currentSteeringAngleL = m_frontLeft.steerAngle;
-        float currentSteeringAngleR = m_frontRight.steerAngle;
-        float newSteeringAngleL = Mathf.Lerp(currentSteeringAngleL, targetSteeringAngle, Time.fixedDeltaTime * m_smoothSteering);
-        float newSteeringAngleR = Mathf.Lerp(currentSteeringAngleR, targetSteeringAngle, Time.fixedDeltaTime * m_smoothSteering);
-
-        m_frontLeft.steerAngle = newSteeringAngleL;
-        m_frontRight.steerAngle = newSteeringAngleR;
-
-        //float distanceToTarget = m_targetDir.magnitude;
-        float desiredSpeed = m_maxSpeed;
-        if (distanceToTarget < m_slowDownDistance)
-        {
-            desiredSpeed = Mathf.Lerp(m_minSpeed, m_maxSpeed, distanceToTarget / m_slowDownDistance);
-            Debug.Log($"SLOWING DOWN! DESIRED SPEED -> {desiredSpeed}");
-        }
-
-        float currentSpeed = m_rb.velocity.magnitude;
-        float targetTorque = (desiredSpeed / m_maxSpeed) * m_maxTorque;
-
-        if (currentSpeed > desiredSpeed)
-        {
-            float brakeForce = Mathf.Clamp(m_brakeForce * (currentSpeed - desiredSpeed), 0, m_brakeForce);
-            m_frontLeft.brakeTorque = brakeForce;
-            m_frontRight.brakeTorque = brakeForce;
-            m_frontLeft.motorTorque = 0;
-            m_frontRight.motorTorque = 0;
-        }
-        else
-        {
-            m_frontLeft.brakeTorque = 0;
-            m_frontRight.brakeTorque = 0;
-            m_frontLeft.motorTorque = targetTorque;
-            m_frontRight.motorTorque = targetTorque;
-        }
+        float steeringAngle = Mathf.Lerp(m_previouseSteeringAngle, targetSteeringAngle, Time.deltaTime * m_smoothSteering);
+        m_previouseSteeringAngle = steeringAngle;
+        SetFrontWheelSteeringAngle(steeringAngle);
     }
 
     /// <summary>
@@ -247,25 +214,57 @@ public class BasicEnemyAI : MonoBehaviour
     }
 
     /// <summary>
+    /// Function <c>SetFrontWheelSteeringAngle</c> sets the two front wheel colliders <c>steerAngle</c> to the desired angle
+    /// </summary>
+    /// <param name="angle">The desired angle to set the front wheels to</param>
+    void SetFrontWheelSteeringAngle(in float angle)
+    {
+        m_frontLeft.steerAngle = angle;
+        m_frontRight.steerAngle = angle;
+    }
+
+    /// <summary>
+    /// Function <c>SetBackWheelTorque</c> sets the rear wheels torque. This is also what drives the vehicle forwards
+    /// </summary>
+    /// <param name="torque">The amount of torque to the rear wheels</param>
+    void SetBackWheelTorque(in float torque)
+    {
+        m_backLeft.motorTorque = torque;
+        m_backRight.motorTorque = torque;
+    }
+
+    /// <summary>
+    /// Function <c>SetAllWheelBrakes</c> sets all the wheels to brake at the given brake force/torque
+    /// </summary>
+    /// <param name="brakeForce">The amount of brake force/torque to apply on each wheel</param>
+    void SetAllWheelBrakes(in float brakeForce)
+    {
+        m_frontLeft.brakeTorque = brakeForce;
+        m_frontRight.brakeTorque = brakeForce;
+        m_backLeft.brakeTorque = brakeForce;
+        m_backRight.brakeTorque = brakeForce;
+    }
+
+    /// <summary>
     /// Function <c>SetDirectionToCorner</c> sets the <c>m_targetDir</c> to the correct direction towards the new corner
     /// </summary>
     /// <param name="distanceToCorner">A reference to get the distance to next corner</param>
     /// <param name="allowPathToPlayer">Allow making a path directly to the player if possible</param>
     void SetDirectionToTarget(ref float distanceToCorner, bool allowPathToPlayer = false)
     {
-        if (allowPathToPlayer)
-        {
-            // If the path towards the player is less than 1 then set the target direction towards player position
-            if (m_path.corners.Length < 1) m_targetDir = m_playerTransform.position - transform.position;
-        }
-        else
+        distanceToCorner = m_targetDir.sqrMagnitude;
+
+        if (m_path.corners.Length > 2) // Sometimes a direct line to the player is 2 elements, other times null elements. Wtf
         {
             if (distanceToCorner <= m_distanceToNewCorner && m_currentCorner < m_path.corners.Length - 1) m_currentCorner++;
             m_targetDir = m_path.corners[m_currentCorner] - transform.position;
         }
+        else if (allowPathToPlayer)
+        {
+            m_targetDir = m_playerTransform.position - transform.position;
+        }
 
         m_targetDir.y = 0;
-        distanceToCorner = m_targetDir.sqrMagnitude;
     }
 
     /// <summary>
@@ -311,13 +310,14 @@ public class BasicEnemyAI : MonoBehaviour
     {
         m_playerPathUpdating = true;
 
-        while(m_state == ENEMY_STATE.PLAYER_TARGETING)
+        while (m_state == ENEMY_STATE.PLAYER_TARGETING)
         {
             yield return new WaitForSeconds(0.5f);
             NavMesh.CalculatePath(transform.position, m_playerTransform.position, NavMesh.AllAreas, m_path);
         }
 
         m_playerPathUpdating = false;
+        yield return null;
     }
 
     private void OnDrawGizmosSelected()
@@ -351,7 +351,7 @@ public class BasicEnemyAI : MonoBehaviour
 
         // Visualize the target move direction
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position, transform.position + m_targetDir.normalized * 5);
+        Gizmos.DrawLine(transform.position, transform.position + m_targetDir);
 
         // Visualize the complete NavMesh path to desiret position
         if (EditorApplication.isPlaying)
