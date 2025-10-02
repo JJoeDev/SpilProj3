@@ -8,78 +8,94 @@ public class BoooSound : MonoBehaviour
     [SerializeField] private HealthManager healthManager;
     [SerializeField] public bool hasdied = false; // Flag to ensure sound plays only once
     [SerializeField] private GameObject player;
-    // Start is called before the first frame update
+ 
+    private Coroutine monitorCo;
 
-    // Update is called once per frame
     private void Start()
     {
         player = GameObject.FindWithTag("Player"); // Finder spilleren via tag
-        healthManager = player != null ? player.GetComponent<HealthManager>() : null; // Henter HealthManager scriptet fra spilleren
+        healthManager = player != null ? player.GetComponent<HealthManager>() : null;
 
-        // Kør samme logik som i Update, men uden Update – via coroutine
-        StartCoroutine(MonitorDeathLoop());
+        if (sound == null) sound = GetComponent<AudioSource>();
+        if (sound != null) sound.loop = true;
+
+        
+        if (monitorCo == null)                                  
+            monitorCo = StartCoroutine(MonitorDeathLoop());
+    }
+    private void OnEnable()
+    {
+        if (sound == null) sound = GetComponent<AudioSource>();
+        if (sound != null) sound.loop = true;
+
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player"); // Finder spilleren via tag
+            healthManager = player != null ? player.GetComponent<HealthManager>() : null;
+        }
+        else if (healthManager == null)
+        {
+            healthManager = player.GetComponent<HealthManager>();
+        }
+
+        if (monitorCo == null)                              
+            monitorCo = StartCoroutine(MonitorDeathLoop());
     }
 
-    // (tom – ingen per-frame logik)
-    // void Update() {}
+    void OnDisable()
+    {
+        if (monitorCo != null) { StopCoroutine(monitorCo); monitorCo = null; }
+        if (sound != null) sound.Stop();
+
+        hasdied = false;
+    }
 
     private IEnumerator MonitorDeathLoop()
     {
-        // Vent til “død” (health <= 0 eller player er null)
-        yield return new WaitUntil(() =>
+        while (true)
         {
-            // prøv at (gen)finde player/healthManager hvis de er null
-            if (player == null)
+            yield return new WaitUntil(() =>
             {
-                var found = GameObject.FindWithTag("Player"); // Finder spilleren via tag
-                if (found != null)
+                if (player == null)
                 {
-                    player = found;
-                    healthManager = player.GetComponent<HealthManager>(); // Henter HealthManager scriptet fra spilleren
+                    var found = GameObject.FindWithTag("Player"); // Finder spilleren via tag
+                    if (found != null)
+                    {
+                        player = found;
+                        healthManager = player.GetComponent<HealthManager>();
+                    }
                 }
-            }
-            return player == null || (healthManager != null && healthManager.currentHealth <= 0); // Check if health is zero or below
-        });
+                return player == null || (healthManager != null && healthManager.currentHealth <= 0); // Check if health is zero or below
+            });
 
-        hasdied = true; // Sætter flaget til sandt, når spilleren dør
-        if (hasdied)
-        {
-            PlayonDeath(); // Kalder metoden til at afspille lyden ved død
+            hasdied = true; // Sætter flaget til sandt, når spilleren dør
+            if (hasdied)
+            {
+                PlayonDeath(); // Kalder metoden til at afspille lyden ved død
+            }
+
+            yield return new WaitUntil(() =>
+            {
+                if (player == null)
+                {
+                    var found = GameObject.FindWithTag("Player"); // Finder spilleren via tag
+                    if (found != null)
+                    {
+                        player = found;
+                        healthManager = player.GetComponent<HealthManager>();
+                    }
+                }
+                return player != null && healthManager != null && healthManager.currentHealth > 0; // efter at have trykket restart knappen i GameOver.cs, så stopper lyden med at afspille
+            });
+            hasdied = false; // efter at have trykket restart knappen i GameOver.cs, så stopper lyden med at afspille
+            if (sound != null) sound.Stop(); // Stopper lyden
         }
-
-        // Vent til “levende igen” (player findes og health > 0)
-        yield return new WaitUntil(() =>
-        {
-            // prøv at (gen)finde player/healthManager hvis de er null
-            if (player == null)
-            {
-                var found = GameObject.FindWithTag("Player"); // Finder spilleren via tag
-                if (found != null)
-                {
-                    player = found;
-                    healthManager = player.GetComponent<HealthManager>(); // Henter HealthManager scriptet fra spilleren
-                }
-            }
-            return player != null && healthManager != null && healthManager.currentHealth > 0; // efter at have trykket restart knappen i GameOver.cs, så stopper lyden med at afspille
-        });
-
-        // “genstartet/levende” → stop lyden
-        hasdied = false; // efter at have trykket restart knappen i GameOver.cs, så stopper lyden med at afspille
-        sound.Stop(); // Stopper lyden
-        OnDisable();  // Kalder OnDisable metoden for at stoppe lyden
-
-        // Fortsæt loopen igen (vent på næste død)
-        StartCoroutine(MonitorDeathLoop());
     }
 
     private void PlayonDeath()
     {
-        sound.PlayOneShot(sound.clip); // Afspiller lyden en gang
-        sound.loop = true; // Sætter lyden til at loope  
-    }
-
-    private void OnDisable()
-    {
-        sound.Stop(); // Stopper lyden, hvis objektet deaktiveres
+        if (sound == null) return;
+        sound.loop = true; // Sætter lyden til at loope
+        if (!sound.isPlaying) sound.Play(); // Afspiller lyden (kildens clip) i loop
     }
 }

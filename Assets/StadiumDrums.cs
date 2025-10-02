@@ -16,16 +16,24 @@ public class StadiumDrums : MonoBehaviour
 
     void Start()
     {
+
         if (stadiumDrumSound == null)
-            stadiumDrumSound = GetComponent<AudioSource>(); 
-        StartCoroutine(nameof(LoopRoutine));
+            stadiumDrumSound = GetComponent<AudioSource>();
+
+        loopCo = StartCoroutine(nameof(LoopRoutine));
     }
 
     void OnEnable()
     {
+        if (stadiumDrumSound == null)
+            stadiumDrumSound = GetComponent<AudioSource>();
+
         if (stadiumDrumSound == null) return;
 
         stadiumDrumSound.loop = true;
+
+        if (loopCo == null)
+            loopCo = StartCoroutine(nameof(LoopRoutine));
     }
 
     void OnDisable()
@@ -36,6 +44,10 @@ public class StadiumDrums : MonoBehaviour
         isPlaying = false;
         isPaused = false;
     }
+    void OnDestroy()
+    {
+        OnDisable();
+    }
 
     IEnumerator LoopRoutine()
     {
@@ -45,10 +57,10 @@ public class StadiumDrums : MonoBehaviour
         isPlaying = true;
         isPaused = false;
 
-        
+
         while (true)
         {
-            CooldownPauser = Random.Range(0f, 10f); // Adding some randomness to the pause duration
+            CooldownPauser = Random.Range(0f, 10f); // tilføjer nyt random interval hver gang. 
 
             if (CooldownPauser <= 0f) { yield return null; continue; }
             yield return new WaitForSeconds(CooldownPauser);
