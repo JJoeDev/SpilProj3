@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class UpgradeManager : MonoBehaviour
 {
-    public UIMeter scoreMeter;
+    public UpgradeBar upgradeBar;
     [SerializeField] private UpgradeCard[] m_upgradeCards;
     [SerializeField] private GameObject m_upgradeMenu;
     private InputManager m_inputManager;
@@ -58,9 +58,9 @@ public class UpgradeManager : MonoBehaviour
         upgradeCount = UpgradeSaving.Instance.acquiredUpgrades.Count;
 
         // Restore score
-        if (scoreMeter != null)
+        if (upgradeBar != null)
         {
-            scoreMeter.value = UpgradeSaving.Instance.savedScore;
+            upgradeBar.upgradeIndex = UpgradeSaving.Instance.savedScore;
         }
     }
 
@@ -77,8 +77,11 @@ public class UpgradeManager : MonoBehaviour
 
         if (upgradeCount < m_upgradeCards.Length)
         {
-            if (scoreMeter.value >= (scoreMeter.maxValue / 3) * (upgradeCount + 1))
+            if (upgradeBar.enemiesKilled >= 3)
             {
+                upgradeBar.enemiesKilled = 0;
+                upgradeBar.upgradeIndex = upgradeCount+1;
+                upgradeBar.UpdateBar();
                 var unlockedCard = m_upgradeCards[upgradeCount];
                 Debug.Log("Got upgrade: " + unlockedCard.UpgradeID);
 
@@ -93,15 +96,11 @@ public class UpgradeManager : MonoBehaviour
                 upgradeCount++;
             }
         }
-        else
-        {
-            scoreMeter.value = scoreMeter.maxValue;
-        }
 
         // Save current score every frame
         if (UpgradeSaving.Instance != null)
         {
-            UpgradeSaving.Instance.SetScore((int)scoreMeter.value);
+            UpgradeSaving.Instance.SetScore((int)upgradeBar.upgradeIndex);
         }
     }
 

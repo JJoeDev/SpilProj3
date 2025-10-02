@@ -28,7 +28,7 @@ public class HealthManager : MonoBehaviour
             GetComponent<VehicleExplosion>().Explodes();
             if (gameObject.CompareTag("Enemy"))
             {
-                GameObject.FindGameObjectWithTag("Player").GetComponent<UpgradeManager>().scoreMeter.value += 3.5f;
+                GameObject.FindGameObjectWithTag("Player").GetComponent<UpgradeManager>().upgradeBar.enemiesKilled++;
             }
         }
     }

@@ -123,6 +123,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &14502974 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2914112198251052818, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
+    type: 3}
+  m_PrefabInstance: {fileID: 71636350}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c6d5147066fc44081257ee84932e4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &31533933 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5291558374515237963, guid: 5199a3315903d7f40b2203db508c2583,
@@ -416,6 +428,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1741053880616197382, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
+        type: 3}
+      propertyPath: m_knockbackForce
+      value: 7500
+      objectReference: {fileID: 0}
     - target: {fileID: 2396910173577997027, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
         type: 3}
       propertyPath: steeringSpeed
@@ -444,6 +461,11 @@ PrefabInstance:
     - target: {fileID: 4844216852583963681, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
         type: 3}
       propertyPath: scoreMeter
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844216852583963681, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
+        type: 3}
+      propertyPath: upgradeBar
       value: 
       objectReference: {fileID: 1861117394}
     - target: {fileID: 4844216852583963681, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
@@ -550,6 +572,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SidewaysFriction.m_Stiffness
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8874368730433195503, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1280,8 +1307,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 155633190}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.032165173, y: 0.000000034662627, z: -0.0000000011155066,
-    w: 0.9994826}
+  m_LocalRotation: {x: 0.03216517, y: -0.000000034662627, z: 0.0000000011155065, w: 0.9994826}
   m_LocalPosition: {x: -51.6, y: 7.42, z: -5.4123325}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1470,7 +1496,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 188079646}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.03216517, y: 0.000000017331311, z: -5.577533e-10, w: 0.9994826}
+  m_LocalRotation: {x: 0.032165166, y: -0.000000017331311, z: 5.577532e-10, w: 0.9994826}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2411,8 +2437,8 @@ MonoBehaviour:
   upgradeID: 
   m_cardImage: {fileID: 319965754}
   m_lock: {fileID: 696685892}
-  m_upgradeManager: {fileID: 0}
-  linkedUpgrade: {fileID: 0}
+  m_upgradeManager: {fileID: 564981541}
+  linkedUpgrade: {fileID: 14502974}
   isUnlocked: 0
 --- !u!1 &329045528
 GameObject:
@@ -4370,6 +4396,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 560227927}
   m_Mesh: {fileID: 2534964839176971238, guid: 377fd2e5cd0503c4db7aa6388d6cd7c9, type: 3}
+--- !u!114 &564981541 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4844216852583963681, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
+    type: 3}
+  m_PrefabInstance: {fileID: 71636350}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93cfbd58de7f84444b3dc3c6f726e529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &584822477
 GameObject:
   m_ObjectHideFlags: 0
@@ -5274,7 +5312,7 @@ MonoBehaviour:
   upgradeID: 
   m_cardImage: {fileID: 769974713}
   m_lock: {fileID: 1522482993}
-  m_upgradeManager: {fileID: 0}
+  m_upgradeManager: {fileID: 564981541}
   linkedUpgrade: {fileID: 0}
   isUnlocked: 0
 --- !u!1 &783175910
@@ -5476,8 +5514,8 @@ MonoBehaviour:
   upgradeID: 
   m_cardImage: {fileID: 799916099}
   m_lock: {fileID: 243340685}
-  m_upgradeManager: {fileID: 0}
-  linkedUpgrade: {fileID: 0}
+  m_upgradeManager: {fileID: 564981541}
+  linkedUpgrade: {fileID: 1287313438}
   isUnlocked: 0
 --- !u!1 &829173916 stripped
 GameObject:
@@ -5584,7 +5622,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 852258087}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06096837, y: 0.000000029978377, z: -0.0000000018311391, w: 0.99813974}
+  m_LocalRotation: {x: 0.06096837, y: -0.000000029978377, z: 0.0000000018311391, w: 0.99813974}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7732,6 +7770,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5612787938406689804, guid: c261e5b123c0f8245a84ab6f3087211c, type: 3}
+--- !u!114 &1287313438 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1741053880616197382, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
+    type: 3}
+  m_PrefabInstance: {fileID: 71636350}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47109b8bb8acf08408d32a1ee0bee9fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1302389245 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7388289971882891211, guid: 5199a3315903d7f40b2203db508c2583,
@@ -10748,7 +10798,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Padding: {x: 0, y: 0, z: 0, w: 0}
+  m_Padding: {x: 0, y: 0, z: 1350, w: 0}
   m_Softness: {x: 0, y: 0}
 --- !u!114 &1861117392
 MonoBehaviour:
@@ -10794,12 +10844,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1861117389}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11f6edf43a913e34eb562b43a8876e75, type: 3}
+  m_Script: {fileID: 11500000, guid: 95c1e8d8d1852e54aa8ab8a46e87e241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 0
-  maxValue: 100
-  Text: {fileID: 0}
+  upgradeIndex: 0
+  enemiesKilled: 0
+  m_progressStages:
+  - 1350
+  - 690
+  - 325
+  - 0
 --- !u!1 &1879761222 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7236060288591396609, guid: 5199a3315903d7f40b2203db508c2583,
@@ -11639,7 +11693,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2018940122}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0035257612, y: -0.00000001719684, z: 6.0632326e-11, w: 0.9999938}
+  m_LocalRotation: {x: 0.003525757, y: 0.000000017239344, z: -6.078211e-11, w: 0.9999938}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
