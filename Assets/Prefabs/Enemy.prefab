@@ -432,6 +432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_sightRadius: 30
   m_sightAngle: 215
+  m_deadAngle: 75
   m_playerTransform: {fileID: 0}
   m_frontRight: {fileID: 4440842355890254650}
   m_frontLeft: {fileID: 3591608584131450819}
@@ -439,11 +440,11 @@ MonoBehaviour:
   m_backLeft: {fileID: 3588349612943415598}
   m_maxTorque: 3100
   m_minSpeed: 10
-  m_maxSpeed: 300
-  m_breakForce: 15
-  m_maxBreakForce: 1
+  m_maxSpeed: 20
+  m_brakeForce: 60
   m_slowDownDistance: 30
   m_turnRadius: 36
+  m_smoothSteering: 5
   m_distanceToNewCorner: 1
   m_roamAreaCenter: {x: 0, y: 0, z: 0}
   m_roamAreaSize: {x: 45, y: 45}
@@ -820,13 +821,13 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 1
+    m_Stiffness: 4
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 4
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1043,13 +1044,13 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 1
+    m_Stiffness: 4
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 4
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1166,13 +1167,13 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 1
+    m_Stiffness: 4
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 4
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1538,13 +1539,13 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 1
+    m_Stiffness: 4
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 1
+    m_Stiffness: 4
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

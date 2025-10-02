@@ -12,6 +12,8 @@ public class BasicEnemyAI : MonoBehaviour
     [Header("Enemy vision")]
     [SerializeField] private float m_sightRadius = 30;
     [SerializeField] private float m_sightAngle = 215;
+    [Tooltip("The dead angle is the angle for roaming where the ai will just find a new path, instead of trying to follow the current path")]
+    [SerializeField] private float m_deadAngle = 75;
     [SerializeField] private Transform m_playerTransform = null;
 
     [Header("Enemy movement")]
@@ -23,12 +25,11 @@ public class BasicEnemyAI : MonoBehaviour
     [SerializeField] private float m_maxTorque = 300;
     [SerializeField] private float m_minSpeed = 10;
     [SerializeField] private float m_maxSpeed = 300;
-    [SerializeField] private float m_breakForce = 15;
-    [SerializeField] private float m_maxBreakForce = 1;
+    [SerializeField] private float m_brakeForce = 15;
     [Tooltip("When the distance from the ai position to the target corner is lower than this distance, the ai will start to slow down")]
     [SerializeField] private float m_slowDownDistance = 30;
-    //[SerializeField] private float m_speed;
     [SerializeField] private float m_turnRadius = 36;
+    [SerializeField] private float m_smoothSteering = 5.0f;
     [Tooltip("The distance the center of the enemy needs to be to the NavMesh corner before it moves to a new corner")]
     [SerializeField] private float m_distanceToNewCorner = 1.0f;
 
@@ -37,6 +38,8 @@ public class BasicEnemyAI : MonoBehaviour
     [Header("Roaming area")]
     [SerializeField] private Vector3 m_roamAreaCenter = Vector3.zero;
     [SerializeField] private Vector2 m_roamAreaSize = Vector2.one;
+
+    private Rigidbody m_rb;
 
     // Nav mesh related variables
     private NavMeshPath m_path;
@@ -56,6 +59,7 @@ public class BasicEnemyAI : MonoBehaviour
 
     private void Start()
     {
+        m_rb = GetComponent<Rigidbody>();
         m_path = new NavMeshPath();
 
         GetRandomWorldPath();
@@ -66,15 +70,11 @@ public class BasicEnemyAI : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (m_path == null)
-        {
-            Debug.LogWarning("M_PATH IS NULL");
-        }
-
+        Assert.AreNotEqual(m_path, null, "NAV MESH PATH IS NULL");
         Vector3 playerDir = m_playerTransform.position - transform.position;
 
         // Is the player inside the visible radius and inside the visible angle
-        if(playerDir.sqrMagnitude <= m_sightRadius * m_sightRadius)
+        if (playerDir.sqrMagnitude <= m_sightRadius * m_sightRadius)
         {
             float angleToPlayer = Vector3.Angle(transform.forward, playerDir);
 
@@ -89,7 +89,10 @@ public class BasicEnemyAI : MonoBehaviour
                 m_currentCorner = 0;
             }
         }
-        else if(m_state != ENEMY_STATE.PATROLE) m_state = ENEMY_STATE.PATROLE;
+        else if (m_state != ENEMY_STATE.PATROLE)
+        {
+            m_state = ENEMY_STATE.PATROLE;
+        }
 
         // If the player is seen and we are not following the player, follow the player
         if (m_state == ENEMY_STATE.PLAYER_TARGETING && !m_playerPathUpdating) StartCoroutine(ieUpdatePlayerPath());
@@ -97,7 +100,7 @@ public class BasicEnemyAI : MonoBehaviour
         switch (m_state)
         {
             case ENEMY_STATE.PATROLE: // No player visible, just roaming
-                EnemyPatrole();
+                //EnemyPatrole();
                 break;
             case ENEMY_STATE.PLAYER_TARGETING: // Player visible, going for the kill
                 EnemyTargeting();
@@ -127,40 +130,53 @@ public class BasicEnemyAI : MonoBehaviour
             return;
         }
 
-        m_targetDir = m_path.corners[m_currentCorner] - transform.position;
+        float distanceToCorner = 0;
+        SetDirectionToTarget(ref distanceToCorner);
 
-        float distanceToCorner = m_targetDir.sqrMagnitude;
-        if (distanceToCorner <= m_distanceToNewCorner && m_currentCorner < m_path.corners.Length - 1) m_currentCorner++;
+        float angleToCorner = Vector3.SignedAngle(transform.forward, m_targetDir, Vector3.up);
 
-        if (m_currentCorner >= m_path.corners.Length)
+        if (m_currentCorner >= m_path.corners.Length - 1 || angleToCorner > m_deadAngle || angleToCorner < -m_deadAngle)
         {
             GetRandomWorldPath();
             m_frontLeft.brakeTorque = 0;
             m_frontRight.brakeTorque = 0;
         }
 
-        m_targetDir = m_path.corners[m_currentCorner] - transform.position;
-        m_targetDir.y = 0;
-        distanceToCorner = m_targetDir.magnitude;
-
-        float angleToCorner = Vector3.SignedAngle(transform.forward, m_targetDir, Vector3.up);
+        distanceToCorner = Vector3.Distance(transform.position, m_path.corners[m_currentCorner]);
         float steeringAngle = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
 
-        float maxAllowedSpeed = Mathf.Sqrt(2 * m_breakForce * distanceToCorner);
-        float desiredSpeed = m_maxSpeed;
+        float maxAllowedSpeed = Mathf.Sqrt(2 * m_brakeForce * distanceToCorner);
+        float desiredSpeed = Mathf.Min(m_maxSpeed, maxAllowedSpeed);
 
-        if (distanceToCorner <= m_slowDownDistance)
+        float currentSpeed = m_rb.velocity.magnitude;
+
+        float accelRatio = desiredSpeed / m_maxSpeed;
+        float torque = accelRatio * m_maxTorque;
+
+        if (distanceToCorner < m_slowDownDistance)
         {
-            desiredSpeed = Mathf.Min(Mathf.Lerp(m_minSpeed, m_maxSpeed, Mathf.Clamp01(distanceToCorner / m_slowDownDistance)), maxAllowedSpeed);
+            desiredSpeed = Mathf.Lerp(m_minSpeed, m_maxSpeed, distanceToCorner / m_slowDownDistance);
         }
 
-        float calculatedAcceleration = desiredSpeed / m_maxSpeed * m_maxTorque;
+        if (currentSpeed > desiredSpeed)
+        {
+            float brakeForce = Mathf.Clamp(m_brakeForce * (currentSpeed - desiredSpeed), 0, m_brakeForce);
+            m_frontLeft.brakeTorque = brakeForce;
+            m_frontRight.brakeTorque = brakeForce;
+            m_backLeft.motorTorque = 0;
+            m_backRight.motorTorque = 0;
+            Debug.Log($"BRAKING: {brakeForce} - DESIRED SPEED: {desiredSpeed} - SPEED {currentSpeed}");
+        }
+        else
+        {
+            m_frontLeft.brakeTorque = 0;
+            m_frontRight.brakeTorque = 0;
+            m_backLeft.motorTorque = torque;
+            m_backRight.motorTorque = torque;
+        }
 
         m_frontLeft.steerAngle = steeringAngle;
         m_frontRight.steerAngle = steeringAngle;
-
-        m_frontLeft.motorTorque = calculatedAcceleration;
-        m_frontRight.motorTorque = calculatedAcceleration;
     }
 
     /// <summary>
@@ -170,27 +186,46 @@ public class BasicEnemyAI : MonoBehaviour
     /// </summary>
     void EnemyTargeting()
     {
-        if (m_path.corners.Length < 1)
-        {
-            m_targetDir = m_playerTransform.position - transform.position;
-        }
-        else
-        {
-            m_targetDir = m_path.corners[m_currentCorner] - transform.position;
-            if (m_targetDir.sqrMagnitude <= m_distanceToNewCorner && m_currentCorner < m_path.corners.Length - 1) m_currentCorner++;
-        }
-        
-        m_targetDir.y = 0;
+        float distanceToTarget = 0;
+        SetDirectionToTarget(ref distanceToTarget, true);
 
         float angleToCorner = Vector3.SignedAngle(transform.forward, m_targetDir, Vector3.up);
 
-        float steeringAngle = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;    
+        float targetSteeringAngle = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
+        float currentSteeringAngleL = m_frontLeft.steerAngle;
+        float currentSteeringAngleR = m_frontRight.steerAngle;
+        float newSteeringAngleL = Mathf.Lerp(currentSteeringAngleL, targetSteeringAngle, Time.fixedDeltaTime * m_smoothSteering);
+        float newSteeringAngleR = Mathf.Lerp(currentSteeringAngleR, targetSteeringAngle, Time.fixedDeltaTime * m_smoothSteering);
 
-        m_frontLeft.steerAngle = steeringAngle;
-        m_frontRight.steerAngle = steeringAngle;
+        m_frontLeft.steerAngle = newSteeringAngleL;
+        m_frontRight.steerAngle = newSteeringAngleR;
 
-        m_frontLeft.motorTorque = m_maxTorque;
-        m_frontRight.motorTorque = m_maxTorque;
+        //float distanceToTarget = m_targetDir.magnitude;
+        float desiredSpeed = m_maxSpeed;
+        if (distanceToTarget < m_slowDownDistance)
+        {
+            desiredSpeed = Mathf.Lerp(m_minSpeed, m_maxSpeed, distanceToTarget / m_slowDownDistance);
+            Debug.Log($"SLOWING DOWN! DESIRED SPEED -> {desiredSpeed}");
+        }
+
+        float currentSpeed = m_rb.velocity.magnitude;
+        float targetTorque = (desiredSpeed / m_maxSpeed) * m_maxTorque;
+
+        if (currentSpeed > desiredSpeed)
+        {
+            float brakeForce = Mathf.Clamp(m_brakeForce * (currentSpeed - desiredSpeed), 0, m_brakeForce);
+            m_frontLeft.brakeTorque = brakeForce;
+            m_frontRight.brakeTorque = brakeForce;
+            m_frontLeft.motorTorque = 0;
+            m_frontRight.motorTorque = 0;
+        }
+        else
+        {
+            m_frontLeft.brakeTorque = 0;
+            m_frontRight.brakeTorque = 0;
+            m_frontLeft.motorTorque = targetTorque;
+            m_frontRight.motorTorque = targetTorque;
+        }
     }
 
     /// <summary>
@@ -209,6 +244,28 @@ public class BasicEnemyAI : MonoBehaviour
     void EnemyReverse()
     {
         
+    }
+
+    /// <summary>
+    /// Function <c>SetDirectionToCorner</c> sets the <c>m_targetDir</c> to the correct direction towards the new corner
+    /// </summary>
+    /// <param name="distanceToCorner">A reference to get the distance to next corner</param>
+    /// <param name="allowPathToPlayer">Allow making a path directly to the player if possible</param>
+    void SetDirectionToTarget(ref float distanceToCorner, bool allowPathToPlayer = false)
+    {
+        if (allowPathToPlayer)
+        {
+            // If the path towards the player is less than 1 then set the target direction towards player position
+            if (m_path.corners.Length < 1) m_targetDir = m_playerTransform.position - transform.position;
+        }
+        else
+        {
+            if (distanceToCorner <= m_distanceToNewCorner && m_currentCorner < m_path.corners.Length - 1) m_currentCorner++;
+            m_targetDir = m_path.corners[m_currentCorner] - transform.position;
+        }
+
+        m_targetDir.y = 0;
+        distanceToCorner = m_targetDir.sqrMagnitude;
     }
 
     /// <summary>
@@ -278,6 +335,15 @@ public class BasicEnemyAI : MonoBehaviour
         float minAngle = -m_sightAngle / 2;
         Vector3 leftAngle = Quaternion.Euler(0.0f, minAngle, 0.0f) * transform.forward;
         Vector3 rightAngle = Quaternion.Euler(0.0f, -minAngle, 0.0f) * transform.forward;
+
+        Gizmos.DrawLine(transform.position, transform.position + transform.forward * m_sightRadius);
+        Gizmos.DrawLine(transform.position, transform.position + rightAngle * m_sightRadius);
+        Gizmos.DrawLine(transform.position, transform.position + leftAngle * m_sightRadius);
+
+        // Visualize the angles where patrol wil generate a new path
+        Gizmos.color = Color.red;
+        leftAngle = Quaternion.Euler(0.0f, m_deadAngle, 0.0f) * transform.forward;
+        rightAngle = Quaternion.Euler(0.0f, -m_deadAngle, 0.0f) * transform.forward;
 
         Gizmos.DrawLine(transform.position, transform.position + transform.forward * m_sightRadius);
         Gizmos.DrawLine(transform.position, transform.position + rightAngle * m_sightRadius);
