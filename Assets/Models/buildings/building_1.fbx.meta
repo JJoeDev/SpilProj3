@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 18ca5e4ad3a1d4c4a804b267946684cf
+guid: 87ad1040f68592047a52108091054abf
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,13 +7,38 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: ramps_texture
-    second: {fileID: 2100000, guid: a6b29734aeb9bf744990d8b8805426a3, type: 2}
+      name: build_1
+    second: {fileID: 2100000, guid: 4031b23fc79272343be097bcf36df649, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: car_undercarriage
+    second: {fileID: 2100000, guid: 2620ac34335cd234187d00310ea21d0b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: hole
+    second: {fileID: 2100000, guid: aba5a4908ce775f4f8b787097ec3f08d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pipes
+    second: {fileID: 2100000, guid: 5f0657c1a9f74ca48b558ef89ed2ae6a, type: 2}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
-      name: ramp_text
-    second: {fileID: 2800000, guid: 0f9175c72dc0a074890c22959b36fd84, type: 3}
+      name: Car_undercarriage
+    second: {fileID: 2800000, guid: cb5b826cd80b2414bbcd9b6ed16a2e1d, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: armor_ugrade_textures
+    second: {fileID: 2800000, guid: d080e810019debf46b9162014fb89b95, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: building_1_text
+    second: {fileID: 2800000, guid: 9b0b5f5fcaa2c8c48a26e68cf1f662d7, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

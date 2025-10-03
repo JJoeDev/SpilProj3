@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 18ca5e4ad3a1d4c4a804b267946684cf
+guid: d583b73a2dc3882409556f00a6f3d676
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,13 +7,23 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: ramps_texture
-    second: {fileID: 2100000, guid: a6b29734aeb9bf744990d8b8805426a3, type: 2}
+      name: pipes
+    second: {fileID: 2100000, guid: 4b2eba94e0db9c64294eff2f9ed0a8a7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: shed
+    second: {fileID: 2100000, guid: ca720885b4ad3304fa7f6da0dcb7d65c, type: 2}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
-      name: ramp_text
-    second: {fileID: 2800000, guid: 0f9175c72dc0a074890c22959b36fd84, type: 3}
+      name: armor_ugrade_textures
+    second: {fileID: 2800000, guid: 46d70567fa9039c48a62c4db1d4806c9, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: shed_text
+    second: {fileID: 2800000, guid: e0e36a1b61a04be44a95bdf1c9fa4c69, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
