@@ -1,49 +1,9 @@
 fileFormatVersion: 2
-guid: 95fb210bd5b6ee14e8c834486d55a82c
+guid: e3b9be191af18bb4a8c161cc3b1ffb7f
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Wheels_windows_band
-    second: {fileID: 2100000, guid: 6eb9dfad753c1af4b9e1b302e6c25051, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: armor_upgrade_textures
-    second: {fileID: 2100000, guid: d62c6262a09c0864e99c9656a01fc8ba, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: cannon
-    second: {fileID: 2100000, guid: 7f572ee86f2fbd84baac9e36b189be16, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: car headlights
-    second: {fileID: 2100000, guid: 049f01500b1baa948a6854b40ab6dd9a, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: car_body
-    second: {fileID: 2100000, guid: 84a4d6460206bd54fbcda26c84867462, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: car_plough_upgrade
-    second: {fileID: 2100000, guid: f4fc4d8a410380c4fb19ccc39ffa8904, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: car_undercarriage
-    second: {fileID: 2100000, guid: e7d8a8ce3bf8fc244b2d365af1593dfb, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: hole
-    second: {fileID: 2100000, guid: 1f29fcf5d1acf6d45808684386966c51, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -130,7 +90,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.01
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
