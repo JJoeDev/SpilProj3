@@ -51,6 +51,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "ScrollRoadMap",
+                    "type": "Value",
+                    "id": "ac1d27f5-531b-489a-9b49-04edbc99ffa4",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "RevealEnemies",
                     "type": "Button",
                     "id": "9dda0454-10b1-45b2-89b8-d55022c1a027",
@@ -212,6 +221,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "RevealEnemies",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a5d4ac59-50e0-46cf-99e5-23754b5c0e12",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "Hold",
+                    "processors": "Invert",
+                    "groups": "",
+                    "action": "ScrollRoadMap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0758ccc3-9f8c-4b61-9b9f-3c58511ce9c2",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ScrollRoadMap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

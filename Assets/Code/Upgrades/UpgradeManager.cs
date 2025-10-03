@@ -5,13 +5,28 @@ using UnityEngine.SceneManagement;
 
 public class UpgradeManager : MonoBehaviour
 {
-    public UpgradeBar upgradeBar;
+    private static UpgradeManager _instance;
+    public static UpgradeManager Instance { get { return _instance; } }
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Debug.LogWarning("Two upgrademanagers exist. Deleting the duplicate!");
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+
+    public UpgradeRoadMap upgradeRoadMap;
     [SerializeField] private UpgradeCard[] m_upgradeCards;
     [SerializeField] private GameObject m_upgradeMenu;
     private InputManager m_inputManager;
-
-    public Upgrade[] upgrades;
-
+    //
     public int upgradeCount = 0;
 
     private void OnEnable()
@@ -71,10 +86,10 @@ public class UpgradeManager : MonoBehaviour
 
         if (upgradeCount < m_upgradeCards.Length)
         {
-            if (upgradeBar.enemiesKilled >= 3)
+            if (upgradeRoadMap.enemiesKilled >= 3)
             {
-                upgradeBar.enemiesKilled = 0;
-                upgradeBar.UpdateRoadMap();
+                upgradeRoadMap.enemiesKilled = 0;
+                upgradeRoadMap.UpdateRoadMap();
                 var unlockedCard = m_upgradeCards[upgradeCount];
                 Debug.Log("Got upgrade: " + unlockedCard.UpgradeID);
 

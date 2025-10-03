@@ -57,6 +57,7 @@ public class SpikeHub : MonoBehaviour
 
     void ClearDict()
     {
+
         // Cheaky work around, every 30 sec clear all cooldown for the demo. FIX ME LETER
         m_lastHitTime.Clear();
         Debug.LogWarning("(spikes.cs) CLEAR DICT");
