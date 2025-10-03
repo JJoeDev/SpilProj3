@@ -23,6 +23,11 @@ public class SpeedBosst : MonoBehaviour
     private int m_startaccalertion;
     private int m_StarterMaxBil;
 
+    private bool isBoosting = false;
+    
+    private float m_currentboostCD = 5f;
+    [SerializeField] private float m_boostCD = 5f;
+
     void Start()
     {
         if (!m_rb) m_rb = GetComponent<Rigidbody>();
@@ -36,60 +41,55 @@ public class SpeedBosst : MonoBehaviour
             m_RocketFire.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     }
 
+    void EndBoost()
+    {
+        m_CarController.maxSpeed = m_StarterMaxBil;
+        m_CarController.accelerationMultiplier = m_startaccalertion;
+        isBoosting = false;
+    }
     void Update()
     {
         if (m_CarController == null) return;
 
-        bool boosting = Input.GetKey(KeyCode.LeftShift) && m_boostTime > 0f;
-
-        if (boosting)
+       
+        if(Input.GetKeyDown(KeyCode.LeftShift) && m_boostTime > 0)
         {
-            m_CarController.maxSpeed = m_StarterMaxBil + m_SpeedBoost;
-            m_CarController.accelerationMultiplier = m_startaccalertion + m_accelerationSpeedBoost;
+            m_CarController.maxSpeed = m_StarterMaxBil + m_SpeedBoost; // sæt max speed op
+            m_CarController.accelerationMultiplier = m_startaccalertion + m_accelerationSpeedBoost; // sæt accel op
 
-            m_boostTime -= Time.deltaTime;
-            if (m_boostTime < 0f) m_boostTime = 0f;
+            isBoosting = true;
+        }
+        if(Input.GetKeyUp(KeyCode.LeftShift) )
+        {
+            EndBoost();
+        }
 
+
+        if (isBoosting)
+        {
+            m_boostTime = Mathf.Clamp(m_boostTime - Time.deltaTime, 0, m_maxBoostTime);
+            m_currentboostCD = m_boostCD;
             if (m_RocketFire != null && !m_RocketFire.isPlaying) m_RocketFire.Play(true);
+            if (m_boostTime <= 0)
+            {
+                EndBoost();
+            }
         }
         else
         {
-            m_CarController.maxSpeed = m_StarterMaxBil;
-            m_CarController.accelerationMultiplier = m_startaccalertion;
+            m_currentboostCD = Mathf.Clamp(m_currentboostCD -  Time.deltaTime,0, m_boostCD);    // cooldown på boost
 
             if (m_RocketFire != null && m_RocketFire.isPlaying)
-                m_RocketFire.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-
-            if (m_boostTime < m_maxBoostTime)
+                m_RocketFire.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear); // stop med det samme
+            if (m_currentboostCD <= 0) // genoplad boost 
             {
-                m_boostTime += Time.deltaTime;
-                if (m_boostTime > m_maxBoostTime) m_boostTime = m_maxBoostTime;
+                Debug.Log("BOOST GENOPLADES");
+                m_boostTime = Mathf.Clamp(m_boostTime + Time.deltaTime, 0, m_maxBoostTime); // genoplad boost
+
             }
         }
-    }
+        
+        
 
-    void FixedUpdate()
-    {
-        if (m_rb == null || m_CarController == null) return;
-
-        bool boosting = Input.GetKey(KeyCode.LeftShift) && m_boostTime > 0f;
-        bool grounded = IsGrounded();
-
-        if (!grounded)
-            m_rb.AddForce(Vector3.down * m_extraDownForce, ForceMode.Acceleration);
-
-        if (boosting)
-            m_rb.AddForce(transform.forward * m_physicsBoostAccel, ForceMode.Acceleration);
-    }
-
-    bool IsGrounded()
-    {
-        if (m_CarController.frontLeftCollider && m_CarController.frontLeftCollider.isGrounded) return true;
-        if (m_CarController.frontRightCollider && m_CarController.frontRightCollider.isGrounded) return true;
-        if (m_CarController.rearLeftCollider && m_CarController.rearLeftCollider.isGrounded) return true;
-        if (m_CarController.rearRightCollider && m_CarController.rearRightCollider.isGrounded) return true;
-
-        Ray ray = new Ray(transform.position + Vector3.up * 0.2f, Vector3.down);
-        return Physics.Raycast(ray, 1.0f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
     }
 }
