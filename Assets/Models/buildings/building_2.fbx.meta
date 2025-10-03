@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 18ca5e4ad3a1d4c4a804b267946684cf
+guid: 80f115bda880bfb49914b19654f6c870
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,13 +7,33 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: ramps_texture
-    second: {fileID: 2100000, guid: a6b29734aeb9bf744990d8b8805426a3, type: 2}
+      name: buil_2
+    second: {fileID: 2100000, guid: eaf56da089ddab94fb66fd53e7b3661d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: chimney
+    second: {fileID: 2100000, guid: cef47b1894f29ea4a86a3a08c95c9eea, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pipes
+    second: {fileID: 2100000, guid: 0731c88442a481e45b3869597571e062, type: 2}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
-      name: ramp_text
-    second: {fileID: 2800000, guid: 0f9175c72dc0a074890c22959b36fd84, type: 3}
+      name: armor_ugrade_textures
+    second: {fileID: 2800000, guid: 654702caeb3a8d34194291fc20067e12, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: building_2_text
+    second: {fileID: 2800000, guid: 39433e2980122c047971171d140d9e27, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: car_plough_upgrade_textures
+    second: {fileID: 2800000, guid: fc315800539b69b47a5e80b5b9799fbb, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
