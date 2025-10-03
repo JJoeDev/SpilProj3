@@ -1,5 +1,4 @@
 using System.Collections;
-using System.IO.Compression;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -31,10 +30,12 @@ public class BasicEnemyAI : MonoBehaviour
     [SerializeField] private float m_slowDownDistance = 30;
     [SerializeField] private float m_turnRadius = 36;
     [SerializeField] private float m_smoothSteering = 5.0f;
+    private float m_previouseSteeringAngle; // For smooth steering
     [Tooltip("The distance the center of the enemy needs to be to the NavMesh corner before it moves to a new corner")]
     [SerializeField] private float m_distanceToNewCorner = 1.0f;
 
     private bool m_playerPathUpdating;
+    private bool m_directPlayerPath;
 
     [Header("Roaming area")]
     [SerializeField] private Vector3 m_roamAreaCenter = Vector3.zero;
@@ -135,12 +136,12 @@ public class BasicEnemyAI : MonoBehaviour
         SetDirectionToTarget(ref distanceToCorner);
 
         float angleToCorner = Vector3.SignedAngle(transform.forward, m_targetDir, Vector3.up);
+        Debug.Log($"ANGLE: {angleToCorner}");
 
-        if (m_currentCorner >= m_path.corners.Length - 1 || angleToCorner > m_deadAngle || angleToCorner < -m_deadAngle)
+        if (distanceToCorner < 4 && (angleToCorner > m_deadAngle || angleToCorner < -m_deadAngle))
         {
-            // Really bad, if all available paths are behind the enemy. Find fix in future
+            m_currentCorner = 0;
             GetRandomWorldPath();
-            SetAllWheelBrakes(0);
         }
 
         float steeringAngle = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
@@ -150,8 +151,8 @@ public class BasicEnemyAI : MonoBehaviour
 
         float currentSpeed = m_rb.velocity.magnitude;
 
-        float accelRatio = desiredSpeed / m_maxSpeed;
-        float torque = accelRatio * m_maxTorque;
+        float accelerationRatio = desiredSpeed / m_maxSpeed;
+        float torque = accelerationRatio * m_maxTorque;
 
         if (distanceToCorner < m_slowDownDistance)
         {
@@ -164,8 +165,6 @@ public class BasicEnemyAI : MonoBehaviour
 
             SetBackWheelTorque(0); // Why are we setting to 0 multiple times
             SetAllWheelBrakes(brakeForce);
-
-            Debug.Log($"BRAKING: {brakeForce} - DESIRED SPEED: {desiredSpeed} - SPEED {currentSpeed}");
         }
         else
         {
@@ -181,18 +180,60 @@ public class BasicEnemyAI : MonoBehaviour
     /// The AI will attempt to get a NavMesh path to the player, and then follow that path to get to the player.
     /// The enemy will attempt to go full speed and ram the player.
     /// </summary>
-    private float m_previouseSteeringAngle;
     void EnemyTargeting()
     {
-        float distanceToTarget = 0.0f;
+        float distanceToTarget = 10.0f;
         SetDirectionToTarget(ref distanceToTarget, true); // Allow direct targeting to player
 
-        float angleToTarget = Vector3.SignedAngle(transform.forward, m_targetDir.normalized, Vector3.up);
+        // Get the angle to the target, and make sure the steering angle can be a max of m_turnRadius in both + & -
+        float angleToTarget = Vector3.SignedAngle(transform.forward, m_targetDir, Vector3.up);
         float targetSteeringAngle = Mathf.Clamp(angleToTarget / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
 
-        float steeringAngle = Mathf.Lerp(m_previouseSteeringAngle, targetSteeringAngle, Time.deltaTime * m_smoothSteering);
-        m_previouseSteeringAngle = steeringAngle;
-        SetFrontWheelSteeringAngle(steeringAngle);
+        // Smoothly set the steering angle
+        // float steeringAngle = Mathf.Lerp(m_previouseSteeringAngle, targetSteeringAngle, Time.deltaTime * m_smoothSteering);
+        // m_previouseSteeringAngle = steeringAngle;
+
+        SetFrontWheelSteeringAngle(targetSteeringAngle);
+
+        if (distanceToTarget > 1)
+        {
+            SetBackWheelTorque(m_maxTorque);
+        }
+
+        // float maxAllowedSpeed = Mathf.Sqrt(2 * (m_brakeForce / 2) * (distanceToTarget / 2));
+        // float desiredSpeed = Mathf.Min(m_maxSpeed, maxAllowedSpeed);
+
+        // float currentSpeed = m_rb.velocity.magnitude;
+
+        // float accelerationRatio = desiredSpeed / m_maxSpeed;
+        // float torque = accelerationRatio * m_maxTorque;
+
+        // if (!m_directPlayerPath)
+        // {
+        //     if (distanceToTarget < m_slowDownDistance)
+        //     {
+        //         desiredSpeed = Mathf.Lerp(m_minSpeed, m_maxSpeed, distanceToTarget / m_slowDownDistance);
+        //     }
+
+        //     if (currentSpeed > desiredSpeed)
+        //     {
+        //         float brakeForce = Mathf.Clamp(m_brakeForce * (currentSpeed - desiredSpeed), 0, m_brakeForce);
+
+        //         SetBackWheelTorque(0); // Why are we setting to 0 multiple times
+        //         SetAllWheelBrakes(brakeForce);
+
+        //         Debug.Log($"(targeting) BRAKING: {brakeForce} - DESIRED SPEED: {desiredSpeed} - SPEED {currentSpeed}");
+        //     }
+        //     else
+        //     {
+        //         SetAllWheelBrakes(0);
+        //         SetBackWheelTorque(torque);
+        //     }
+        // }
+        // else
+        // {
+        //     SetBackWheelTorque(torque);
+        // }
     }
 
     /// <summary>
@@ -209,6 +250,12 @@ public class BasicEnemyAI : MonoBehaviour
     /// This simply puts the enemy in the reverse gear and gives it an attempt to get free
     /// </summary>
     void EnemyReverse()
+    {
+        
+    }
+
+
+    void SetControlledTorque(in float distanceToTarget)
     {
         
     }
@@ -252,19 +299,50 @@ public class BasicEnemyAI : MonoBehaviour
     /// <param name="allowPathToPlayer">Allow making a path directly to the player if possible</param>
     void SetDirectionToTarget(ref float distanceToCorner, bool allowPathToPlayer = false)
     {
-        distanceToCorner = m_targetDir.sqrMagnitude;
-
-        if (m_path.corners.Length > 2) // Sometimes a direct line to the player is 2 elements, other times null elements. Wtf
+        if (m_path.corners.Length >= 2)
         {
-            if (distanceToCorner <= m_distanceToNewCorner && m_currentCorner < m_path.corners.Length - 1) m_currentCorner++;
+            m_directPlayerPath = false;
+
+            // Calculate the distance to current corner.
             m_targetDir = m_path.corners[m_currentCorner] - transform.position;
+            m_targetDir.y = 0;
+            distanceToCorner = m_targetDir.sqrMagnitude;
+
+            // If within range of last corner, create a new path.
+            if (m_currentCorner >= m_path.corners.Length - 1)
+            {
+                GetRandomWorldPath();
+                m_currentCorner = 0;
+                // Reset direction
+                m_targetDir = m_path.corners[m_currentCorner] - transform.position;
+                m_targetDir.y = 0;
+                distanceToCorner = m_targetDir.sqrMagnitude;
+            }
+            // If within range of the next corner, advance to it.
+            else if (distanceToCorner <= m_distanceToNewCorner && m_currentCorner < m_path.corners.Length - 1)
+            {
+                m_currentCorner++;
+                m_targetDir = m_path.corners[m_currentCorner] - transform.position;
+                m_targetDir.y = 0;
+                distanceToCorner = m_targetDir.sqrMagnitude;
+            }
         }
         else if (allowPathToPlayer)
         {
             m_targetDir = m_playerTransform.position - transform.position;
+            m_directPlayerPath = true;
+            m_targetDir.y = 0;
+            distanceToCorner = m_targetDir.sqrMagnitude;
         }
-
-        m_targetDir.y = 0;
+        else
+        {
+            GetRandomWorldPath();
+            m_currentCorner = 0;
+            // Reset direction
+            m_targetDir = m_path.corners[m_currentCorner] - transform.position;
+            m_targetDir.y = 0;
+            distanceToCorner = m_targetDir.sqrMagnitude;
+        }
     }
 
     /// <summary>
