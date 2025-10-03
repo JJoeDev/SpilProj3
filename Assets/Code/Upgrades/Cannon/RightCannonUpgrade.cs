@@ -15,7 +15,7 @@ public class RightCannonUpgrade : Upgrade
 
     [SerializeField] GameObject m_cannonModel;
 
-    private bool canFire = true;
+    private bool m_canFire = true;
 
     public override void EnableUpgrade()
     {
@@ -28,7 +28,7 @@ public class RightCannonUpgrade : Upgrade
     }
     void Update()
     {
-        if (Input.GetMouseButtonDown(1) && canFire)
+        if (Input.GetMouseButtonDown(1) && m_canFire)
         {
             FireCannon();
         }
@@ -37,7 +37,7 @@ public class RightCannonUpgrade : Upgrade
 
     void FireCannon()
     {
-        canFire = false;
+        m_canFire = false;
 
         if (projectilePrefab != null && firePoint != null)
         {
@@ -67,6 +67,6 @@ public class RightCannonUpgrade : Upgrade
     IEnumerator FireCooldown()
     {
         yield return new WaitForSeconds(fireCooldown);
-        canFire = true;
+        m_canFire = true;
     }
 }
