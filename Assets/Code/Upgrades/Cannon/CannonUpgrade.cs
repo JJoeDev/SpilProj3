@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class CannonUpgrade : Upgrade
 {
-    public GameObject cannonVisual; // optional, if you have a model/mesh for the cannon
+    public GameObject cannonVisual; 
 
     public override void EnableUpgrade()
     {
-        CarCannon cannon = GetComponent<CarCannon>();
+        FrontCarCannon cannon = GetComponent<FrontCarCannon>();
         if (cannon != null)
         {
             cannon.enabled = true; // turn on the cannon script
@@ -21,7 +21,7 @@ public class CannonUpgrade : Upgrade
 
     public override void DisableUpgrade()
     {
-        CarCannon cannon = GetComponent<CarCannon>();
+        FrontCarCannon cannon = GetComponent<FrontCarCannon>();
         if (cannon != null)
         {
             cannon.enabled = false; // turn off cannon script

@@ -1,17 +1,17 @@
 using System.Collections;
 using UnityEngine;
 
-public class FrontCarCannon : Upgrade
+public class RightCannonUpgrade : Upgrade
 {
     [Header("Cannon Settings")]
-    public GameObject projectilePrefab;   
-    public Transform firePoint;           
-    public float projectileForce = 100f;   
-    public float fireCooldown = 5f;     
+    public GameObject projectilePrefab;
+    public Transform firePoint;
+    public float projectileForce = 100f;
+    public float fireCooldown = 5f;
 
     [Header("Knockback Settings")]
-    public Rigidbody carRigidbody;        
-    public float knockbackForce = 30000f;
+    public Rigidbody carRigidbody;
+    public float knockbackForce = 10000f;
 
     [SerializeField] GameObject m_cannonModel;
 
@@ -28,11 +28,12 @@ public class FrontCarCannon : Upgrade
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F) && canFire)
+        if (Input.GetMouseButtonDown(1) && canFire)
         {
             FireCannon();
         }
     }
+
 
     void FireCannon()
     {
@@ -46,27 +47,19 @@ public class FrontCarCannon : Upgrade
 
             if (rb != null)
             {
-                rb.velocity = firePoint.forward * projectileForce; // shoots forward
+                rb.velocity = firePoint.right * projectileForce; // shoots right
             }
 
             // Destroy after 15 seconds
             Destroy(projectile, 15f);
         }
 
-        // Apply recoil with upward kick
         if (carRigidbody != null)
         {
-            // backward + upward force
-            Vector3 recoilDirection = (-firePoint.forward + Vector3.up * 0.35f).normalized;
+            // sideways + upward force
+            Vector3 recoilDirection = (-firePoint.right + Vector3.up * 0.35f).normalized;
             carRigidbody.AddForce(recoilDirection * knockbackForce, ForceMode.Impulse);
         }
-        // tilts the car upwards
-        if (carRigidbody != null)
-        {
-            Vector3 torque = -firePoint.right * knockbackForce * 0.1f;
-            carRigidbody.AddTorque(torque, ForceMode.Impulse);
-        }
-
 
         StartCoroutine(FireCooldown());
     }
