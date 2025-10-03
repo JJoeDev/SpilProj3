@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class CarCannon : MonoBehaviour
+public class CarCannon : Upgrade
 {
     [Header("Cannon Settings")]
     public GameObject projectilePrefab;   
@@ -11,13 +11,24 @@ public class CarCannon : MonoBehaviour
 
     [Header("Knockback Settings")]
     public Rigidbody carRigidbody;        
-    public float knockbackForce = 30000f;    
+    public float knockbackForce = 30000f;
+
+    [SerializeField] GameObject m_cannonModel;
 
     private bool canFire = true;
 
+    public override void EnableUpgrade()
+    {
+        m_cannonModel.SetActive(true);
+    }
+
+    public override void DisableUpgrade()
+    {
+        m_cannonModel.SetActive(false);
+    }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && canFire)
+        if (Input.GetKeyDown(KeyCode.F) && canFire)
         {
             FireCannon();
         }
