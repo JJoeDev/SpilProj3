@@ -15,6 +15,11 @@ public class UpgradeCard : MenuButton
     [SerializeField] private GameObject m_lock;
     [SerializeField] private UpgradeManager m_upgradeManager;
     [SerializeField] private Upgrade linkedUpgrade; // Drag in Inspector
+                                                    
+    public bool requiresCannonballKill = false;
+    public int killsRequired = 3;
+    public int cannonballKillsRequired = 1;
+
     public Upgrade LinkedUpgrade => linkedUpgrade;    
 
     [Tooltip("Whether this upgrade is unlocked")]

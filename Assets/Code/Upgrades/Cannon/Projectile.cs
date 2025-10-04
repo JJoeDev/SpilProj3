@@ -1,3 +1,4 @@
+// Projectile.cs
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -11,7 +12,8 @@ public class Projectile : MonoBehaviour
         HealthManager targetHealth = collision.gameObject.GetComponent<HealthManager>();
         if (targetHealth != null)
         {
-            targetHealth.TakeDamage(damage);
+            // Pass this projectile as the damage source
+            targetHealth.TakeDamage(damage, gameObject);
         }
 
         // Spawn explosion effect
