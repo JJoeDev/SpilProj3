@@ -13,7 +13,6 @@ public class UpgradeRoadMap : MonoBehaviour
 
     public RectTransform rectTransform;
 
-    public int enemiesKilled = 0; 
     public float maxScrollDist;
     public float minScrollDist;
 

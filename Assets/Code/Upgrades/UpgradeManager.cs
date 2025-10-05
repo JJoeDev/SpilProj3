@@ -12,7 +12,7 @@ public class UpgradeManager : MonoBehaviour
     {
         if (_instance != null && _instance != this)
         {
-            Debug.LogWarning("Two upgrademanagers exist. Deleting the duplicate!");
+            Debug.LogWarning("Two upgrademanagers exist - Deleting the duplicate!");
             Destroy(gameObject);
         }
         else
@@ -25,8 +25,10 @@ public class UpgradeManager : MonoBehaviour
     public UpgradeRoadMap upgradeRoadMap;
     [SerializeField] private UpgradeCard[] m_upgradeCards;
     [SerializeField] private GameObject m_upgradeMenu;
+
     private InputManager m_inputManager;
-    //
+    private StatTracker m_statTracker;
+    
     public int upgradeCount = 0;
 
     private void OnEnable()
@@ -42,6 +44,7 @@ public class UpgradeManager : MonoBehaviour
     private void Start()
     {
         m_inputManager = InputManager.Instance;
+        m_statTracker = StatTracker.Instance;
         ReapplySavedUpgrades();
     }
 
@@ -86,14 +89,11 @@ public class UpgradeManager : MonoBehaviour
 
         if (upgradeCount < m_upgradeCards.Length)
         {
-            if (upgradeRoadMap.enemiesKilled >= 3)
+            if (m_upgradeCards[upgradeCount].CheckUpgradeUnlocked())
             {
-                upgradeRoadMap.enemiesKilled = 0;
                 upgradeRoadMap.UpdateRoadMap();
                 var unlockedCard = m_upgradeCards[upgradeCount];
                 Debug.Log("Got upgrade: " + unlockedCard.UpgradeID);
-
-                unlockedCard.isUnlocked = true;
                 unlockedCard.UpdateCard();
 
                 if (UpgradeSaving.Instance != null)

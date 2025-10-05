@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UpgradeCard : MenuButton
+public class UpgradeCard : MonoBehaviour, IPointerClickHandler
 {
     [Header("Upgrade Data")]
     [SerializeField] private string upgradeID; // Unique ID for saving/loading
@@ -20,14 +20,15 @@ public class UpgradeCard : MenuButton
     [Tooltip("Whether this upgrade is unlocked")]
     public bool isUnlocked = false;              
 
-    private void Awake()
+    private void Update()
     {
         UpdateCard();
     }
 
-    private void Update()
+
+    public virtual bool CheckUpgradeUnlocked()
     {
-        UpdateCard();
+        return isUnlocked;
     }
 
     public void UpdateCard()
@@ -44,7 +45,7 @@ public class UpgradeCard : MenuButton
         }
     }
 
-    public override void OnPointerClick(PointerEventData pointerEventData)
+    public void OnPointerClick(PointerEventData pointerEventData)
     {
         if (isUnlocked)
         {
@@ -80,8 +81,4 @@ public class UpgradeCard : MenuButton
 
         transform.rotation = Quaternion.identity;
     }
-
-    public override void OnPointerEnter(PointerEventData pointerEventData) { }
-
-    public override void OnPointerExit(PointerEventData pointerEventData) { }
 }
