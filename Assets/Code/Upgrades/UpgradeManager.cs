@@ -32,18 +32,6 @@ public class UpgradeManager : MonoBehaviour
     
     public int upgradeCount = 0;
 
-    // track cannonball kills separately
-    public int cannonballKills = 0;
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
 
     private void OnEnable()
     {
@@ -60,34 +48,6 @@ public class UpgradeManager : MonoBehaviour
         m_inputManager = InputManager.Instance;
         m_statTracker = StatTracker.Instance;
         ReapplySavedUpgrades();
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        ReapplySavedUpgrades();
-    }
-
-    private void ReapplySavedUpgrades()
-    {
-        if (UpgradeSaving.Instance == null) return;
-
-        // Restore upgrades
-        foreach (var savedID in UpgradeSaving.Instance.acquiredUpgrades)
-        {
-            foreach (var card in m_upgradeCards)
-            {
-                if (card.UpgradeID == savedID)
-                {
-                    card.isUnlocked = true;
-                    card.UpdateCard();
-
-                    if (card.LinkedUpgrade != null)
-                        card.LinkedUpgrade.EnableUpgrade();
-                }
-            }
-        }
-
-        upgradeCount = UpgradeSaving.Instance.acquiredUpgrades.Count;
     }
 
     private void Update()
@@ -124,76 +84,32 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    // Called by HealthManager when an enemy is killed by normal means
-    public void RegisterNormalKill()
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (upgradeBar != null)
-        {
-            upgradeBar.enemiesKilled++;
-        }
-
-        TryUnlockNext();
+        ReapplySavedUpgrades();
     }
 
-    // Called by HealthManager when an enemy is killed by a cannonball
-    public void RegisterCannonballKill()
+    private void ReapplySavedUpgrades()
     {
-        cannonballKills++;
-        TryUnlockNext();
-    }
+        if (UpgradeSaving.Instance == null) return;
 
-    private void TryUnlockNext()
-    {
-        if (upgradeCount >= m_upgradeCards.Length) return;
-
-        var nextCard = m_upgradeCards[upgradeCount];
-
-        if (nextCard == null) return;
-
-        if (nextCard.requiresCannonballKill)
+        // Restore upgrades
+        foreach (var savedID in UpgradeSaving.Instance.acquiredUpgrades)
         {
-            Debug.Log("Next upgrade requires " + nextCard.cannonballKillsRequired + " cannonball kills. Current: " + cannonballKills);
-
-            if (cannonballKills >= nextCard.cannonballKillsRequired)
+            foreach (var card in m_upgradeCards)
             {
-                Debug.Log("Cannonball requirement met. Unlocking upgrade.");
-                cannonballKills = 0;
-                UnlockUpgrade(nextCard);
+                if (card.UpgradeID == savedID)
+                {
+                    card.isUnlocked = true;
+                    card.UpdateCard();
+
+                    if (card.LinkedUpgrade != null)
+                        card.LinkedUpgrade.EnableUpgrade();
+                }
             }
         }
-        else
-        {
-            Debug.Log("Next upgrade requires " + nextCard.killsRequired + " normal kills. Current: " + upgradeBar.enemiesKilled);
 
-            if (upgradeBar.enemiesKilled >= nextCard.killsRequired)
-            {
-                Debug.Log("Normal requirement met. Unlocking upgrade.");
-                upgradeBar.enemiesKilled = 0;
-                UnlockUpgrade(nextCard);
-            }
-        }
-    }
-
-
-    private void UnlockUpgrade(UpgradeCard card)
-    {
-        if (upgradeBar != null)
-            upgradeBar.UpdateRoadMap();
-        else
-            Debug.LogWarning("UpgradeBar reference is missing!");
-
-        Debug.Log(">>> UNLOCKED UPGRADE: " + card.UpgradeID);
-
-        card.isUnlocked = true;
-        card.UpdateCard();
-
-        if (card.LinkedUpgrade != null)
-            card.LinkedUpgrade.EnableUpgrade();
-
-        if (UpgradeSaving.Instance != null)
-            UpgradeSaving.Instance.acquiredUpgrades.Add(card.UpgradeID);
-
-        upgradeCount++;
+        upgradeCount = UpgradeSaving.Instance.acquiredUpgrades.Count;
     }
 
 }

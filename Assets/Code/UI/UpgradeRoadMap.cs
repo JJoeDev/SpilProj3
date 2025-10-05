@@ -24,9 +24,11 @@ public class UpgradeRoadMap : MonoBehaviour
 
         rectTransform = GetComponent<RectTransform>();
 
+        m_roadMapPoints = GetComponentsInChildren<RawImage>();
+
         //m_minScrollDist = m_roadMapPoints[m_roadMapPoints.Length - 1].transform.position.x;
         //m_maxScrollDist = m_roadMapPoints[0].transform.position.x;
-        UpdateRoadMap();
+        //UpdateRoadMap();
     }
 
     private void Update()
@@ -42,16 +44,6 @@ public class UpgradeRoadMap : MonoBehaviour
 
     public void UpdateRoadMap()
     {
-        m_roadMapPoints = GetComponentsInChildren<RawImage>();
-
-        int i = 0;
-        for (; i < m_upgradeManager.upgradeCount; i++)
-        {
-            m_roadMapPoints[i].color = Color.HSVToRGB(0, 0, 1);
-        }
-        for (; i < m_roadMapPoints.Length; i++)
-        {
-            m_roadMapPoints[i].color = Color.HSVToRGB(0, 0, 0.5f);
-        } 
+        m_roadMapPoints[m_upgradeManager.upgradeCount].color = Color.HSVToRGB(0, 0, 1);
     }
 }

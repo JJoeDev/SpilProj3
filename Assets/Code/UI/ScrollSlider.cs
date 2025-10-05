@@ -43,8 +43,6 @@ public class ScrollBar : MonoBehaviour, IDragHandler, IPointerClickHandler
 
         m_scrollDistance = Mathf.InverseLerp(m_minScroll, m_maxScroll, m_slider.anchoredPosition.x);
 
-        Debug.Log(m_scrollDistance);
-
         m_upgradeRoadMap.rectTransform.anchoredPosition = new Vector2(
             Mathf.Lerp(m_upgradeRoadMap.maxScrollDist, m_upgradeRoadMap.minScrollDist, m_scrollDistance),
             m_upgradeRoadMap.rectTransform.anchoredPosition.y

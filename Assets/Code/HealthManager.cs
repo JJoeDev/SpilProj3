@@ -36,19 +36,14 @@ public class HealthManager : MonoBehaviour
 
             if (gameObject.CompareTag("Enemy"))
             {
-                StatTracker.Instance.totalEnemiesKilled++;
-                var upgradeManager = UpgradeManager.Instance;
-                if (upgradeManager != null)
+                StatTracker m_statTracker = StatTracker.Instance;
+                if (m_statTracker != null)
                 {
+                    m_statTracker.totalEnemiesKilled++;
                     if (source != null && source.GetComponent<CannonballMarker>() != null)
                     {
-                        Debug.Log("Enemy killed by CANNONBALL!"); 
-                        upgradeManager.RegisterCannonballKill();
-                    }
-                    else
-                    {
-                        Debug.Log("Enemy killed by NORMAL means."); 
-                        upgradeManager.RegisterNormalKill();
+                        Debug.Log("Enemy killed by CANNONBALL!");
+                        m_statTracker.enemiesKilledWithCannon++;
                     }
                 }
             }
