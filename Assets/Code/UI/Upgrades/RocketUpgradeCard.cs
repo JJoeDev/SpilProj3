@@ -1,19 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class RocketUpgradeCard : UpgradeCard
 {
-    StatTracker m_statTracker;
+    [SerializeField] TMP_Text stattracker_Text;
 
-    private void Start()
+    public override void Update()
     {
-        m_statTracker = StatTracker.Instance;
+        base.Update();
+        stattracker_Text.text = statTracker.smallHoopsJumpedThrough.ToString() + "/" + 3;
     }
-
     public override bool CheckUpgradeUnlocked()
     {
-        isUnlocked = m_statTracker.smallHoopsJumpedThrough >= 3;
+        isUnlocked = statTracker.smallHoopsJumpedThrough >= 3;
         return isUnlocked;
     }
 }

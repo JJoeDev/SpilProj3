@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ArmorUpgradeCard : UpgradeCard
+public class TrophyUpgradeCard : UpgradeCard
 {
     [SerializeField] TMP_Text stattracker_Text;
 
     public override void Update()
     {
         base.Update();
-        stattracker_Text.text = statTracker.enemiesPushedIntoBarrels.ToString() + "/" + 1;
+        stattracker_Text.text = statTracker.totalEnemiesKilled.ToString() + "/" + 50;
     }
     public override bool CheckUpgradeUnlocked()
     {
-        isUnlocked = statTracker.enemiesPushedIntoBarrels >= 1;
+        isUnlocked = statTracker.totalEnemiesKilled >= 50;
         return isUnlocked;
     }
 }
