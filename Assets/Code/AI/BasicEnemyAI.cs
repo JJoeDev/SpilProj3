@@ -131,7 +131,6 @@ public class BasicEnemyAI : MonoBehaviour
         SetDirectionToCorner(ref distanceToCorner);
 
         float angleToCorner = Vector3.SignedAngle(transform.forward, m_targetDir, Vector3.up);
-        Debug.Log($"ANGLE: {angleToCorner}");
 
         float steeringAngle = Mathf.Clamp(angleToCorner / m_turnRadius, -1.0f, 1.0f) * m_turnRadius;
 
@@ -190,8 +189,27 @@ public class BasicEnemyAI : MonoBehaviour
 
             float angleToTarget = Vector3.SignedAngle(transform.forward, m_targetDir, Vector3.up);
             SetFrontWheelSteeringAngle(angleToTarget);
-            SetBackWheelTorque(0.0f);
-            SetAllWheelBrakes(m_brakeForce);
+
+            float maxAllowedSpeed = Mathf.Sqrt(2 * m_brakeForce * distanceToTarget);
+            float desiredSpeed = Mathf.Min(m_maxSpeed, maxAllowedSpeed);
+
+            float accelerationRatio = desiredSpeed / m_maxSpeed;
+            float torque = accelerationRatio * m_maxTorque;
+
+            float currentSpeed = m_rb.velocity.magnitude;
+
+            if (currentSpeed > desiredSpeed)
+            {
+                float brakeForce = Mathf.Clamp(m_brakeForce * (currentSpeed - desiredSpeed), 0, m_brakeForce);
+
+                SetBackWheelTorque(0); // Why are we setting to 0 multiple times
+                SetAllWheelBrakes(brakeForce);
+            }
+            else
+            {
+                SetBackWheelTorque(torque);
+                SetAllWheelBrakes(0.0f);
+            }
         }
     }
 
