@@ -434,6 +434,7 @@ MonoBehaviour:
   m_sightAngle: 215
   m_deadAngle: 75
   m_playerTransform: {fileID: 0}
+  m_playerPosOffset: {x: 0, y: 1, z: 0}
   m_frontRight: {fileID: 4440842355890254650}
   m_frontLeft: {fileID: 3591608584131450819}
   m_backRight: {fileID: 6441563432041185785}
@@ -446,8 +447,8 @@ MonoBehaviour:
   m_turnRadius: 36
   m_smoothSteering: 5
   m_distanceToNewCorner: 1
-  m_roamAreaCenter: {x: 0, y: 0, z: 0}
-  m_roamAreaSize: {x: 45, y: 45}
+  m_roamAreaCenter: {x: -18.7, y: 0, z: -112.7}
+  m_roamAreaSize: {x: 371, y: 559.5}
 --- !u!114 &4512875644321838927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -461,6 +462,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  healthBar: {fileID: 0}
   currentHealth: 100
 --- !u!114 &8800439001727571166
 MonoBehaviour:
