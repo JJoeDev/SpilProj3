@@ -2,10 +2,6 @@ using UnityEngine;
 
 public abstract class Explodable : MonoBehaviour
 {
-    public virtual void Explode() 
-    {
-
-    }
 
     /// <summary>
     /// This method is used for physics-explodables

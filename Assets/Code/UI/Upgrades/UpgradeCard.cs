@@ -1,45 +1,70 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UpgradeCard : MenuButton
+public class UpgradeCard : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] Image m_cardImage;
-    [SerializeField] UpgradeManager m_upgradeManager;
-    public bool enabled = false;
+    [Header("Upgrade Data")]
+    [SerializeField] private string upgradeID; // Unique ID for saving/loading
+    public string UpgradeID => upgradeID; // Read-only accessor
 
-    // Update is called once per frame
-    void Update()
+    [SerializeField] private Image m_cardImage;
+    [SerializeField] private GameObject m_lock;
+    [SerializeField] private GameObject m_soldText;
+    [SerializeField] private Graphic[] m_upgradeRequirementTexts; // Stuff to reveal on mouse hover
+    [SerializeField] private Graphic[] m_otherGraphics; // Stuff to unreveal on mouse hover
+    [SerializeField] private UpgradeManager m_upgradeManager;
+    [SerializeField] private Upgrade linkedUpgrade;
+
+    bool m_hovering;
+    Coroutine m_hoverRoutine;
+
+    public Upgrade LinkedUpgrade => linkedUpgrade;    
+
+    [Tooltip("Whether this upgrade is unlocked")]
+    public bool isUnlocked = false;              
+
+    private void Update()
     {
         UpdateCard();
     }
 
-    private void Awake()
+
+    public virtual bool CheckUpgradeUnlocked()
     {
-        UpdateCard();
+        return isUnlocked;
     }
 
     public void UpdateCard()
     {
-        if (enabled)
+        if (!m_hovering)
         {
-            m_cardImage.color = Color.white;
-        }
-        else
-        {
-            m_cardImage.color = new Color(0.5f, 0.5f, 0.5f);
+            if (isUnlocked)
+            {
+                m_cardImage.color = Color.white;
+                m_lock.SetActive(false);
+            }
+            else
+            {
+                m_cardImage.color = new Color(0.5f, 0.5f, 0.5f);
+                m_lock.SetActive(true);
+            }
         }
     }
 
-    public override void OnPointerClick(PointerEventData pointerEventData)
+    public void OnPointerClick(PointerEventData pointerEventData)
     {
-        if (enabled)
+        if (isUnlocked)
         {
-            m_upgradeManager.upgrades[m_upgradeManager.upgradeCount - 1].EnableUpgrade();
+            m_soldText.SetActive(true);
+            if (LinkedUpgrade != null)
+            {
+                LinkedUpgrade.EnableUpgrade();
+            }
         }
         else
         {
@@ -48,6 +73,92 @@ public class UpgradeCard : MenuButton
         }
     }
 
+    // Show upgrade requirements on hover if card isnt unlocked
+    public void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        if (isUnlocked) return;
+
+        if (m_hoverRoutine != null) StopCoroutine(m_hoverRoutine);
+        m_hoverRoutine = StartCoroutine(ieShowUpgradeRequirement(0.2f, true));
+    }
+
+    public void OnPointerExit(PointerEventData pointerEventData)
+    {
+        if (isUnlocked) return;
+
+        if (m_hoverRoutine != null) StopCoroutine(m_hoverRoutine);
+        m_hoverRoutine = StartCoroutine(ieShowUpgradeRequirement(0.2f, false));
+    }
+
+
+    IEnumerator ieShowUpgradeRequirement(float easeInTime, bool pointerEnter)
+    {
+        m_hovering = true;
+
+        float elapsed = 0;
+
+        while (elapsed < easeInTime)
+        {
+            elapsed += Time.deltaTime;
+
+            float cardGraphicsEase = pointerEnter ? Mathf.Lerp(1f, 0f, elapsed / easeInTime) : Mathf.Lerp(0, 1f, elapsed / easeInTime);
+            float upgradeRequirementEase  = pointerEnter ? Mathf.Lerp(0, 1f, elapsed / easeInTime) : Mathf.Lerp(1f, 0f, elapsed / easeInTime);
+
+            float cardEase = pointerEnter ? Mathf.Lerp(0.5f, 0f, elapsed / easeInTime) : Mathf.Lerp(0, 0.5f, elapsed / easeInTime);
+
+            m_cardImage.color = new Color(
+                cardEase,
+                cardEase,
+                cardEase
+            );
+
+            foreach (var graphic in m_otherGraphics)
+            {
+                graphic.color = new Color(
+                    cardGraphicsEase,
+                    cardGraphicsEase,
+                    cardGraphicsEase,
+                    cardGraphicsEase
+                );
+            }
+
+            foreach (var txt in m_upgradeRequirementTexts)
+            {
+                txt.color = new Color(
+                    upgradeRequirementEase,
+                    upgradeRequirementEase,
+                    upgradeRequirementEase,
+                    upgradeRequirementEase
+                );
+            }
+
+            yield return null;
+        }
+
+        // Ensure that the colors are set to the correct final values
+
+        foreach (var graphic in m_otherGraphics)
+        {
+            graphic.color = new Color(
+                1f,
+                1f,
+                1f,
+                pointerEnter ? 0f : 1f
+            );
+        }
+
+        foreach (var txt in m_upgradeRequirementTexts)
+        {
+            txt.color = new Color(
+                1f,
+                1f,
+                1f,
+                pointerEnter ? 1f : 0f
+            );
+        }
+
+       if (!pointerEnter) m_hovering = false;
+    }
 
     IEnumerator ieShakeCard(float animTime)
     {
@@ -67,14 +178,5 @@ public class UpgradeCard : MenuButton
         }
 
         transform.rotation = Quaternion.identity;
-    }
-    public override void OnPointerEnter(PointerEventData pointerEventData)
-    {
-        
-    }
-
-    public override void OnPointerExit(PointerEventData pointerEventData)
-    {
-        
     }
 }
