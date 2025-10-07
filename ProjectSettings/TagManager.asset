@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Enemy
   - RevealedEnemy
+  - Walls
+  - SmallHoop
+  - BigHoop
   layers:
   - Default
   - TransparentFX
@@ -33,7 +36,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Player
   - 
   - Enemies
   - 

@@ -20,15 +20,23 @@ public class UpgradeCard : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     [SerializeField] private UpgradeManager m_upgradeManager;
     [SerializeField] private Upgrade linkedUpgrade;
 
+    public StatTracker statTracker;
+
     bool m_hovering;
     Coroutine m_hoverRoutine;
 
     public Upgrade LinkedUpgrade => linkedUpgrade;    
 
     [Tooltip("Whether this upgrade is unlocked")]
-    public bool isUnlocked = false;              
+    public bool isUnlocked = false;
 
-    private void Update()
+
+    private void Start()
+    {
+        statTracker = StatTracker.Instance;
+    }
+
+    public virtual void Update()
     {
         UpdateCard();
     }

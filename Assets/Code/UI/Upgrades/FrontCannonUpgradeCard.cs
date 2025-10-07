@@ -1,19 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class FrontCannonUpgradeCard: UpgradeCard
 {
-    StatTracker m_statTracker;
+    [SerializeField] TMP_Text stattracker_Text;
 
-    private void Start()
+    public override void Update()
     {
-        m_statTracker = StatTracker.Instance;
+        base.Update();
+        stattracker_Text.text = statTracker.bigHoopsJumpedThrough.ToString() + "/" + 1;
     }
-
     public override bool CheckUpgradeUnlocked()
     {
-        isUnlocked = m_statTracker.bigHoopsJumpedThrough >= 1;
+        isUnlocked = statTracker.bigHoopsJumpedThrough >= 1;
         return isUnlocked;
     }
 }
