@@ -33,6 +33,37 @@ Transform:
   - {fileID: 13467187748953643}
   m_Father: {fileID: 3745775732619948354}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &456102964690528518
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5719777188750751317}
+  m_Layer: 0
+  m_Name: ShootingPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5719777188750751317
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 456102964690528518}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: 0.050912686, y: -0.13847159, z: -0.062387418}
+  m_LocalScale: {x: 0.01, y: 0.010000002, z: 0.010000002}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5902576473756930171}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &814995650285220787
 GameObject:
   m_ObjectHideFlags: 0
@@ -44,6 +75,8 @@ GameObject:
   - component: {fileID: 6054950274380925954}
   - component: {fileID: 6705715969657077148}
   - component: {fileID: 645411840201898662}
+  - component: {fileID: 9188232994515644113}
+  - component: {fileID: 6417336858298538704}
   m_Layer: 0
   m_Name: Cylinder.017
   m_TagString: Untagged
@@ -117,6 +150,38 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &9188232994515644113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 814995650285220787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc05ad8ecf36ef64eb7c9c38beb5039e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cannonVisual: {fileID: 814995650285220787}
+--- !u!114 &6417336858298538704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 814995650285220787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a99d04fe0df7a3540a5069ed4b8e5b3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 0}
+  firePoint: {fileID: 5719777188750751317}
+  projectileForce: 100
+  fireCooldown: 5
+  carRigidbody: {fileID: 8519721712876099262}
+  knockbackForce: 30000
+  m_cannonModel: {fileID: 814995650285220787}
 --- !u!1 &851194026170904207
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,6 +365,8 @@ Transform:
   m_Children:
   - {fileID: 5646523892072676689}
   - {fileID: 6411334914971567059}
+  - {fileID: 1255914638151845480}
+  - {fileID: 9081981546194904403}
   m_Father: {fileID: 3745775732619948354}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1482449553688318106
@@ -449,6 +516,37 @@ Transform:
   - {fileID: 731828655577320810}
   m_Father: {fileID: 3745775732619948354}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1734842647110819633
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9081981546194904403}
+  m_Layer: 0
+  m_Name: ShootingPointRight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9081981546194904403
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734842647110819633}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: 0.07727575, y: -0.093659975, z: -0.049829986}
+  m_LocalScale: {x: 0.010000003, y: 0.010000002, z: 0.010000004}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3376802006438723738}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &2051876994799295241
 GameObject:
   m_ObjectHideFlags: 0
@@ -493,6 +591,8 @@ GameObject:
   - component: {fileID: 6411334914971567059}
   - component: {fileID: 4487756297132864248}
   - component: {fileID: 3230530421042304543}
+  - component: {fileID: 1060721015601898069}
+  - component: {fileID: 9220034732367525165}
   m_Layer: 0
   m_Name: Cylinder.004
   m_TagString: Untagged
@@ -567,6 +667,38 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1060721015601898069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2186998797789864704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc05ad8ecf36ef64eb7c9c38beb5039e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cannonVisual: {fileID: 2186998797789864704}
+--- !u!114 &9220034732367525165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2186998797789864704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a42d56481fc4c41b91bfafd7dd9fe5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 0}
+  firePoint: {fileID: 1255914638151845480}
+  projectileForce: 100
+  fireCooldown: 5
+  carRigidbody: {fileID: 8519721712876099262}
+  knockbackForce: 10000
+  m_cannonModel: {fileID: 2186998797789864704}
 --- !u!1 &2426095879632794348
 GameObject:
   m_ObjectHideFlags: 0
@@ -1057,6 +1189,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6054950274380925954}
+  - {fileID: 5719777188750751317}
   m_Father: {fileID: 3745775732619948354}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4710364325338181917
@@ -1495,6 +1628,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5518635654753655022
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6672058612562903148}
+  m_Layer: 0
+  m_Name: CameraLookAt
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6672058612562903148
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5518635654753655022}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 5.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3745775732619948354}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5569098344819946435
 GameObject:
   m_ObjectHideFlags: 0
@@ -1614,6 +1778,7 @@ Transform:
   - {fileID: 404470215918737557}
   - {fileID: 8093788991244635465}
   - {fileID: 4714416195857773408}
+  - {fileID: 6672058612562903148}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &8519721712876099262
@@ -1624,7 +1789,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5984531812428329800}
   serializedVersion: 4
-  m_Mass: 700
+  m_Mass: 1000
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -1702,7 +1867,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   upgradeRoadMap: {fileID: 0}
-  m_upgradeCards: []
+  m_upgradeCards:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   m_upgradeMenu: {fileID: 0}
   upgradeCount: 0
 --- !u!114 &8765775284796708214
@@ -2673,6 +2845,37 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
+--- !u!1 &8247176865029219128
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1255914638151845480}
+  m_Layer: 0
+  m_Name: ShootingPointLeft
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1255914638151845480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8247176865029219128}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: 0.022855738, y: -0.093659975, z: -0.049829967}
+  m_LocalScale: {x: 0.010000003, y: 0.010000002, z: 0.010000004}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3376802006438723738}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &8315930472803679715
 GameObject:
   m_ObjectHideFlags: 0
@@ -2716,6 +2919,8 @@ GameObject:
   - component: {fileID: 5646523892072676689}
   - component: {fileID: 3790858869398936192}
   - component: {fileID: 4396907343851836650}
+  - component: {fileID: 7131911490905001719}
+  - component: {fileID: 8936563035969455980}
   m_Layer: 0
   m_Name: Cylinder.003
   m_TagString: Untagged
@@ -2790,6 +2995,38 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7131911490905001719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8331298151242945601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc05ad8ecf36ef64eb7c9c38beb5039e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cannonVisual: {fileID: 8331298151242945601}
+--- !u!114 &8936563035969455980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8331298151242945601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d1a4662f2ecbb74896ff083749382ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 0}
+  firePoint: {fileID: 9081981546194904403}
+  projectileForce: 100
+  fireCooldown: 5
+  carRigidbody: {fileID: 8519721712876099262}
+  knockbackForce: 10000
+  m_cannonModel: {fileID: 8331298151242945601}
 --- !u!1 &8537317232637162130
 GameObject:
   m_ObjectHideFlags: 0
