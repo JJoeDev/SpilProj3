@@ -1,19 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class SideCannonUpgradeCard: UpgradeCard
 {
-    StatTracker m_statTracker;
+    [SerializeField] TMP_Text stattracker_Text;
 
-    private void Start()
+    public override void Update()
     {
-        m_statTracker = StatTracker.Instance;
+        base.Update();
+        stattracker_Text.text = statTracker.enemiesKilledWithCannon.ToString() + "/" + 10;
     }
 
     public override bool CheckUpgradeUnlocked()
     {
-        isUnlocked = m_statTracker.enemiesKilledWithCannon >= 10;
+        isUnlocked = statTracker.enemiesKilledWithCannon >= 10;
         return isUnlocked;
     }
 }
