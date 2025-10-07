@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - RevealedEnemy
+  - Walls
   layers:
   - Default
   - TransparentFX
@@ -33,7 +34,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Player
   - 
   - Enemies
   - 
