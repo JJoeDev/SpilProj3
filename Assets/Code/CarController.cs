@@ -1,4 +1,4 @@
-/*
+﻿/*
 MESSAGE FROM CREATOR: This script was coded by Mena. You can use it in your games either these are commercial or
 personal projects. You can even add or remove functions as you wish. However, you cannot sell copies of this
 script by itself, since it is originally distributed as a free product.
@@ -22,14 +22,14 @@ public class CarController : MonoBehaviour
       [Space(20)]
       //[Header("CAR SETUP")]
       [Space(10)]
-      [Range(10, 100)]
+      [Range(10, 2900)]
       public int maxSpeed = 90; //The maximum speed that the car can reach in km/h.
       [Range(10, 120)]
       public int maxReverseSpeed = 45; //The maximum speed that the car can reach while going on reverse in km/h.
-      [Range(1, 900)]
+      [Range(1, 5900)]
       public int accelerationMultiplier = 2; // How fast the car can accelerate. 1 is a slow acceleration and 10 is the fastest.
       [Space(10)]
-      [Range(10, 55)]
+      [Range(10, 995)]
       public int maxSteeringAngle = 27; // The maximum angle that the tires can reach while rotating the steering wheel.
       [Range(0.1f, 3f)]
       public float steeringSpeed = 0.5f; // How fast the steering wheel turns.

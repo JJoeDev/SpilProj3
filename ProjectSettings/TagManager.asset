@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - RevealedEnemy
+  - Walls
   - SmallHoop
   - BigHoop
   layers:
@@ -35,7 +36,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Player
   - 
   - Enemies
   - 
