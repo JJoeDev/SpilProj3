@@ -5,7 +5,7 @@ using UnityEngine;
 public class ArmorUpgrade : Upgrade
 {
     public float armorHealth = 150f;
-    public GameObject armorVisual;
+    public GameObject[] armorVisuals;
 
     public override void EnableUpgrade()
     {
@@ -16,9 +16,12 @@ public class ArmorUpgrade : Upgrade
             health.maxHealth = armorHealth;
         }
         // Activates the armor visually
-        if (armorVisual != null)
+        if (armorVisuals.Length != 0)
         {
-            armorVisual.SetActive(true);
+            foreach (GameObject armorPart in armorVisuals)
+            {
+                armorPart.SetActive(true);
+            }
         }
     }
 }

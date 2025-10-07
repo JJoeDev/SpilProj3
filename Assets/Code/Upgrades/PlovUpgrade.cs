@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Plov : Upgrade
 {
@@ -20,6 +21,8 @@ public class Plov : Upgrade
 
     private void OnTriggerEnter(Collider m_collision)
     {
+        if (m_plovModel.activeSelf == false) return; 
+
         if (m_collision.gameObject.CompareTag("Enemy"))
         {
             Debug.Log("Plow collided with " + m_collision.name);
