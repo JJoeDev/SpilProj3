@@ -7,8 +7,7 @@ public class HoopCompletion : MonoBehaviour
     [SerializeField] private GameObject m_bigHoop;
     private List<Collider> m_hoopsToHitRuntime;
     public bool smallHoopsCompleted = false;
-    public bool bigHoopCompleted = false;
-
+    StatTracker m_statTracker;
     private void Awake()
     {
         m_hoopsToHitRuntime = new List<Collider>(m_hoopsToHitOriginal);
@@ -16,7 +15,8 @@ public class HoopCompletion : MonoBehaviour
         {
             m_bigHoop.SetActive(false);
         }
-    }
+        m_statTracker = StatTracker.Instance;
+    } 
 
     private void OnTriggerEnter(Collider other)
     {
@@ -24,6 +24,7 @@ public class HoopCompletion : MonoBehaviour
         {
             m_hoopsToHitRuntime.Remove(other);
             Destroy(other.gameObject);
+            m_statTracker.smallHoopsJumpedThrough++;
         }
         if (!smallHoopsCompleted && m_hoopsToHitRuntime.Count == 0)
         {
@@ -35,7 +36,7 @@ public class HoopCompletion : MonoBehaviour
         {
             Destroy(m_bigHoop);
             m_bigHoop = null;
-            bigHoopCompleted = true;
+            m_statTracker.bigHoopsJumpedThrough++;
         }
     }
 }
