@@ -1,3 +1,4 @@
+// UpgradeManager.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class UpgradeManager : MonoBehaviour
     {
         if (_instance != null && _instance != this)
         {
-            Debug.LogWarning("Two upgrademanagers exist. Deleting the duplicate!");
+            Debug.LogWarning("Two upgrademanagers exist - Deleting the duplicate!");
             Destroy(gameObject);
         }
         else
@@ -25,9 +26,12 @@ public class UpgradeManager : MonoBehaviour
     public UpgradeRoadMap upgradeRoadMap;
     [SerializeField] private UpgradeCard[] m_upgradeCards;
     [SerializeField] private GameObject m_upgradeMenu;
+
     private InputManager m_inputManager;
-    //
+    private StatTracker m_statTracker;
+    
     public int upgradeCount = 0;
+
 
     private void OnEnable()
     {
@@ -42,7 +46,42 @@ public class UpgradeManager : MonoBehaviour
     private void Start()
     {
         m_inputManager = InputManager.Instance;
+        m_statTracker = StatTracker.Instance;
         ReapplySavedUpgrades();
+    }
+
+    private void Update()
+    {
+        if (m_inputManager != null && m_inputManager.OnOpenUpgradeRoadmap().triggered)
+        {
+            m_upgradeMenu.SetActive(!m_upgradeMenu.activeSelf);
+            Cursor.lockState = m_upgradeMenu.activeSelf ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = m_upgradeMenu.activeSelf ? true : false;
+        }
+
+        if (upgradeCount < m_upgradeCards.Length)
+        {
+            if (m_upgradeCards[upgradeCount].CheckUpgradeUnlocked())
+            {
+                upgradeRoadMap.UpdateRoadMap();
+                var unlockedCard = m_upgradeCards[upgradeCount];
+                Debug.Log("Got upgrade: " + unlockedCard.UpgradeID);
+                unlockedCard.UpdateCard();
+
+                if (UpgradeSaving.Instance != null)
+                {
+                    UpgradeSaving.Instance.acquiredUpgrades.Add(unlockedCard.UpgradeID);
+                }
+
+                upgradeCount++;
+            }
+        }
+
+        // Save current score every frame
+        if (UpgradeSaving.Instance != null)
+        {
+            UpgradeSaving.Instance.SetScore((int)upgradeCount);
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -71,45 +110,6 @@ public class UpgradeManager : MonoBehaviour
         }
 
         upgradeCount = UpgradeSaving.Instance.acquiredUpgrades.Count;
-    }
-
-
-
-    private void Update()
-    {
-        if (m_inputManager.OnOpenUpgradeRoadmap().triggered)
-        {
-            m_upgradeMenu.SetActive(!m_upgradeMenu.activeSelf);
-            Cursor.lockState = m_upgradeMenu.activeSelf ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = m_upgradeMenu.activeSelf ? true : false;
-        }
-
-        if (upgradeCount < m_upgradeCards.Length)
-        {
-            if (upgradeRoadMap.enemiesKilled >= 3)
-            {
-                upgradeRoadMap.enemiesKilled = 0;
-                upgradeRoadMap.UpdateRoadMap();
-                var unlockedCard = m_upgradeCards[upgradeCount];
-                Debug.Log("Got upgrade: " + unlockedCard.UpgradeID);
-
-                unlockedCard.isUnlocked = true;
-                unlockedCard.UpdateCard();
-
-                if (UpgradeSaving.Instance != null)
-                {
-                    UpgradeSaving.Instance.acquiredUpgrades.Add(unlockedCard.UpgradeID);
-                }
-
-                upgradeCount++;
-            }
-        }
-
-        // Save current score every frame
-        if (UpgradeSaving.Instance != null)
-        {
-            UpgradeSaving.Instance.SetScore((int)upgradeCount);
-        }
     }
 
 }
