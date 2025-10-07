@@ -429,7 +429,7 @@ GameObject:
   - component: {fileID: 597431371918639933}
   - component: {fileID: 4512875644321838927}
   - component: {fileID: 2363229836181118821}
-  m_Layer: 0
+  m_Layer: 28
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -543,6 +543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 20
+  healthBar: {fileID: 0}
   currentHealth: 20
 --- !u!114 &2363229836181118821
 MonoBehaviour:

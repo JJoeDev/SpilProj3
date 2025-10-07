@@ -31,4 +31,6 @@ public class InputManager : MonoBehaviour
     public InputAction OnJump() => pInput.Player.Jump;
     public InputAction OnOpenUpgradeRoadmap() => pInput.Player.OpenUpgradeRoadmap;
     public InputAction OnRevealEnemies() => pInput.Player.RevealEnemies;
+    public float OnRoadMapScroll() => pInput.Player.ScrollRoadMap.ReadValue<float>();
+    public Vector2 OnMouseMove() => pInput.Player.MousePos.ReadValue<Vector2>();
 }

@@ -73,6 +73,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""ScrollRoadMap"",
+                    ""type"": ""Value"",
+                    ""id"": ""ac1d27f5-531b-489a-9b49-04edbc99ffa4"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""RevealEnemies"",
                     ""type"": ""Button"",
                     ""id"": ""9dda0454-10b1-45b2-89b8-d55022c1a027"",
@@ -80,6 +89,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MousePos"",
+                    ""type"": ""Value"",
+                    ""id"": ""41310bc5-70c2-4a4d-8f4c-b1404e284d33"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -236,6 +254,39 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""RevealEnemies"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a5d4ac59-50e0-46cf-99e5-23754b5c0e12"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": ""Invert"",
+                    ""groups"": """",
+                    ""action"": ""ScrollRoadMap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0758ccc3-9f8c-4b61-9b9f-3c58511ce9c2"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ScrollRoadMap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""352777df-1c9f-4283-9bf5-e85932c4716e"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -249,7 +300,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_Player_HandBreak = m_Player.FindAction("HandBreak", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_OpenUpgradeRoadmap = m_Player.FindAction("OpenUpgradeRoadmap", throwIfNotFound: true);
+        m_Player_ScrollRoadMap = m_Player.FindAction("ScrollRoadMap", throwIfNotFound: true);
         m_Player_RevealEnemies = m_Player.FindAction("RevealEnemies", throwIfNotFound: true);
+        m_Player_MousePos = m_Player.FindAction("MousePos", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -316,7 +369,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_HandBreak;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_OpenUpgradeRoadmap;
+    private readonly InputAction m_Player_ScrollRoadMap;
     private readonly InputAction m_Player_RevealEnemies;
+    private readonly InputAction m_Player_MousePos;
     public struct PlayerActions
     {
         private @PlayerInputs m_Wrapper;
@@ -326,7 +381,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         public InputAction @HandBreak => m_Wrapper.m_Player_HandBreak;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @OpenUpgradeRoadmap => m_Wrapper.m_Player_OpenUpgradeRoadmap;
+        public InputAction @ScrollRoadMap => m_Wrapper.m_Player_ScrollRoadMap;
         public InputAction @RevealEnemies => m_Wrapper.m_Player_RevealEnemies;
+        public InputAction @MousePos => m_Wrapper.m_Player_MousePos;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -351,9 +408,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @OpenUpgradeRoadmap.started += instance.OnOpenUpgradeRoadmap;
             @OpenUpgradeRoadmap.performed += instance.OnOpenUpgradeRoadmap;
             @OpenUpgradeRoadmap.canceled += instance.OnOpenUpgradeRoadmap;
+            @ScrollRoadMap.started += instance.OnScrollRoadMap;
+            @ScrollRoadMap.performed += instance.OnScrollRoadMap;
+            @ScrollRoadMap.canceled += instance.OnScrollRoadMap;
             @RevealEnemies.started += instance.OnRevealEnemies;
             @RevealEnemies.performed += instance.OnRevealEnemies;
             @RevealEnemies.canceled += instance.OnRevealEnemies;
+            @MousePos.started += instance.OnMousePos;
+            @MousePos.performed += instance.OnMousePos;
+            @MousePos.canceled += instance.OnMousePos;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -373,9 +436,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @OpenUpgradeRoadmap.started -= instance.OnOpenUpgradeRoadmap;
             @OpenUpgradeRoadmap.performed -= instance.OnOpenUpgradeRoadmap;
             @OpenUpgradeRoadmap.canceled -= instance.OnOpenUpgradeRoadmap;
+            @ScrollRoadMap.started -= instance.OnScrollRoadMap;
+            @ScrollRoadMap.performed -= instance.OnScrollRoadMap;
+            @ScrollRoadMap.canceled -= instance.OnScrollRoadMap;
             @RevealEnemies.started -= instance.OnRevealEnemies;
             @RevealEnemies.performed -= instance.OnRevealEnemies;
             @RevealEnemies.canceled -= instance.OnRevealEnemies;
+            @MousePos.started -= instance.OnMousePos;
+            @MousePos.performed -= instance.OnMousePos;
+            @MousePos.canceled -= instance.OnMousePos;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -400,6 +469,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         void OnHandBreak(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnOpenUpgradeRoadmap(InputAction.CallbackContext context);
+        void OnScrollRoadMap(InputAction.CallbackContext context);
         void OnRevealEnemies(InputAction.CallbackContext context);
+        void OnMousePos(InputAction.CallbackContext context);
     }
 }
