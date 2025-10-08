@@ -31,6 +31,8 @@ public class SpeedBosst : MonoBehaviour
     const float kOverspeedDragMul = 2.0f;  // proportional “bremsning” over base topfart
     const float kClampSlack = 1.02f; // lille slack, undgår hak ved grænsen
 
+    [SerializeField] private GameObject rocketObject; // reference to the same rocketObject from RocketUpgrade
+
     void Awake()
     {
         if (!m_CarController) m_CarController = GetComponent<CarController>() ?? GetComponentInParent<CarController>();
@@ -79,6 +81,9 @@ public class SpeedBosst : MonoBehaviour
     void Update()
     {
         if (m_CarController == null) return;
+        
+        if (rocketObject == null || !rocketObject.activeSelf) // kun boost hvis vi har rocket upgrade
+            return;
 
         // Start boost KUN hvis vi har tid tilbage
         if (Input.GetKeyDown(KeyCode.LeftShift) && m_boostTime > 0f)
@@ -122,6 +127,7 @@ public class SpeedBosst : MonoBehaviour
             }
         }
     }
+
 
     void FixedUpdate()
     {

@@ -5459,7 +5459,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4486791509900789987}
-  - component: {fileID: 6729066679687365384}
   m_Layer: 0
   m_Name: rocket
   m_TagString: Untagged
@@ -5485,25 +5484,6 @@ Transform:
   - {fileID: 3849301897123741277}
   m_Father: {fileID: 5904826851355353482}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6729066679687365384
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2051876994799295241}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b41073d18a4e2da4987e0773cb50ed02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SpeedBoost: 1
-  m_accelerationSpeedBoost: 1
-  m_maxBoostTime: 10
-  m_CarController: {fileID: -230241118460714649}
-  m_rb: {fileID: 8519721712876099262}
-  m_RocketFire: {fileID: 7603194215079056322}
-  m_boostCD: 5
 --- !u!1 &2186998797789864704
 GameObject:
   m_ObjectHideFlags: 0
