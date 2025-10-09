@@ -11,6 +11,7 @@ public class ArmorUpgrade : Upgrade
     {
         // Adds health
         HealthManager health = GetComponent<HealthManager>();
+        
         if (health != null)
         {
             health.maxHealth = armorHealth;

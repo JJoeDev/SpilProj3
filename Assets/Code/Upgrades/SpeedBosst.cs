@@ -81,9 +81,9 @@ public class SpeedBosst : MonoBehaviour
     void Update()
     {
         if (m_CarController == null) return;
-        
+
         if (rocketObject == null || !rocketObject.activeSelf) // kun boost hvis vi har rocket upgrade
-            return;
+            return; // ingen rocket → ingen boost
 
         // Start boost KUN hvis vi har tid tilbage
         if (Input.GetKeyDown(KeyCode.LeftShift) && m_boostTime > 0f)
