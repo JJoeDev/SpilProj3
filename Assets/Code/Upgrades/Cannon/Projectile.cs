@@ -12,35 +12,27 @@ public class Projectile : MonoBehaviour
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, m_explotionRadius);
 
-        foreach(var col in colliders)
+        HealthManager hm;
+
+        foreach (var col in colliders)
         {
             Debug.DrawLine(col.transform.position, col.transform.position + Vector3.up * 100, Color.red);
-            HealthManager hm = col.GetComponent<HealthManager>();
+            hm = col.GetComponent<HealthManager>();
             if (hm == null) continue;
 
-            hm.TakeDamage(damage, gameObject);
+            if (col == collision.collider) 
+            {
+                hm.TakeDamage(damage, gameObject);
+                continue;
+            }
 
-            if (explosionEffect == null) continue;
-            Instantiate(explosionEffect, transform.position, Quaternion.identity);
 
-            Destroy(gameObject);
+            Vector3 distance = col.transform.position - transform.position;
+            hm.TakeDamage(damage / distance.magnitude, gameObject); // Less damage based on distance
         }
 
-        // // Check if target has a HealthManager
-        // HealthManager targetHealth = collision.gameObject.GetComponent<HealthManager>();
-        // if (targetHealth != null)
-        // {
-        //     // Pass this projectile as the damage source
-        //     targetHealth.TakeDamage(damage, gameObject);
-        // }
-
-        // // Spawn explosion effect
-        // if (explosionEffect != null)
-        // {
-        //     Instantiate(explosionEffect, transform.position, Quaternion.identity);
-        // }
-
-        // // Destroy projectile after impact
-        // Destroy(gameObject);
+        if (explosionEffect != null) Instantiate(explosionEffect, transform.position, Quaternion.identity);
+        
+        Destroy(gameObject);
     }
 }
