@@ -19,7 +19,7 @@ public class UpgradeManager : MonoBehaviour
         else
         {
             _instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
     }
 
@@ -59,29 +59,33 @@ public class UpgradeManager : MonoBehaviour
             Cursor.visible = m_upgradeMenu.activeSelf ? true : false;
         }
 
-        if (upgradeCount < m_upgradeCards.Length)
+        if (upgradeRoadMap.gameObject.activeSelf)
         {
-            if (m_upgradeCards[upgradeCount].CheckUpgradeUnlocked())
+            if (upgradeCount < m_upgradeCards.Length)
             {
-                upgradeRoadMap.UpdateRoadMap();
-                var unlockedCard = m_upgradeCards[upgradeCount];
-                Debug.Log("Got upgrade: " + unlockedCard.UpgradeID);
-                unlockedCard.UpdateCard();
-
-                if (UpgradeSaving.Instance != null)
+                if (m_upgradeCards[upgradeCount].CheckUpgradeUnlocked())
                 {
-                    UpgradeSaving.Instance.acquiredUpgrades.Add(unlockedCard.UpgradeID);
-                }
+                    upgradeRoadMap.UpdateRoadMap();
+                    var unlockedCard = m_upgradeCards[upgradeCount];
+                    Debug.Log("Got upgrade: " + unlockedCard.UpgradeID);
+                    unlockedCard.UpdateCard();
 
-                upgradeCount++;
+                    if (UpgradeSaving.Instance != null)
+                    {
+                        UpgradeSaving.Instance.acquiredUpgrades.Add(unlockedCard.UpgradeID);
+                    }
+
+                    upgradeCount++;
+                }
+            }
+
+            // Save current score every frame
+            if (UpgradeSaving.Instance != null)
+            {
+                UpgradeSaving.Instance.SetScore((int)upgradeCount);
             }
         }
 
-        // Save current score every frame
-        if (UpgradeSaving.Instance != null)
-        {
-            UpgradeSaving.Instance.SetScore((int)upgradeCount);
-        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

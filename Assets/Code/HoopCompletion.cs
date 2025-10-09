@@ -7,7 +7,7 @@ public class HoopCompletion : MonoBehaviour
     [SerializeField] private GameObject m_bigHoop;
     private List<Collider> m_hoopsToHitRuntime;
     public bool smallHoopsCompleted = false;
-    StatTracker m_statTracker;
+    [SerializeField] StatTracker m_statTracker;
     private void Awake()
     {
         m_hoopsToHitRuntime = new List<Collider>(m_hoopsToHitOriginal);
@@ -15,7 +15,7 @@ public class HoopCompletion : MonoBehaviour
         {
             m_bigHoop.SetActive(false);
         }
-        m_statTracker = StatTracker.Instance;
+        //m_statTracker = StatTracker.Instance;
     } 
 
     private void OnTriggerEnter(Collider other)

@@ -11284,11 +11284,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   armorHealth: 150
-  healplayer: 50
   armorVisuals:
   - {fileID: 3138025637180521446}
   - {fileID: 4290204022940023668}
   - {fileID: 4710364325338181917}
+  m_healthManager: {fileID: 0}
 --- !u!1 &5317291797031862223
 GameObject:
   m_ObjectHideFlags: 0
@@ -11828,6 +11828,7 @@ MonoBehaviour:
   m_hoopsToHitOriginal: []
   m_bigHoop: {fileID: 0}
   smallHoopsCompleted: 0
+  m_statTracker: {fileID: 0}
 --- !u!114 &6926567510842138727
 MonoBehaviour:
   m_ObjectHideFlags: 0
