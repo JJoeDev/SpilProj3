@@ -4888,6 +4888,37 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &739750858318936158
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2425238973355419769}
+  m_Layer: 0
+  m_Name: LootAt
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2425238973355419769
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 739750858318936158}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.07, y: 6.88, z: -3.17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3745775732619948354}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &814995650285220787
 GameObject:
   m_ObjectHideFlags: 0
@@ -5262,6 +5293,7 @@ GameObject:
   - component: {fileID: 3360572689509869485}
   - component: {fileID: 5505080549637783791}
   - component: {fileID: 8694112062133805907}
+  - component: {fileID: 5662047467634263346}
   m_Layer: 0
   m_Name: Cylinder.014
   m_TagString: Untagged
@@ -5372,6 +5404,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.010557367, y: 0.017050324, z: 0.017134394}
   m_Center: {x: -0.012757502, y: 0.000023372468, z: 0.000058988564}
+--- !u!114 &5662047467634263346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1604934299118053841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6893a6cfbe435e44bc106d36f4eb8dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Spikeskade: 10
+  m_hitCooldown: 0.25
+  m_damageableLayers:
+    serializedVersion: 2
+    m_Bits: 268435456
 --- !u!1 &1679619442925973684
 GameObject:
   m_ObjectHideFlags: 0
@@ -5459,7 +5508,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4486791509900789987}
-  - component: {fileID: 6729066679687365384}
   m_Layer: 0
   m_Name: rocket
   m_TagString: Untagged
@@ -5485,25 +5533,6 @@ Transform:
   - {fileID: 3849301897123741277}
   m_Father: {fileID: 5904826851355353482}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6729066679687365384
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2051876994799295241}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b41073d18a4e2da4987e0773cb50ed02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SpeedBoost: 1
-  m_accelerationSpeedBoost: 1
-  m_maxBoostTime: 10
-  m_CarController: {fileID: -230241118460714649}
-  m_rb: {fileID: 8519721712876099262}
-  m_RocketFire: {fileID: 7603194215079056322}
-  m_boostCD: 5
 --- !u!1 &2186998797789864704
 GameObject:
   m_ObjectHideFlags: 0
@@ -11255,6 +11284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   armorHealth: 150
+  healplayer: 50
   armorVisuals:
   - {fileID: 3138025637180521446}
   - {fileID: 4290204022940023668}
@@ -11272,6 +11302,7 @@ GameObject:
   - component: {fileID: 4131508036803086601}
   - component: {fileID: 2129699952214029164}
   - component: {fileID: 6845269327972429326}
+  - component: {fileID: 5994789051093964429}
   m_Layer: 0
   m_Name: Cylinder.012
   m_TagString: Untagged
@@ -11382,6 +11413,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.010557357, y: 0.017050326, z: 0.017134394}
   m_Center: {x: 0.012757488, y: 0.000023366414, z: -0.000058996015}
+--- !u!114 &5994789051093964429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5317291797031862223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6893a6cfbe435e44bc106d36f4eb8dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Spikeskade: 10
+  m_hitCooldown: 0.25
+  m_damageableLayers:
+    serializedVersion: 2
+    m_Bits: 268435456
 --- !u!1 &5396755354303230939
 GameObject:
   m_ObjectHideFlags: 0
@@ -11520,13 +11568,13 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 6
+    m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 5
+    m_Stiffness: 2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -11554,6 +11602,7 @@ GameObject:
   - component: {fileID: -230241118460714649}
   - component: {fileID: -4893848986485415346}
   - component: {fileID: 4007897793000004257}
+  - component: {fileID: 6926567510842138727}
   m_Layer: 0
   m_Name: new_player
   m_TagString: Player
@@ -11582,6 +11631,7 @@ Transform:
   - {fileID: 5902576473756930171}
   - {fileID: 1847917450272702653}
   - {fileID: 5904826851355353482}
+  - {fileID: 2425238973355419769}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &8519721712876099262
@@ -11670,7 +11720,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   upgradeRoadMap: {fileID: 0}
-  m_upgradeCards: []
+  m_upgradeCards:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   m_upgradeMenu: {fileID: 0}
   upgradeCount: 0
 --- !u!114 &8765775284796708214
@@ -11687,10 +11746,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_freeLookCam: {fileID: 0}
   m_trackCam: {fileID: 0}
-  m_carController: {fileID: 2396910173577997027, guid: 122e2c9dba2ef524d8e5d2296b95c8aa,
-    type: 3}
-  m_lookAheadCarSpeed: 30
-  m_lookAheadRotationSpeed: 0
+  m_carController: {fileID: -230241118460714649}
+  m_lookAheadCarSpeed: 200
+  m_lookAheadRotationSpeed: 8
   m_enemyTag: Enemy
   m_trackCamDistance: 8
   m_trackCamHeight: 7
@@ -11710,7 +11768,7 @@ MonoBehaviour:
   maxReverseSpeed: 60
   accelerationMultiplier: 65
   maxSteeringAngle: 27
-  steeringSpeed: 0.7
+  steeringSpeed: 3
   brakeForce: 1200
   decelerationMultiplier: 2
   handbrakeDriftMultiplier: 5
@@ -11770,6 +11828,26 @@ MonoBehaviour:
   m_hoopsToHitOriginal: []
   m_bigHoop: {fileID: 0}
   smallHoopsCompleted: 0
+--- !u!114 &6926567510842138727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5984531812428329800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b41073d18a4e2da4987e0773cb50ed02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SpeedBoost: 1000
+  m_accelerationSpeedBoost: 2000
+  m_maxBoostTime: 4
+  m_CarController: {fileID: -230241118460714649}
+  m_rb: {fileID: 8519721712876099262}
+  m_RocketFire: {fileID: 7603194215079056322}
+  m_boostCD: 5
+  rocketObject: {fileID: 2051876994799295241}
 --- !u!1 &6030879534574085618
 GameObject:
   m_ObjectHideFlags: 0
@@ -12139,13 +12217,13 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 6
+    m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 5
+    m_Stiffness: 2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -22203,6 +22281,7 @@ GameObject:
   - component: {fileID: 4278872375724460104}
   - component: {fileID: 369473679762677737}
   - component: {fileID: 8312214136023230900}
+  - component: {fileID: 2999058466237013981}
   m_Layer: 0
   m_Name: Cylinder.013
   m_TagString: Untagged
@@ -22313,6 +22392,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.010557367, y: 0.017050324, z: 0.017134394}
   m_Center: {x: -0.012757494, y: 0.000023610886, z: 0.000058988564}
+--- !u!114 &2999058466237013981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7790298034663599462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6893a6cfbe435e44bc106d36f4eb8dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Spikeskade: 10
+  m_hitCooldown: 0.25
+  m_damageableLayers:
+    serializedVersion: 2
+    m_Bits: 268435456
 --- !u!1 &8134120560947631752
 GameObject:
   m_ObjectHideFlags: 0
@@ -22451,13 +22547,13 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 6
+    m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 5
+    m_Stiffness: 2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -22785,13 +22881,13 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 6
+    m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
-    m_Stiffness: 5
+    m_Stiffness: 2
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -22923,6 +23019,7 @@ GameObject:
   - component: {fileID: 5399287004333375304}
   - component: {fileID: 8545834724221404737}
   - component: {fileID: 5169121232611620307}
+  - component: {fileID: 2999058644178273406}
   m_Layer: 0
   m_Name: Cylinder.011
   m_TagString: Untagged
@@ -23033,3 +23130,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.010557357, y: 0.017050326, z: 0.017134394}
   m_Center: {x: 0.012757488, y: 0.000023366414, z: -0.000058996015}
+--- !u!114 &2999058644178273406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9202220743689727242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6893a6cfbe435e44bc106d36f4eb8dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Spikeskade: 10
+  m_hitCooldown: 0.25
+  m_damageableLayers:
+    serializedVersion: 2
+    m_Bits: 268435456
