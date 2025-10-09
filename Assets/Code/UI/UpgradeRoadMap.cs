@@ -8,7 +8,7 @@ public class UpgradeRoadMap : MonoBehaviour
     [SerializeField] RawImage[] m_roadMapPoints;
     [SerializeField] float m_scrollSpeed;
 
-    UpgradeManager m_upgradeManager;
+    [SerializeField] UpgradeManager m_upgradeManager;
     InputManager m_inputManager;
 
     public RectTransform rectTransform;

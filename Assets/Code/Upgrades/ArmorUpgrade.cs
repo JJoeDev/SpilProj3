@@ -6,14 +6,15 @@ public class ArmorUpgrade : Upgrade
 {
     public float armorHealth = 150f;
     public GameObject[] armorVisuals;
+    [SerializeField] HealthManager m_healthManager;
 
     public override void EnableUpgrade()
     {
-        // Adds health
-        HealthManager health = GetComponent<HealthManager>();
-        if (health != null)
+        
+        if (m_healthManager != null)
         {
-            health.maxHealth = armorHealth;
+            m_healthManager.maxHealth = armorHealth;
+            m_healthManager.currentHealth = armorHealth;
         }
         // Activates the armor visually
         if (armorVisuals.Length != 0)
