@@ -8,7 +8,7 @@ public class RestartButton : MenuButton
     public override void OnPointerClick(PointerEventData eventData)
     {
         m_sound.hasdied = false; // Reset the flag when restarting the game / så lyden stopper med at afspille
-        SceneManager.LoadScene("Patrick-1"); // or current scene
+        SceneManager.LoadScene("MainScene"); // or current scene
     }
 
     public override void OnPointerEnter(PointerEventData pointerEventData)

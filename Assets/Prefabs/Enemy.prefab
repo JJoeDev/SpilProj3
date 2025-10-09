@@ -96,11 +96,11 @@ GameObject:
   - component: {fileID: 2375278725377683643}
   m_Layer: 0
   m_Name: HovedRevealed
-  m_TagString: RevealedEnemy
+  m_TagString: EnemyRevealed
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3985862787193881747
 Transform:
   m_ObjectHideFlags: 0
@@ -109,8 +109,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 708428546786132610}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -63.38543, y: 1.9147265, z: 1.8965986}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -63.385426, y: 1.9147158, z: 1.8965542}
   m_LocalScale: {x: 1.01, y: 1.01, z: 1.01}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -131,7 +131,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 708428546786132610}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -530,8 +530,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 22.26, y: 8.334589, z: -0.7482004}
-  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.8, y: 1.8, z: 1.8}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5472231391702598115}
   - {fileID: 2635224160340653741}
@@ -598,8 +598,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e145e47cf00b6248b7f86f2b56b134e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_sightRadius: 30
-  m_sightAngle: 215
+  m_sightRadius: 100
+  m_sightAngle: 350
   m_deadAngle: 75
   m_playerTransform: {fileID: 0}
   m_playerPosOffset: {x: 0, y: 1, z: 0}

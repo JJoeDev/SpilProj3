@@ -10,6 +10,7 @@ public class ArmorUpgrade : Upgrade
 
     public override void EnableUpgrade()
     {
+        Debug.Log("Enabling armir");
         
         if (m_healthManager != null)
         {

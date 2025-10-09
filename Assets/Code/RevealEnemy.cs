@@ -5,7 +5,7 @@ using UnityEngine;
 public class RevealEnemy : MonoBehaviour
 {
     [SerializeField] float revealTime = 5f;
-    GameObject[] m_enemies; // List of all enemies in the scene
+    [SerializeField] GameObject[] m_enemies;
 
     InputManager m_inputManager;
 
@@ -25,11 +25,11 @@ public class RevealEnemy : MonoBehaviour
     private IEnumerator RevealEnemies()
     {
         Debug.Log("FINDING ENEMIES...");
-        m_enemies = GameObject.FindGameObjectsWithTag("RevealedEnemy");
+        m_enemies = GameObject.FindGameObjectsWithTag("EnemyRevealed");
 
-        if (m_enemies == null || m_enemies.Length == 0)
+        if ( m_enemies.Length <= 0)
         {
-            Debug.Log("Couldn't find any enemies");
+            Debug.Log("Couldn't find any enemies"); 
             yield break;
         }
 
