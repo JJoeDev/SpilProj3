@@ -7369,6 +7369,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_roadMapPoints: []
   m_scrollSpeed: 800
+  m_upgradeManager: {fileID: 0}
   rectTransform: {fileID: 917514691609830129}
   maxScrollDist: -620
   minScrollDist: -2400

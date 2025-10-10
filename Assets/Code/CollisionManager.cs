@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class CollisionManager : MonoBehaviour
 {
@@ -71,7 +70,7 @@ public class CollisionManager : MonoBehaviour
 
             if (angle < 45f) // I hit them with my front
             {
-                // Check if they’re also facing me (head-on)
+                // Check if theyï¿½re also facing me (head-on)
                 float otherAngle = Vector3.Angle(collision.transform.forward, -toOther);
 
                 if (otherAngle < 45f)

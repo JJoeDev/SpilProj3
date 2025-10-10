@@ -14,8 +14,8 @@ public class ArmorUpgrade : Upgrade
         
         if (m_healthManager != null)
         {
-            m_healthManager.maxHealth = armorHealth;
-            m_healthManager.currentHealth = armorHealth;
+            m_healthManager.maxHealth += armorHealth;
+            m_healthManager.TakeDamage(-armorHealth);
         }
         // Activates the armor visually
         if (armorVisuals.Length != 0)

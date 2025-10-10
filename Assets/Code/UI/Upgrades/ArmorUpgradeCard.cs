@@ -10,11 +10,12 @@ public class ArmorUpgradeCard : UpgradeCard
     public override void Update()
     {
         base.Update();
-        stattracker_Text.text = statTracker.enemiesPushedIntoBarrels.ToString() + "/" + 1;
+        stattracker_Text.text = statTracker.totalEnemiesKilled.ToString() + "/" + 10;
     }
     public override bool CheckUpgradeUnlocked()
     {
-        isUnlocked = statTracker.enemiesPushedIntoBarrels >= 1;
+        isUnlocked = statTracker.totalEnemiesKilled >= 10;
         return isUnlocked;
     }
 }
+    

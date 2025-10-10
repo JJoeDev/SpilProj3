@@ -10,11 +10,11 @@ public class WheelSpikesUpgradeCard : UpgradeCard
     public override void Update()
     {
         base.Update();
-        stattracker_Text.text = statTracker.totalEnemiesKilled.ToString() + "/" + 10;
+        stattracker_Text.text = statTracker.totalEnemiesKilled.ToString() + "/" + 15;
     }
     public override bool CheckUpgradeUnlocked()
     {
-        isUnlocked = statTracker.totalEnemiesKilled >= 10;
+        isUnlocked = statTracker.totalEnemiesKilled >= 15;
         return isUnlocked;
     }
 }
